@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Razorpay Integration Test</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; color: #155724; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; color: #721c24; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; color: #0c5460; }
+        button { padding: 10px 20px; margin: 5px; border: none; border-radius: 4px; cursor: pointer; }
+        .btn-primary { background-color: #007bff; color: white; }
+        .btn-success { background-color: #28a745; color: white; }
+        .btn-danger { background-color: #dc3545; color: white; }
+        .btn-warning { background-color: #ffc107; color: black; }
+        #results { margin-top: 20px; }
+        .result-item { margin: 10px 0; padding: 10px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Razorpay Integration Test</h1>
+    <p>Use this page to test your Razorpay integration step by step.</p>
+
+    <!-- Step 1: Check SDK -->
+    <div class="test-section">
+        <h3>Step 1: Check Razorpay SDK</h3>
+        <button class="btn-primary" onclick="checkSDK()">Check SDK</button>
+        <div id="sdk-result"></div>
+    </div>
+
+    <!-- Step 2: Test Backend Connection -->
+    <div class="test-section">
+        <h3>Step 2: Test Backend Connection</h3>
+        <button class="btn-primary" onclick="testBackend()">Test Backend</button>
+        <div id="backend-result"></div>
+    </div>
+
+    <!-- Step 3: Create Order -->
+    <div class="test-section">
+        <h3>Step 3: Create Payment Order</h3>
+        <button class="btn-primary" onclick="createOrder()">Create Order</button>
+        <div id="order-result"></div>
+    </div>
+
+    <!-- Step 4: Test Payment -->
+    <div class="test-section">
+        <h3>Step 4: Test Payment Flow</h3>
+        <button class="btn-success" onclick="testPayment()">Start Payment Test</button>
+        <div id="payment-result"></div>
+    </div>
+
+    <!-- Results -->
+    <div id="results"></div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:5000'
+        let currentOrder = null
+
+        function addResult(message, type = 'info') {
+            const results = document.getElementById('results')
+            const div = document.createElement('div')
+            div.className = `result-item ${type}`
+            div.innerHTML = `<strong>${new Date().toLocaleTimeString()}:</strong> ${message}`
+            results.appendChild(div)
+            results.scrollTop = results.scrollHeight
+        }
+
+        function checkSDK() {
+            const result = document.getElementById('sdk-result')
+            if (typeof window.Razorpay !== 'undefined') {
+                result.innerHTML = '<div class="success">✅ Razorpay SDK loaded successfully!</div>'
+                addResult('Razorpay SDK is available', 'success')
+            } else {
+                result.innerHTML = '<div class="error">❌ Razorpay SDK not loaded. Check your internet connection.</div>'
+                addResult('Razorpay SDK not available', 'error')
+            }
+        }
+
+        async function testBackend() {
+            const result = document.getElementById('backend-result')
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/health`)
+                const data = await response.json()
+                
+                if (response.ok) {
+                    result.innerHTML = `<div class="success">✅ Backend connected: ${data.message}</div>`
+                    addResult('Backend connection successful', 'success')
+                } else {
+                    result.innerHTML = `<div class="error">❌ Backend error: ${data.message}</div>`
+                    addResult('Backend connection failed', 'error')
+                }
+            } catch (error) {
+                result.innerHTML = `<div class="error">❌ Cannot connect to backend: ${error.message}</div>`
+                addResult(`Backend connection error: ${error.message}`, 'error')
+            }
+        }
+
+        async function createOrder() {
+            const result = document.getElementById('order-result')
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/payments/create-order`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        service: 'tarot',
+                        customerDetails: {
+                            name: 'Test User',
+                            email: 'test@example.com',
+                            phone: '9999999999'
+                        }
+                    })
+                })
+
+                const data = await response.json()
+                
+                if (data.success) {
+                    currentOrder = data.data
+                    result.innerHTML = `<div class="success">✅ Order created: ${data.data.orderId}</div>`
+                    addResult(`Order created successfully: ${data.data.orderId}`, 'success')
+                } else {
+                    result.innerHTML = `<div class="error">❌ Order creation failed: ${data.message}</div>`
+                    addResult(`Order creation failed: ${data.message}`, 'error')
+                }
+            } catch (error) {
+                result.innerHTML = `<div class="error">❌ Order creation error: ${error.message}</div>`
+                addResult(`Order creation error: ${error.message}`, 'error')
+            }
+        }
+
+        function testPayment() {
+            const result = document.getElementById('payment-result')
+            
+            if (!currentOrder) {
+                result.innerHTML = '<div class="error">❌ Please create an order first</div>'
+                addResult('No order available for payment', 'error')
+                return
+            }
+
+            if (typeof window.Razorpay === 'undefined') {
+                result.innerHTML = '<div class="error">❌ Razorpay SDK not loaded</div>'
+                addResult('Razorpay SDK not available for payment', 'error')
+                return
+            }
+
+            const options = {
+                key: currentOrder.keyId,
+                amount: currentOrder.amount,
+                currency: currentOrder.currency,
+                name: 'Krushnalaya Test',
+                description: 'Test Payment',
+                order_id: currentOrder.orderId,
+                prefill: {
+                    name: 'Test User',
+                    email: 'test@example.com',
+                    contact: '9999999999'
+                },
+                theme: {
+                    color: '#FFD700'
+                },
+                handler: function(response) {
+                    result.innerHTML = `<div class="success">✅ Payment successful! Payment ID: ${response.razorpay_payment_id}</div>`
+                    addResult(`Payment successful: ${response.razorpay_payment_id}`, 'success')
+                    
+                    // Test verification
+                    verifyPayment(response)
+                },
+                modal: {
+                    ondismiss: function() {
+                        result.innerHTML = '<div class="error">❌ Payment cancelled by user</div>'
+                        addResult('Payment cancelled by user', 'error')
+                    }
+                }
+            }
+
+            try {
+                const rzp = new Razorpay(options)
+                rzp.open()
+                result.innerHTML = '<div class="info">💳 Payment modal opened. Complete the payment...</div>'
+                addResult('Payment modal opened', 'info')
+            } catch (error) {
+                result.innerHTML = `<div class="error">❌ Payment modal error: ${error.message}</div>`
+                addResult(`Payment modal error: ${error.message}`, 'error')
+            }
+        }
+
+        async function verifyPayment(paymentResponse) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/payments/verify`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(paymentResponse)
+                })
+
+                const data = await response.json()
+                
+                if (data.success) {
+                    addResult('Payment verification successful', 'success')
+                } else {
+                    addResult(`Payment verification failed: ${data.message}`, 'error')
+                }
+            } catch (error) {
+                addResult(`Payment verification error: ${error.message}`, 'error')
+            }
+        }
+
+        // Auto-check SDK on load
+        window.onload = function() {
+            checkSDK()
+        }
+    </script>
+</body>
+</html>

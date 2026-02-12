@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+  
+  body {
+    @apply bg-gradient-to-br from-cosmic-blue via-deep-purple to-midnight-blue text-white font-body;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-gradient-to-r from-gold to-yellow-400 text-deep-purple font-semibold py-3 px-8 rounded-full hover:shadow-lg hover:shadow-gold/50 transition-all duration-300 transform hover:scale-105;
+  }
+  
+  .btn-secondary {
+    @apply border-2 border-gold text-gold font-semibold py-3 px-8 rounded-full hover:bg-gold hover:text-deep-purple transition-all duration-300;
+  }
+  
+  .card-mystical {
+    @apply bg-gradient-to-br from-deep-purple/80 to-midnight-blue/80 backdrop-blur-sm border border-gold/20 rounded-xl p-6 hover:border-gold/40 transition-all duration-300 hover:shadow-xl hover:shadow-gold/20;
+  }
+  
+  .text-gradient {
+    @apply bg-gradient-to-r from-gold to-aqua bg-clip-text text-transparent;
+  }
+}
