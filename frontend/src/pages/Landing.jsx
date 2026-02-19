@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import ServiceCard from '../components/ServiceCard'
 import ShinyText from '../components/ShinyText'
 import Threads from '../components/Threads'
+import BookingWizard from '../components/BookingWizard'
 import { useState, useMemo, useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import api from '../api/axios'
@@ -92,6 +93,7 @@ const Landing = () => {
   // Global expansion state for all mobile cards
   const [allCardsExpanded, setAllCardsExpanded] = useState(false)
   const [aboutCardsExpanded, setAboutCardsExpanded] = useState(false)
+  const [expandedCards, setExpandedCards] = useState({ tarot: false, reiki: false, jal: false })
   const [disclaimerAccepted, setDisclaimerAccepted] = useState(false)
   const [showDisclaimerModal, setShowDisclaimerModal] = useState(false)
   const [bookedSlots, setBookedSlots] = useState([])
@@ -496,9 +498,41 @@ const Landing = () => {
       </div>
       
       {/* HOME SECTION */}
-      <section id="home" className="min-h-screen">
-        {/* Hero Section */}
-        <section className="relative py-32 px-4 sm:px-6 lg:px-8 overflow-hidden">
+      <section id="home" className="relative py-4 md:py-12 lg:pt-24 px-4">
+        {/* Mobile Hero - Compact Design */}
+        <div className="md:hidden">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8 }}
+            className="text-center py-8 px-4"
+          >
+            {/* Logo */}
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-gold/20 to-aqua/20 border-2 border-gold/40 flex items-center justify-center shadow-lg shadow-gold/30 overflow-hidden">
+              <img src="/images/logo.png" alt="Krushnalaya" className="w-full h-full object-cover" />
+            </div>
+            
+            {/* Brand Name */}
+            <h1 className="font-mystical text-[2rem] font-bold text-gold mb-1">
+              Krushnalaya
+            </h1>
+            
+            {/* Tagline */}
+            <p className="text-aqua text-xs font-semibold tracking-[0.3em] mb-3">
+              KNOW · HEAL · GROW
+            </p>
+            
+            {/* Description */}
+            <p className="text-gray-300 text-sm leading-relaxed mb-6 max-w-xs mx-auto">
+              When life feels uncertain, clarity begins within. Discover your direction through spiritual guidance.
+            </p>
+            
+
+          </motion.div>
+        </div>
+
+        {/* Desktop Hero - Unchanged */}
+        <section className="hidden md:block relative py-6 md:py-8 px-4 sm:px-6 lg:px-8">
           <div className="relative max-w-4xl mx-auto text-center flex flex-col items-center justify-center min-h-[60vh]">
             <motion.div
               initial={{ opacity: 0, y: 50 }}
@@ -506,7 +540,7 @@ const Landing = () => {
               transition={{ duration: 0.8 }}
               className="flex flex-col items-center"
             >
-              <h1 className="font-mystical text-4xl md:text-6xl font-bold mb-8 text-white drop-shadow-2xl text-center">
+              <h1 className="font-mystical text-[2.8rem] md:text-[4.25rem] font-bold mb-8 text-white drop-shadow-2xl text-center">
                 When life feels uncertain, clarity begins within.
               </h1>
               <p className="text-lg md:text-xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed text-center">
@@ -522,8 +556,8 @@ const Landing = () => {
           </div>
         </section>
 
-        {/* Who We Are Section */}
-        <section className="py-20 px-4 sm:px-6 lg:px-8">
+        {/* Desktop Who We Are Section - Unchanged */}
+        <section className="hidden md:block py-20 px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
             <motion.div
               initial={{ opacity: 0, y: 16 }}
@@ -531,7 +565,7 @@ const Landing = () => {
               transition={{ duration: 1, ease: "easeOut" }}
               viewport={{ once: true }}
             >
-              <h2 className="font-mystical text-3xl md:text-4xl font-bold text-gradient mb-8">
+              <h2 className="font-mystical text-[2.1rem] md:text-[2.8rem] font-bold text-gradient mb-8">
                 A Sacred Space for Guidance & Healing
               </h2>
             </motion.div>
@@ -594,15 +628,333 @@ const Landing = () => {
       </section>
 
       {/* SERVICES SECTION */}
-      <section id="services" className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
+      <section id="services" className="py-4 md:py-10 px-4 sm:px-6 lg:px-8">
+        {/* Mobile Services */}
+        <div className="md:hidden px-4 py-8">
+          {/* Title */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-6"
+          >
+            <h2 className="font-mystical text-[1.8rem] font-bold text-gold mb-2">
+              Services
+            </h2>
+          </motion.div>
+
+          {/* All Sessions Include Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-3 shadow-lg shadow-gold/10 mb-6"
+          >
+            <div className="flex items-center justify-around text-xs">
+              <div className="flex items-center gap-1">
+                <span className="text-gold">✓</span>
+                <span className="text-gray-300">Guidance</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <span className="text-gold">✓</span>
+                <span className="text-gray-300">Follow-up</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <span className="text-gold">✓</span>
+                <span className="text-gray-300">Support</span>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Service Cards - Full Width Stacked */}
+          <div className="space-y-4">
+            {/* Tarot Reading */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className={`backdrop-blur-xl bg-gradient-to-br from-deep-purple/40 to-midnight-blue/30 border border-gold/30 p-4 shadow-lg shadow-gold/10 transition-all duration-300 ease-in-out ${
+                expandedCards.tarot ? 'rounded-3xl shadow-xl shadow-gold/20 bg-deep-purple/50' : 'rounded-2xl'
+              }`}
+            >
+              <div className="flex items-start justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl leading-none">🔮</span>
+                  <div>
+                    <h3 className="text-white font-bold text-base leading-tight">Tarot Reading</h3>
+                  </div>
+                </div>
+                <div className="text-[#18c2a4] font-bold text-lg leading-none">₹1,100</div>
+              </div>
+              
+              {!expandedCards.tarot ? (
+                <div>
+                  <p className="text-gray-300 text-xs mb-2 leading-relaxed">Personalized guidance for clarity</p>
+                  <div className="space-y-1 mb-3">
+                    <div className="flex items-start gap-1.5 text-xs">
+                      <span className="text-gold mt-0.5">✓</span>
+                      <span className="text-gray-300">30-minute session</span>
+                    </div>
+                    <div className="flex items-start gap-1.5 text-xs">
+                      <span className="text-gold mt-0.5">✓</span>
+                      <span className="text-gray-300">Custom card spread</span>
+                    </div>
+                    <div className="flex items-start gap-1.5 text-xs">
+                      <span className="text-gold mt-0.5">✓</span>
+                      <span className="text-gray-300">Love & career insights</span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setExpandedCards(prev => ({ ...prev, tarot: true }))}
+                    className="w-full text-gold text-xs flex items-center justify-center gap-1 hover:text-white transition-colors"
+                  >
+                    <span>View Details</span>
+                    <span>▼</span>
+                  </button>
+                </div>
+              ) : (
+                <div>
+                  <p className="text-gray-300 text-xs mb-3 leading-relaxed">
+                    Personalized guidance for clarity, direction, and confident decisions.
+                  </p>
+                  <div className="space-y-1.5 mb-4">
+                    <div className="flex items-start gap-1.5 text-xs">
+                      <span className="text-gold mt-0.5">✓</span>
+                      <span className="text-gray-300">Custom card spread based on concern</span>
+                    </div>
+                    <div className="flex items-start gap-1.5 text-xs">
+                      <span className="text-gold mt-0.5">✓</span>
+                      <span className="text-gray-300">Deep intuitive interpretation</span>
+                    </div>
+                    <div className="flex items-start gap-1.5 text-xs">
+                      <span className="text-gold mt-0.5">✓</span>
+                      <span className="text-gray-300">Love, career & life insights</span>
+                    </div>
+                    <div className="flex items-start gap-1.5 text-xs">
+                      <span className="text-gold mt-0.5">✓</span>
+                      <span className="text-gray-300">Follow-up clarification support</span>
+                    </div>
+                    <div className="flex items-start gap-1.5 text-xs">
+                      <span className="text-gold mt-0.5">✓</span>
+                      <span className="text-gray-300">Past, present, future guidance</span>
+                    </div>
+                    <div className="flex items-start gap-1.5 text-xs">
+                      <span className="text-gold mt-0.5">✓</span>
+                      <span className="text-gray-300">Recorded session notes</span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => handleServiceSelect('tarot')}
+                    className="w-full py-2 border border-gold/40 text-gold font-medium rounded-full hover:bg-gold/10 transition-all duration-300 text-xs mb-2"
+                  >
+                    Book Now
+                  </button>
+                  <button
+                    onClick={() => setExpandedCards(prev => ({ ...prev, tarot: false }))}
+                    className="w-full text-gold text-xs flex items-center justify-center gap-1 hover:text-white transition-colors"
+                  >
+                    <span>Show Less</span>
+                    <span className="rotate-180">▼</span>
+                  </button>
+                </div>
+              )}
+            </motion.div>
+
+            {/* Reiki Healing */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className={`backdrop-blur-xl bg-gradient-to-br from-deep-purple/40 to-midnight-blue/30 border border-gold/30 p-4 shadow-lg shadow-gold/10 transition-all duration-300 ease-in-out ${
+                expandedCards.reiki ? 'rounded-3xl shadow-xl shadow-gold/20 bg-deep-purple/50' : 'rounded-2xl'
+              }`}
+            >
+              <div className="flex items-start justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl leading-none">✨</span>
+                  <div>
+                    <h3 className="text-white font-bold text-base leading-tight">Reiki Healing</h3>
+                  </div>
+                </div>
+                <div className="text-[#18c2a4] font-bold text-lg leading-none">₹1,551</div>
+              </div>
+              
+              {!expandedCards.reiki ? (
+                <div>
+                  <p className="text-gray-300 text-xs mb-2 leading-relaxed">Structured 21-day healing journey</p>
+                  <div className="space-y-1 mb-3">
+                    <div className="flex items-start gap-1.5 text-xs">
+                      <span className="text-gold mt-0.5">✓</span>
+                      <span className="text-gray-300">21-day healing journey</span>
+                    </div>
+                    <div className="flex items-start gap-1.5 text-xs">
+                      <span className="text-gold mt-0.5">✓</span>
+                      <span className="text-gray-300">Daily energy sessions</span>
+                    </div>
+                    <div className="flex items-start gap-1.5 text-xs">
+                      <span className="text-gold mt-0.5">✓</span>
+                      <span className="text-gray-300">Complete package ₹2100</span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setExpandedCards(prev => ({ ...prev, reiki: true }))}
+                    className="w-full text-gold text-xs flex items-center justify-center gap-1 hover:text-white transition-colors"
+                  >
+                    <span>View Details</span>
+                    <span>▼</span>
+                  </button>
+                </div>
+              ) : (
+                <div>
+                  <p className="text-gray-300 text-xs mb-3 leading-relaxed">
+                    A structured 21-day healing journey for deep energetic reset.
+                  </p>
+                  <div className="space-y-1.5 mb-4">
+                    <div className="flex items-start gap-1.5 text-xs">
+                      <span className="text-gold mt-0.5">✓</span>
+                      <span className="text-gray-300">Daily energy healing sessions</span>
+                    </div>
+                    <div className="flex items-start gap-1.5 text-xs">
+                      <span className="text-gold mt-0.5">✓</span>
+                      <span className="text-gray-300">Chakra balancing & emotional release</span>
+                    </div>
+                    <div className="flex items-start gap-1.5 text-xs">
+                      <span className="text-gold mt-0.5">✓</span>
+                      <span className="text-gray-300">21-session set (most recommended)</span>
+                    </div>
+                    <div className="flex items-start gap-1.5 text-xs">
+                      <span className="text-gold mt-0.5">✓</span>
+                      <span className="text-gray-300">Complete package ₹2100</span>
+                    </div>
+                    <div className="flex items-start gap-1.5 text-xs">
+                      <span className="text-gold mt-0.5">✓</span>
+                      <span className="text-gray-300">Stress & anxiety relief</span>
+                    </div>
+                    <div className="flex items-start gap-1.5 text-xs">
+                      <span className="text-gold mt-0.5">✓</span>
+                      <span className="text-gray-300">Physical & emotional healing</span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => handleServiceSelect('reiki')}
+                    className="w-full py-2 border border-gold/40 text-gold font-medium rounded-full hover:bg-gold/10 transition-all duration-300 text-xs mb-2"
+                  >
+                    Book Now
+                  </button>
+                  <button
+                    onClick={() => setExpandedCards(prev => ({ ...prev, reiki: false }))}
+                    className="w-full text-gold text-xs flex items-center justify-center gap-1 hover:text-white transition-colors"
+                  >
+                    <span>Show Less</span>
+                    <span className="rotate-180">▼</span>
+                  </button>
+                </div>
+              )}
+            </motion.div>
+
+            {/* Jal Jyotish */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className={`backdrop-blur-xl bg-gradient-to-br from-deep-purple/40 to-midnight-blue/30 border border-gold/30 p-4 shadow-lg shadow-gold/10 transition-all duration-300 ease-in-out ${
+                expandedCards.jal ? 'rounded-3xl shadow-xl shadow-gold/20 bg-deep-purple/50' : 'rounded-2xl'
+              }`}
+            >
+              <div className="flex items-start justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl leading-none">💧</span>
+                  <div>
+                    <h3 className="text-white font-bold text-base leading-tight">Jal Jyotish</h3>
+                  </div>
+                </div>
+                <div className="text-[#18c2a4] font-bold text-lg leading-none">₹21,000</div>
+              </div>
+              
+              {!expandedCards.jal ? (
+                <div>
+                  <p className="text-gray-300 text-xs mb-2 leading-relaxed">Strategic water source assessment</p>
+                  <div className="space-y-1 mb-3">
+                    <div className="flex items-start gap-1.5 text-xs">
+                      <span className="text-gold mt-0.5">✓</span>
+                      <span className="text-gray-300">Traditional water detection</span>
+                    </div>
+                    <div className="flex items-start gap-1.5 text-xs">
+                      <span className="text-gold mt-0.5">✓</span>
+                      <span className="text-gray-300">Land assessment</span>
+                    </div>
+                    <div className="flex items-start gap-1.5 text-xs">
+                      <span className="text-gold mt-0.5">✓</span>
+                      <span className="text-gray-300">Drilling location guidance</span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setExpandedCards(prev => ({ ...prev, jal: true }))}
+                    className="w-full text-gold text-xs flex items-center justify-center gap-1 hover:text-white transition-colors"
+                  >
+                    <span>View Details</span>
+                    <span>▼</span>
+                  </button>
+                </div>
+              ) : (
+                <div>
+                  <p className="text-gray-300 text-xs mb-3 leading-relaxed">
+                    Strategic water source assessment using traditional methods.
+                  </p>
+                  <div className="space-y-1.5 mb-4">
+                    <div className="flex items-start gap-1.5 text-xs">
+                      <span className="text-gold mt-0.5">✓</span>
+                      <span className="text-gray-300">Land & directional evaluation</span>
+                    </div>
+                    <div className="flex items-start gap-1.5 text-xs">
+                      <span className="text-gold mt-0.5">✓</span>
+                      <span className="text-gray-300">Energetic field analysis</span>
+                    </div>
+                    <div className="flex items-start gap-1.5 text-xs">
+                      <span className="text-gold mt-0.5">✓</span>
+                      <span className="text-gray-300">Recommended drilling location</span>
+                    </div>
+                    <div className="flex items-start gap-1.5 text-xs">
+                      <span className="text-gold mt-0.5">✓</span>
+                      <span className="text-gray-300">Cost-risk optimization insight</span>
+                    </div>
+                    <div className="flex items-start gap-1.5 text-xs">
+                      <span className="text-gold mt-0.5">✓</span>
+                      <span className="text-gray-300">Depth estimation guidance</span>
+                    </div>
+                    <div className="flex items-start gap-1.5 text-xs">
+                      <span className="text-gold mt-0.5">✓</span>
+                      <span className="text-gray-300">Post-drilling consultation</span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => handleServiceSelect('water-divination')}
+                    className="w-full py-2 border border-gold/40 text-gold font-medium rounded-full hover:bg-gold/10 transition-all duration-300 text-xs mb-2"
+                  >
+                    Book Now
+                  </button>
+                  <button
+                    onClick={() => setExpandedCards(prev => ({ ...prev, jal: false }))}
+                    className="w-full text-gold text-xs flex items-center justify-center gap-1 hover:text-white transition-colors"
+                  >
+                    <span>Show Less</span>
+                    <span className="rotate-180">▼</span>
+                  </button>
+                </div>
+              )}
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Desktop Services - Keep existing */}
+        <div className="hidden md:block max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <h1 className="font-mystical text-5xl md:text-6xl font-bold text-gradient mb-6">
+            <h1 className="font-mystical text-[3.5rem] md:text-[4.25rem] font-bold text-gradient mb-6">
               Sacred Services
             </h1>
             <p className="text-xl text-gray-300 max-w-4xl mx-auto">
@@ -630,7 +982,7 @@ const Landing = () => {
               >
                 <div className="text-center mb-8">
                   <div className="text-6xl mb-6">{service.icon}</div>
-                  <h2 className="font-mystical text-3xl font-bold text-gold mb-4">{service.title}</h2>
+                  <h2 className="font-mystical text-[2.1rem] font-bold text-gold mb-4">{service.title}</h2>
                   <div className="text-2xl font-bold text-aqua mb-6">{service.price}</div>
                 </div>
                 
@@ -676,7 +1028,7 @@ const Landing = () => {
                     <div className="p-6">
                       <div className="text-center mb-6">
                         <div className="text-5xl mb-4">{service.icon}</div>
-                        <h2 className="font-mystical text-2xl font-bold text-gold mb-3">{service.title}</h2>
+                        <h2 className="font-mystical text-[1.4rem] font-bold text-gold mb-3">{service.title}</h2>
                         <div className="text-xl font-bold text-aqua mb-4">{service.price}</div>
                       </div>
                       
@@ -731,237 +1083,54 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* ABOUT SECTION */}
-      <section id="about" className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
+      {/* BOOK APPOINTMENT SECTION */}
+      <section id="book" className="py-4 md:py-10 px-4 sm:px-6 lg:px-8 pb-24 md:pb-10">
+        {/* Mobile Booking Form - Wizard */}
+        <div className="md:hidden px-4 py-6 pb-24">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-16"
+            className="text-center mb-6"
           >
-            <h1 className="font-mystical text-5xl md:text-6xl font-bold text-gradient mb-6">
-              About the Practice
-            </h1>
-            <p className="text-xl text-gray-300 max-w-4xl mx-auto">
-              Welcome to a sacred space where ancient wisdom meets modern healing. 
-              Discover the journey that led to this spiritual practice.
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-20">
-            {/* Desktop Layout */}
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="card-mystical hidden lg:block"
-            >
-              <h2 className="font-mystical text-3xl font-bold text-gradient mb-6">My Journey</h2>
-              <div className="space-y-4 text-gray-300">
-                <p>
-                  The seeds were always within me, even when I did not yet recognize them. In those early days, I felt drawn to mysteries I couldn't quite understand, sensing there was something deeper calling to my soul.
-                </p>
-                <p>
-                  When they first began to awaken, I felt a gentle realization take shape within my heart. It was like watching the first light of dawn slowly illuminate a landscape that had always been there, waiting to be discovered.
-                </p>
-                <p>
-                  As those seeds slowly grew, unfolding into a living tree, expanding and finding its strength, that growth became my spiritual journey. Each branch represented a new understanding, each leaf a lesson learned through practice and dedication.
-                </p>
-                <p>
-                  Through years of study in tarot, energy healing, and ancient wisdom traditions, I discovered that true knowledge comes not just from books, but from the quiet moments of connection with something greater than ourselves.
-                </p>
-                <p>
-                  And when this journey led me to truly understand myself, I felt a natural calling to help others. That service became the fruit of this spiritual tree, a gift born from experience, awareness, and compassion, which I now offer to you with sincerity and love.
-                </p>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="card-mystical hidden lg:block"
-            >
-              <h2 className="font-mystical text-3xl font-bold text-gradient mb-6">Qualifications</h2>
-              <ul className="space-y-3">
-                {qualifications.map((qualification, index) => (
-                  <li key={index} className="flex items-start text-gray-300">
-                    <span className="text-gold mr-3 mt-1">✨</span>
-                    {qualification}
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-6 p-4 bg-gold/10 rounded-lg border border-gold/20">
-                <p className="text-gold font-semibold mb-2">Continuous Learning</p>
-                <p className="text-gray-300 text-sm">
-                  I regularly attend workshops and retreats to deepen my practice and 
-                  stay connected with the evolving world of spiritual healing.
-                </p>
-              </div>
-            </motion.div>
-
-            {/* Mobile/Tablet Expandable Cards */}
-            <div className="lg:hidden col-span-full">
-              <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-4 pb-4 -mx-4 scrollbar-hide">
-                {[
-                  {
-                    title: "My Journey",
-                    icon: "🌱",
-                    preview: "The seeds were always within me, even when I did not yet recognize them. In those early days, I felt drawn to mysteries I couldn't quite understand...",
-                    content: (
-                      <div className="space-y-4 text-gray-300">
-                        <p>
-                          The seeds were always within me, even when I did not yet recognize them. In those early days, I felt drawn to mysteries I couldn't quite understand, sensing there was something deeper calling to my soul.
-                        </p>
-                        <p>
-                          When they first began to awaken, I felt a gentle realization take shape within my heart. It was like watching the first light of dawn slowly illuminate a landscape that had always been there, waiting to be discovered.
-                        </p>
-                        <p>
-                          As those seeds slowly grew, unfolding into a living tree, expanding and finding its strength, that growth became my spiritual journey. Each branch represented a new understanding, each leaf a lesson learned through practice and dedication.
-                        </p>
-                        <p>
-                          Through years of study in tarot, energy healing, and ancient wisdom traditions, I discovered that true knowledge comes not just from books, but from the quiet moments of connection with something greater than ourselves.
-                        </p>
-                        <p>
-                          And when this journey led me to truly understand myself, I felt a natural calling to help others. That service became the fruit of this spiritual tree, a gift born from experience, awareness, and compassion, which I now offer to you with sincerity and love.
-                        </p>
-                      </div>
-                    )
-                  },
-                  {
-                    title: "Qualifications",
-                    icon: "🎓",
-                    preview: "Certified Tarot Reader with 10+ years experience, Reiki Master Teacher, Traditional Jal Jyotishi specialist...",
-                    content: (
-                      <div>
-                        <ul className="space-y-3 mb-6">
-                          {qualifications.map((qualification, index) => (
-                            <li key={index} className="flex items-start text-gray-300">
-                              <span className="text-gold mr-3 mt-1">✨</span>
-                              <span className="text-sm">{qualification}</span>
-                            </li>
-                          ))}
-                        </ul>
-                        <div className="p-4 bg-gold/10 rounded-lg border border-gold/20">
-                          <p className="text-gold font-semibold mb-2">Continuous Learning</p>
-                          <p className="text-gray-300 text-sm">
-                            I regularly attend workshops and retreats to deepen my practice and 
-                            stay connected with the evolving world of spiritual healing.
-                          </p>
-                        </div>
-                      </div>
-                    )
-                  }
-                ].map((card, index) => (
-                  <motion.div
-                    key={card.title}
-                    initial={{ opacity: 0, x: 50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    className="flex-none w-[85vw] snap-center bg-gradient-to-br from-deep-purple/30 to-midnight-blue/30 backdrop-blur-lg border border-gold/30 rounded-2xl overflow-hidden"
-                  >
-                    <div className="p-6">
-                      <div className="text-center mb-6">
-                        <div className="text-5xl mb-4">{card.icon}</div>
-                        <h2 className="font-mystical text-2xl font-bold text-gold mb-3">{card.title}</h2>
-                      </div>
-                      
-                      <p className="text-gray-300 text-base leading-relaxed mb-6 text-center">
-                        {card.preview}
-                      </p>
-                      
-                      {/* Expandable Content */}
-                      <motion.div
-                        initial={false}
-                        animate={{ height: aboutCardsExpanded ? 'auto' : 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="overflow-hidden"
-                      >
-                        <div className="mb-4">
-                          {card.content}
-                        </div>
-                      </motion.div>
-                      
-                      {/* Expand/Collapse Button */}
-                      <div className="text-center">
-                        <button
-                          onClick={() => setAboutCardsExpanded(!aboutCardsExpanded)}
-                          className="text-gold hover:text-white transition-colors duration-300 flex items-center justify-center mx-auto"
-                        >
-                          <span className="mr-2">{aboutCardsExpanded ? 'Show Less' : 'Show More'}</span>
-                          <div className={`transition-transform duration-300 ${aboutCardsExpanded ? 'rotate-180' : ''}`}>
-                            ▼
-                          </div>
-                        </button>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-20"
-          >
-            <h2 className="font-mystical text-4xl font-bold text-center text-gradient mb-12">
-              Core Values
+            <h2 className="font-mystical text-[1.8rem] font-bold text-gold mb-2">
+              Book Session
             </h2>
-            <div className="grid grid-cols-2 gap-4 max-w-4xl mx-auto">
-              {values.map((value, index) => (
-                <motion.div
-                  key={value.title}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="card-mystical text-center"
-                >
-                  <div className="text-4xl mb-4">{value.icon}</div>
-                  <h3 className="font-semibold text-gold mb-3">{value.title}</h3>
-                  <p className="text-gray-300 text-sm">{value.description}</p>
-                </motion.div>
-              ))}
-            </div>
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="card-mystical mb-20"
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-5 shadow-lg shadow-gold/10"
           >
-            <h2 className="font-mystical text-3xl font-bold text-center text-gradient mb-6">
-              My Philosophy
-            </h2>
-            <div className="max-w-4xl mx-auto text-center">
-              <p className="text-lg text-gray-300 mb-6">
-                "Every soul carries within it the wisdom it seeks. My role is not to provide all the answers, 
-                but to help you discover the profound truths that already exist within you."
-              </p>
-              <p className="text-gray-300">
-                I believe that spiritual healing is a collaborative journey. Through compassionate guidance 
-                and ancient wisdom, we work together to unlock your inner potential and create positive 
-                transformation in your life.
-              </p>
-            </div>
+            <form onSubmit={handleSubmit(onBookingSubmit)}>
+              <BookingWizard
+                onSubmit={onBookingSubmit}
+                isSubmitting={isSubmitting}
+                submitMessage={submitMessage}
+                register={register}
+                errors={errors}
+                watch={watch}
+                setValue={setValue}
+                availableTimeSlots={availableTimeSlots}
+                selectedDate={selectedDate}
+                disclaimerAccepted={disclaimerAccepted}
+                setDisclaimerAccepted={setDisclaimerAccepted}
+              />
+            </form>
           </motion.div>
         </div>
-      </section>
 
-      {/* BOOK APPOINTMENT SECTION */}
-      <section id="book" className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
+        {/* Desktop Booking - Keep existing */}
+        <div className="hidden md:block max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
-            <h1 className="font-mystical text-5xl md:text-6xl font-bold text-gradient mb-6">
+            <h1 className="font-mystical text-[3.5rem] md:text-[4.25rem] font-bold text-gradient mb-6">
               Book Your Session
             </h1>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
@@ -1217,16 +1386,163 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* CONTACT SECTION - Keeping original as it's working fine */}
-      <section id="contact" className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
+      <section id="contact" className="py-4 md:py-10 px-4 sm:px-6 lg:px-8 pb-24 md:pb-10">
+        {/* Mobile Contact */}
+        <div className="md:hidden px-4 py-6 pb-24">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-6"
+          >
+            <h2 className="font-mystical text-[1.8rem] font-bold text-gold mb-2">
+              Contact
+            </h2>
+          </motion.div>
+
+          {/* Contact Cards */}
+          <div className="space-y-3 mb-6">
+            {/* WhatsApp */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-4 shadow-lg shadow-gold/10"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">💬</span>
+                  <div>
+                    <h3 className="text-white font-semibold text-sm">WhatsApp</h3>
+                    <p className="text-gray-400 text-xs">Instant messaging</p>
+                  </div>
+                </div>
+                <a
+                  href="https://wa.me/919893578135"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2 bg-gradient-to-r from-[#f5d000] to-[#18c2a4] text-deep-purple font-semibold rounded-full text-xs shadow-md"
+                >
+                  Chat
+                </a>
+              </div>
+            </motion.div>
+
+            {/* Email */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-4 shadow-lg shadow-gold/10"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">📧</span>
+                  <div>
+                    <h3 className="text-white font-semibold text-sm">Email</h3>
+                    <p className="text-gray-400 text-xs">24-hour response</p>
+                  </div>
+                </div>
+                <a
+                  href="mailto:rajshreepandetiwari@gmail.com"
+                  className="px-4 py-2 bg-gradient-to-r from-[#f5d000] to-[#18c2a4] text-deep-purple font-semibold rounded-full text-xs shadow-md"
+                >
+                  Email
+                </a>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Contact Form */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-5 shadow-lg shadow-gold/10"
+          >
+            <h3 className="font-mystical text-base text-gold mb-4 text-center">Send Message</h3>
+            <form onSubmit={handleContactSubmit(onContactSubmit)} className="space-y-3">
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <input
+                    type="text"
+                    {...registerContact('name', { required: 'Name is required' })}
+                    className="w-full px-3 py-2 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white placeholder-gray-400 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all text-xs"
+                    placeholder="Name"
+                  />
+                  {contactErrors.name && <p className="text-red-400 text-xs mt-1">{contactErrors.name.message}</p>}
+                </div>
+                <div>
+                  <input
+                    type="email"
+                    {...registerContact('email', { 
+                      required: 'Email is required',
+                      pattern: {
+                        value: /^\S+@\S+$/i,
+                        message: 'Invalid email'
+                      }
+                    })}
+                    className="w-full px-3 py-2 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white placeholder-gray-400 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all text-xs"
+                    placeholder="Email"
+                  />
+                  {contactErrors.email && <p className="text-red-400 text-xs mt-1">{contactErrors.email.message}</p>}
+                </div>
+              </div>
+
+              <div>
+                <select
+                  {...registerContact('subject', { required: 'Please select a subject' })}
+                  className="w-full px-3 py-2 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all appearance-none text-xs"
+                >
+                  <option value="" className="bg-cosmic-blue text-gray-400">Subject...</option>
+                  <option value="general-inquiry" className="bg-cosmic-blue text-white">General Inquiry</option>
+                  <option value="booking-question" className="bg-cosmic-blue text-white">Booking Question</option>
+                  <option value="service-information" className="bg-cosmic-blue text-white">Service Info</option>
+                  <option value="other" className="bg-cosmic-blue text-white">Other</option>
+                </select>
+                {contactErrors.subject && <p className="text-red-400 text-xs mt-1">{contactErrors.subject.message}</p>}
+              </div>
+
+              <div>
+                <textarea
+                  {...registerContact('message', { required: 'Message is required' })}
+                  rows="3"
+                  className="w-full px-3 py-2 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white placeholder-gray-400 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all resize-none text-xs"
+                  placeholder="Your message..."
+                ></textarea>
+                {contactErrors.message && <p className="text-red-400 text-xs mt-1">{contactErrors.message.message}</p>}
+              </div>
+
+              <button
+                type="submit"
+                disabled={isContactSubmitting}
+                className="w-full py-2.5 bg-gradient-to-r from-[#f5d000] to-[#18c2a4] text-deep-purple font-bold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 text-xs"
+              >
+                {isContactSubmitting ? 'Sending...' : 'Send Message'}
+              </button>
+
+              {contactSubmitMessage && (
+                <div className={`text-center p-3 rounded-xl text-xs ${
+                  contactSubmitMessage.includes('successfully') 
+                    ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
+                    : 'bg-red-500/20 text-red-400 border border-red-500/30'
+                }`}>
+                  {contactSubmitMessage}
+                </div>
+              )}
+            </form>
+          </motion.div>
+        </div>
+
+        {/* Desktop Contact - Keep existing */}
+        <div className="hidden md:block max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <h1 className="font-mystical text-5xl md:text-6xl font-bold text-gradient mb-6">
+            <h1 className="font-mystical text-[3.5rem] md:text-[4.25rem] font-bold text-gradient mb-6">
               Get in Touch
             </h1>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
@@ -1241,7 +1557,7 @@ const Landing = () => {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <h2 className="font-mystical text-3xl font-bold text-gradient mb-8">
+              <h2 className="font-mystical text-[2.1rem] font-bold text-gradient mb-8">
                 Contact Information
               </h2>
               
@@ -1286,7 +1602,7 @@ const Landing = () => {
                 transition={{ duration: 0.6, delay: 0.7 }}
                 className="space-y-4"
               >
-                <h3 className="font-mystical text-2xl font-bold text-gradient mb-4">
+                <h3 className="font-mystical text-[1.4rem] font-bold text-gradient mb-4">
                   Quick Actions
                 </h3>
                 <div className="flex flex-col sm:flex-row gap-4">
@@ -1314,7 +1630,7 @@ const Landing = () => {
               transition={{ duration: 0.6, delay: 0.4 }}
               className="card-mystical"
             >
-              <h2 className="font-mystical text-3xl font-bold text-gradient mb-6">
+              <h2 className="font-mystical text-[2.1rem] font-bold text-gradient mb-6">
                 Send a Message
               </h2>
               
@@ -1430,7 +1746,7 @@ const Landing = () => {
             transition={{ duration: 0.6 }}
             className="mt-20"
           >
-            <h2 className="font-mystical text-4xl font-bold text-center text-gradient mb-12">
+            <h2 className="font-mystical text-[2.8rem] font-bold text-center text-gradient mb-12">
               Frequently Asked Questions
             </h2>
             
@@ -1479,7 +1795,7 @@ const Landing = () => {
           >
             <div className="text-center">
               <div className="text-4xl mb-4">⚠️</div>
-              <h3 className="font-mystical text-2xl font-bold text-gold mb-4">Disclaimer Required</h3>
+              <h3 className="font-mystical text-[1.4rem] font-bold text-gold mb-4">Disclaimer Required</h3>
               <p className="text-gray-300 mb-6">
                 Please check the "I have read and agree to the Disclaimer" box to proceed with your booking.
               </p>
@@ -1504,7 +1820,7 @@ const Landing = () => {
           >
             <div className="text-center">
               <div className="text-4xl mb-4">⚠️</div>
-              <h3 className="font-mystical text-2xl font-bold text-gold mb-4">Existing Booking Found</h3>
+              <h3 className="font-mystical text-[1.4rem] font-bold text-gold mb-4">Existing Booking Found</h3>
               <p className="text-gray-300 mb-6">
                 You already have a booking scheduled for:
               </p>

@@ -45,7 +45,10 @@ const Contact = () => {
       setSubmitMessage('Your message has been sent successfully! We will get back to you within 24 hours.')
       reset()
     } catch (error) {
-      setSubmitMessage('There was an error sending your message. Please try again or contact us directly.')
+      const errorMessage = error.response?.data?.errors?.[0]?.message || 
+                          error.response?.data?.message || 
+                          'There was an error sending your message. Please try again or contact us directly.'
+      setSubmitMessage(errorMessage)
     } finally {
       setIsSubmitting(false)
     }

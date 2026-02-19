@@ -1,20 +1,15 @@
-const Footer = () => {
-  const whatsappNumber = "+919893578135"
+import { useLocation } from 'react-router-dom'
 
-  const scrollToSection = (sectionId) => {
-    const element = document.querySelector(sectionId)
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
-    }
-  }
+const Footer = () => {
+  const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || "+919893578135"
 
   return (
     <footer className="bg-cosmic-blue border-t border-gold/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div className="col-span-1 md:col-span-2">
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="w-8 h-8 bg-gradient-to-br from-gold to-aqua rounded-full animate-glow"></div>
+        <div className="max-w-2xl mx-auto">
+          <div className="text-center">
+            <div className="flex items-center justify-center space-x-2 mb-4">
+              <img src="/images/logo.png" alt="Krushnalaya" className="w-8 h-8 rounded-full shadow-[0_0_15px_rgba(255,215,0,0.5)]" />
               <span className="font-mystical text-xl font-semibold text-gradient">
                 Krushnalaya
               </span>
@@ -23,7 +18,7 @@ const Footer = () => {
               Discover your spiritual path through ancient wisdom and modern healing practices. 
               Professional Tarot Reading, Reiki Healing, and Water Divination services.
             </p>
-            <div className="flex space-x-4">
+            <div className="flex justify-center space-x-4">
               <a
                 href={`https://wa.me/${whatsappNumber}`}
                 target="_blank"
@@ -37,33 +32,11 @@ const Footer = () => {
               </a>
             </div>
           </div>
-
-          <div>
-            <h3 className="font-semibold text-gold mb-4">Quick Links</h3>
-            <ul className="space-y-2">
-              <li><a href="#home" onClick={(e) => { e.preventDefault(); scrollToSection('#home'); }} className="text-gray-300 hover:text-gold transition-colors">Home</a></li>
-              <li><a href="#services" onClick={(e) => { e.preventDefault(); scrollToSection('#services'); }} className="text-gray-300 hover:text-gold transition-colors">Services</a></li>
-              <li><a href="#about" onClick={(e) => { e.preventDefault(); scrollToSection('#about'); }} className="text-gray-300 hover:text-gold transition-colors">About</a></li>
-              <li><a href="#book" onClick={(e) => { e.preventDefault(); scrollToSection('#book'); }} className="text-gray-300 hover:text-gold transition-colors">Book Appointment</a></li>
-              <li><a href="#contact" onClick={(e) => { e.preventDefault(); scrollToSection('#contact'); }} className="text-gray-300 hover:text-gold transition-colors">Contact</a></li>
-              <li><a href="/disclaimer" className="text-gray-300 hover:text-gold transition-colors">Disclaimer</a></li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="font-semibold text-gold mb-4">Services</h3>
-            <ul className="space-y-2">
-              <li className="text-gray-300">Tarot Reading</li>
-              <li className="text-gray-300">Reiki Healing</li>
-              <li className="text-gray-300">Water Divination</li>
-              <li className="text-gray-300">Spiritual Guidance</li>
-            </ul>
-          </div>
         </div>
 
         <div className="border-t border-gold/20 mt-8 pt-8 text-center">
           <p className="text-gray-300">
-            © 2024 Krushnalaya. All rights reserved. | Designed with ✨ for spiritual seekers
+            © 2026 Krushnalaya. All rights reserved. | Designed with ✨ for spiritual seekers
           </p>
         </div>
       </div>

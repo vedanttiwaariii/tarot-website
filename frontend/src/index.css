@@ -9,7 +9,7 @@
   }
   
   body {
-    @apply bg-gradient-to-br from-cosmic-blue via-deep-purple to-midnight-blue text-white font-body;
+    @apply text-white font-body;
     overflow-x: hidden;
     margin: 0;
     padding: 0;

@@ -4,6 +4,7 @@ import crypto from 'crypto'
 import { body, validationResult } from 'express-validator'
 import rateLimit from 'express-rate-limit'
 import Booking from '../models/Booking.js'
+import Pricing from '../models/Pricing.js'
 
 const router = express.Router()
 
@@ -32,12 +33,19 @@ const getRazorpayInstance = () => {
 }
 
 // Service prices in paise (multiply by 100)
-const servicePrices = {
-  'tarot': 110000, // ₹1,100
-  'reiki': 155100, // ₹1,551
-  'water-divination': 2100000, // ₹21,000
-  'spiritual-consultation': 250000, // ₹2,500
-  'group-session': 80000 // ₹800
+const getServicePrice = async (service) => {
+  const pricing = await Pricing.findOne({ service })
+  if (pricing) {
+    return pricing.currentPrice
+  }
+  // Fallback
+  const servicePrices = {
+    'tarot': 110000,
+    'reiki': 155100,
+    'water-divination': 2100000,
+    'spiritual-consultation': 250000
+  }
+  return servicePrices[service] || 0
 }
 
 // Validation middleware for create order
@@ -45,8 +53,13 @@ const validateCreateOrder = [
   body('service')
     .notEmpty()
     .withMessage('Service is required')
-    .isIn(Object.keys(servicePrices))
-    .withMessage('Invalid service selected'),
+    .custom(async (value) => {
+      const validServices = ['tarot', 'reiki', 'water-divination', 'spiritual-consultation']
+      if (!validServices.includes(value)) {
+        throw new Error('Invalid service selected')
+      }
+      return true
+    }),
   body('bookingId')
     .optional()
     .isMongoId()
@@ -106,7 +119,7 @@ router.post('/create-order', paymentLimiter, validateCreateOrder, async (req, re
     const { service, bookingId, customerDetails } = req.body
 
     // Get amount for the service
-    const amount = servicePrices[service]
+    const amount = await getServicePrice(service)
     
     // If bookingId is provided, verify it exists and is not already paid
     if (bookingId) {
@@ -119,15 +132,15 @@ router.post('/create-order', paymentLimiter, validateCreateOrder, async (req, re
         })
       }
 
-      if (booking.paymentStatus === 'COMPLETED') {
+      if (booking.paymentStatus === 'completed') {
         return res.status(400).json({
           success: false,
           message: 'Payment already completed for this booking'
         })
       }
 
-      // Update booking to PENDING
-      booking.paymentStatus = 'PENDING'
+      // Update booking to pending
+      booking.paymentStatus = 'pending'
       await booking.save()
     }
     
@@ -172,7 +185,7 @@ router.post('/create-order', paymentLimiter, validateCreateOrder, async (req, re
       // Revert booking status if it was updated
       if (bookingId) {
         await Booking.findByIdAndUpdate(bookingId, {
-          paymentStatus: 'FAILED'
+          paymentStatus: 'failed'
         })
       }
 
@@ -228,7 +241,7 @@ router.post('/verify', paymentLimiter, validateVerifyPayment, async (req, res, n
       // Update booking status to failed
       if (bookingId) {
         await Booking.findByIdAndUpdate(bookingId, {
-          paymentStatus: 'FAILED'
+          paymentStatus: 'failed'
         })
       }
 
@@ -253,7 +266,7 @@ router.post('/verify', paymentLimiter, validateVerifyPayment, async (req, res, n
       }
 
       // Prevent duplicate payment processing
-      if (booking.paymentStatus === 'COMPLETED' && booking.paymentId) {
+      if (booking.paymentStatus === 'completed' && booking.paymentId) {
         return res.status(200).json({
           success: true,
           message: 'Payment already verified',
@@ -265,7 +278,7 @@ router.post('/verify', paymentLimiter, validateVerifyPayment, async (req, res, n
         })
       }
 
-      booking.paymentStatus = 'COMPLETED'
+      booking.paymentStatus = 'completed'
       booking.paymentId = razorpay_payment_id
       booking.orderId = razorpay_order_id
       booking.paidAt = new Date()
@@ -291,7 +304,7 @@ router.post('/verify', paymentLimiter, validateVerifyPayment, async (req, res, n
     if (req.body.bookingId) {
       try {
         await Booking.findByIdAndUpdate(req.body.bookingId, {
-          paymentStatus: 'FAILED'
+          paymentStatus: 'failed'
         })
       } catch (updateError) {
         console.error('Failed to update booking status:', updateError)
@@ -314,7 +327,7 @@ router.post('/failure', async (req, res, next) => {
     // Update booking status to failed
     if (bookingId) {
       await Booking.findByIdAndUpdate(bookingId, {
-        paymentStatus: 'FAILED',
+        paymentStatus: 'failed',
         orderId: orderId || null,
         failureReason: error?.description || 'Payment failed'
       })
@@ -367,7 +380,7 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
         await Booking.findOneAndUpdate(
           { orderId: paymentEntity.order_id },
           { 
-            paymentStatus: 'COMPLETED',
+            paymentStatus: 'completed',
             paymentId: paymentEntity.id,
             paidAt: new Date()
           }
@@ -379,7 +392,7 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
         await Booking.findOneAndUpdate(
           { orderId: paymentEntity.order_id },
           { 
-            paymentStatus: 'FAILED',
+            paymentStatus: 'failed',
             failureReason: paymentEntity.error_description
           }
         )

@@ -3,7 +3,7 @@ import ShinyText from '../components/ShinyText'
 
 const Disclaimer = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cosmic-blue via-deep-purple to-midnight-blue py-20 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-cosmic-blue via-deep-purple to-midnight-blue py-20 lg:pt-32 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -106,7 +106,7 @@ const Disclaimer = () => {
           className="text-center mt-12"
         >
           <a
-            href="/"
+            href="/#home"
             className="btn-primary text-lg px-8 py-3"
           >
             Return to Home

@@ -2,6 +2,7 @@ import express from 'express'
 import rateLimit from 'express-rate-limit'
 import Booking from '../models/Booking.js'
 import AccessCode from '../models/AccessCode.js'
+import Pricing from '../models/Pricing.js'
 import { validate, bookingSchema } from '../middleware/validation.js'
 import { authenticateAdmin } from '../middleware/auth.js'
 
@@ -28,13 +29,17 @@ const generateBookingNumber = () => {
 }
 
 // Get service price in paise
-const getServicePrice = (service) => {
+const getServicePrice = async (service) => {
+  const pricing = await Pricing.findOne({ service })
+  if (pricing) {
+    return pricing.currentPrice
+  }
+  // Fallback to default prices
   const prices = {
-    'tarot': 110000, // ₹1,100
-    'reiki': 155100, // ₹1,551
-    'water-divination': 2100000, // ₹21,000
-    'spiritual-consultation': 250000, // ₹2,500
-    'group-session': 80000 // ₹800
+    'tarot': 110000,
+    'reiki': 155100,
+    'water-divination': 2100000,
+    'spiritual-consultation': 250000
   }
   return prices[service] || 0
 }
@@ -49,6 +54,7 @@ router.post('/', bookingRateLimit, validate(bookingSchema), async (req, res, nex
     let finalAmount = 0
     let paymentStatus = 'pending'
     let accessCodeUsed = null
+    let bookingStatus = 'pending'
 
     // Validate access code if provided
     if (accessCode) {
@@ -74,8 +80,9 @@ router.post('/', bookingRateLimit, validate(bookingSchema), async (req, res, nex
 
       // Access code is valid - skip payment
       finalAmount = 0
-      paymentStatus = 'SKIPPED_MANUAL'
+      paymentStatus = 'skipped'
       accessCodeUsed = foundAccessCode.code
+      bookingStatus = 'confirmed'
     }
 
     // Check for existing future bookings with same email or phone (unless explicitly allowed)
@@ -117,6 +124,7 @@ router.post('/', bookingRateLimit, validate(bookingSchema), async (req, res, nex
 
     // Create new booking
     const bookingNumber = generateBookingNumber()
+    const servicePrice = await getServicePrice(service)
     const booking = await Booking.create({
       bookingNumber,
       name,
@@ -127,13 +135,13 @@ router.post('/', bookingRateLimit, validate(bookingSchema), async (req, res, nex
       time,
       sessionType,
       message,
-      status: accessCode ? 'confirmed' : 'pending', // Only confirm if access code used
-      paymentStatus: accessCode ? 'SKIPPED_MANUAL' : 'pending',
-      finalAmount: accessCode ? 0 : getServicePrice(service),
+      status: bookingStatus,
+      paymentStatus: paymentStatus,
+      finalAmount: accessCode ? 0 : servicePrice,
       accessCodeUsed
     })
 
-    // If no access code, return booking for payment processing
+    // If no access code, ALWAYS return booking for payment processing
     if (!accessCode) {
       return res.status(201).json({
         success: true,
@@ -148,7 +156,7 @@ router.post('/', bookingRateLimit, validate(bookingSchema), async (req, res, nex
           time: booking.time,
           sessionType: booking.sessionType,
           status: booking.status,
-          amount: getServicePrice(service)
+          amount: servicePrice
         }
       })
     }

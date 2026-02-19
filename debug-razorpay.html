@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Razorpay Debug Test</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body style="background: #1a0b2e; color: white; font-family: Arial; padding: 20px;">
+    <h1>🔍 Razorpay Debug Test</h1>
+    
+    <div style="margin: 20px 0;">
+        <h3>Step 1: Check Razorpay SDK</h3>
+        <button onclick="checkRazorpay()" style="padding: 10px 20px; font-size: 16px;">Check SDK</button>
+        <div id="sdk-status"></div>
+    </div>
+
+    <div style="margin: 20px 0;">
+        <h3>Step 2: Test Backend Connection</h3>
+        <button onclick="testBackend()" style="padding: 10px 20px; font-size: 16px;">Test Backend</button>
+        <div id="backend-status"></div>
+    </div>
+
+    <div style="margin: 20px 0;">
+        <h3>Step 3: Create Test Order</h3>
+        <button onclick="createOrder()" style="padding: 10px 20px; font-size: 16px;">Create Order</button>
+        <div id="order-status"></div>
+    </div>
+
+    <div style="margin: 20px 0;">
+        <h3>Step 4: Open Razorpay</h3>
+        <button onclick="openRazorpay()" style="padding: 10px 20px; font-size: 16px;">Open Payment</button>
+        <div id="payment-status"></div>
+    </div>
+
+    <script>
+        const API_URL = 'http://192.168.10.7:5000';
+        let testOrderData = null;
+
+        function checkRazorpay() {
+            const status = document.getElementById('sdk-status');
+            if (window.Razorpay) {
+                status.innerHTML = '<p style="color: lime;">✅ Razorpay SDK loaded successfully!</p>';
+                console.log('Razorpay object:', window.Razorpay);
+            } else {
+                status.innerHTML = '<p style="color: red;">❌ Razorpay SDK not loaded!</p>';
+            }
+        }
+
+        async function testBackend() {
+            const status = document.getElementById('backend-status');
+            status.innerHTML = '<p style="color: yellow;">⏳ Testing backend...</p>';
+            
+            try {
+                const response = await fetch(`${API_URL}/api/health`);
+                const data = await response.json();
+                status.innerHTML = `<p style="color: lime;">✅ Backend connected: ${data.message}</p>`;
+                console.log('Backend response:', data);
+            } catch (error) {
+                status.innerHTML = `<p style="color: red;">❌ Backend error: ${error.message}</p>`;
+                console.error('Backend error:', error);
+            }
+        }
+
+        async function createOrder() {
+            const status = document.getElementById('order-status');
+            status.innerHTML = '<p style="color: yellow;">⏳ Creating order...</p>';
+            
+            try {
+                const response = await fetch(`${API_URL}/api/payments/create-order`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        service: 'tarot',
+                        bookingId: 'test-' + Date.now()
+                    })
+                });
+                
+                const data = await response.json();
+                console.log('Order response:', data);
+                
+                if (data.success) {
+                    testOrderData = data.data;
+                    status.innerHTML = `<p style="color: lime;">✅ Order created: ${testOrderData.orderId}</p>`;
+                } else {
+                    status.innerHTML = `<p style="color: red;">❌ Order failed: ${data.message}</p>`;
+                }
+            } catch (error) {
+                status.innerHTML = `<p style="color: red;">❌ Order error: ${error.message}</p>`;
+                console.error('Order error:', error);
+            }
+        }
+
+        function openRazorpay() {
+            const status = document.getElementById('payment-status');
+            
+            if (!window.Razorpay) {
+                status.innerHTML = '<p style="color: red;">❌ Razorpay SDK not loaded!</p>';
+                return;
+            }
+            
+            if (!testOrderData) {
+                status.innerHTML = '<p style="color: red;">❌ Create order first!</p>';
+                return;
+            }
+            
+            status.innerHTML = '<p style="color: yellow;">⏳ Opening Razorpay...</p>';
+            console.log('Opening Razorpay with:', testOrderData);
+            
+            const options = {
+                key: testOrderData.keyId,
+                amount: testOrderData.amount,
+                currency: 'INR',
+                name: 'Test Payment',
+                description: 'Testing Razorpay',
+                order_id: testOrderData.orderId,
+                handler: function(response) {
+                    status.innerHTML = '<p style="color: lime;">✅ Payment successful!</p>';
+                    console.log('Payment response:', response);
+                },
+                modal: {
+                    ondismiss: function() {
+                        status.innerHTML = '<p style="color: orange;">⚠️ Payment cancelled</p>';
+                    }
+                }
+            };
+            
+            try {
+                const rzp = new window.Razorpay(options);
+                rzp.open();
+                status.innerHTML = '<p style="color: lime;">✅ Razorpay modal opened!</p>';
+            } catch (error) {
+                status.innerHTML = `<p style="color: red;">❌ Razorpay error: ${error.message}</p>`;
+                console.error('Razorpay error:', error);
+            }
+        }
+
+        // Auto-check on load
+        window.onload = function() {
+            setTimeout(checkRazorpay, 500);
+        };
+    </script>
+</body>
+</html>

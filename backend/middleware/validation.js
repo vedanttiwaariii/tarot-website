@@ -26,7 +26,7 @@ export const bookingSchema = Joi.object({
     }),
   
   service: Joi.string()
-    .valid('tarot', 'reiki', 'water-divination', 'spiritual-consultation', 'group-session')
+    .valid('tarot', 'reiki', 'water-divination', 'spiritual-consultation')
     .required(),
   
   date: Joi.date()
@@ -77,7 +77,7 @@ export const contactSchema = Joi.object({
     .trim()
     .pattern(/^[0-9]{10}$/)
     .optional()
-    .allow('')
+    .allow('', null)
     .messages({
       'string.pattern.base': 'Phone number must be exactly 10 digits'
     }),
@@ -91,6 +91,9 @@ export const contactSchema = Joi.object({
     .min(10)
     .max(1000)
     .required()
+    .messages({
+      'string.min': 'Message should be at least 10 characters long'
+    })
 })
 
 // Access code validation schema

@@ -28,8 +28,7 @@ const AdminDashboard = () => {
     { value: 'tarot', label: 'Tarot Reading - ₹1,100', duration: '30 min' },
     { value: 'reiki', label: 'Reiki Healing - ₹1,551', duration: '60 min' },
     { value: 'water-divination', label: 'Water Divination - ₹21,000', duration: '45 min' },
-    { value: 'spiritual-consultation', label: 'Spiritual Consultation - ₹2,500', duration: '90 min' },
-    { value: 'group-session', label: 'Group Session - ₹800/person', duration: '60 min' }
+    { value: 'spiritual-consultation', label: 'Spiritual Consultation - ₹2,500', duration: '90 min' }
   ]
 
   const timeSlots = [
@@ -38,6 +37,9 @@ const AdminDashboard = () => {
 
   const [activeTab, setActiveTab] = useState('bookings')
   const [generatedCode, setGeneratedCode] = useState('')
+  const [pricing, setPricing] = useState([])
+  const [pricingLoading, setPricingLoading] = useState(false)
+  const [editingPrice, setEditingPrice] = useState(null)
 
   const onAddBooking = async (data) => {
     setAddFormSubmitting(true)
@@ -161,6 +163,7 @@ const AdminDashboard = () => {
     checkAuthStatus()
     fetchBookings()
     fetchMessages()
+    fetchPricing()
   }, [])
 
   const checkAuthStatus = async () => {
@@ -237,6 +240,39 @@ const AdminDashboard = () => {
       console.error('Error fetching messages:', err)
     } finally {
       setMessagesLoading(false)
+    }
+  }
+
+  const fetchPricing = async () => {
+    try {
+      setPricingLoading(true)
+      const response = await axios.get('/api/pricing')
+      setPricing(response.data.data)
+    } catch (err) {
+      console.error('Error fetching pricing:', err)
+    } finally {
+      setPricingLoading(false)
+    }
+  }
+
+  const initializePricing = async () => {
+    try {
+      await axios.post('/api/pricing/initialize')
+      fetchPricing()
+      alert('Pricing initialized successfully!')
+    } catch (err) {
+      alert('Error initializing pricing')
+    }
+  }
+
+  const updatePricing = async (service, data) => {
+    try {
+      await axios.put(`/api/pricing/${service}`, data)
+      fetchPricing()
+      setEditingPrice(null)
+      alert('Pricing updated successfully!')
+    } catch (err) {
+      alert('Error updating pricing')
     }
   }
 
@@ -335,6 +371,16 @@ const AdminDashboard = () => {
             }`}
           >
             Access Codes
+          </button>
+          <button
+            onClick={() => setActiveTab('pricing')}
+            className={`px-6 py-3 rounded-lg font-semibold transition-colors ${
+              activeTab === 'pricing'
+                ? 'bg-gold text-cosmic-blue'
+                : 'bg-deep-purple/20 text-gold hover:bg-deep-purple/40'
+            }`}
+          >
+            Pricing
           </button>
         </div>
 
@@ -669,6 +715,158 @@ const AdminDashboard = () => {
             )}
             
             <p className="text-gray-300">Generate access codes for clients to skip payment process.</p>
+          </motion.div>
+        )}
+
+        {/* Pricing Tab */}
+        {activeTab === 'pricing' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="card-mystical"
+          >
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-gold">Pricing Management</h2>
+              <div className="flex gap-2">
+                {pricing.length === 0 && (
+                  <button onClick={initializePricing} className="btn-primary text-sm">
+                    Initialize Prices
+                  </button>
+                )}
+                <button onClick={fetchPricing} className="btn-secondary text-sm">
+                  Refresh
+                </button>
+              </div>
+            </div>
+
+            {pricingLoading ? (
+              <div className="text-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gold mx-auto mb-4"></div>
+                <p className="text-gray-400">Loading pricing...</p>
+              </div>
+            ) : pricing.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-gray-400 mb-4">No pricing configured. Click "Initialize Prices" to set up default pricing.</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {pricing.map((item) => (
+                  <div key={item.service} className="bg-deep-purple/20 border border-gold/20 rounded-lg p-6">
+                    {editingPrice === item.service ? (
+                      <div className="space-y-4">
+                        <h3 className="text-xl font-bold text-white capitalize mb-4">
+                          {item.service.replace('-', ' ')}
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-gold font-semibold mb-2">Base Price (₹)</label>
+                            <input
+                              type="number"
+                              id={`base-${item.service}`}
+                              defaultValue={item.basePrice / 100}
+                              className="w-full px-3 py-2 bg-cosmic-blue/50 border border-gold/30 rounded text-white"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-gold font-semibold mb-2">Discount (%)</label>
+                            <input
+                              type="number"
+                              id={`discount-${item.service}`}
+                              defaultValue={item.discount}
+                              min="0"
+                              max="100"
+                              className="w-full px-3 py-2 bg-cosmic-blue/50 border border-gold/30 rounded text-white"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-gold font-semibold mb-2">Sale Label (e.g., "Diwali Sale")</label>
+                          <input
+                            type="text"
+                            id={`label-${item.service}`}
+                            defaultValue={item.saleLabel}
+                            placeholder="Optional sale label"
+                            className="w-full px-3 py-2 bg-cosmic-blue/50 border border-gold/30 rounded text-white"
+                          />
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            id={`active-${item.service}`}
+                            defaultChecked={item.saleActive}
+                            className="text-gold focus:ring-gold"
+                          />
+                          <label htmlFor={`active-${item.service}`} className="text-white">
+                            Sale Active
+                          </label>
+                        </div>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => {
+                              const basePrice = parseFloat(document.getElementById(`base-${item.service}`).value) * 100
+                              const discount = parseFloat(document.getElementById(`discount-${item.service}`).value)
+                              const saleLabel = document.getElementById(`label-${item.service}`).value
+                              const saleActive = document.getElementById(`active-${item.service}`).checked
+                              updatePricing(item.service, { basePrice, discount, saleLabel, saleActive })
+                            }}
+                            className="btn-primary text-sm"
+                          >
+                            Save
+                          </button>
+                          <button
+                            onClick={() => setEditingPrice(null)}
+                            className="btn-secondary text-sm"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <div className="flex justify-between items-start mb-4">
+                          <div>
+                            <h3 className="text-xl font-bold text-white capitalize">
+                              {item.service.replace('-', ' ')}
+                            </h3>
+                            {item.saleActive && item.saleLabel && (
+                              <span className="inline-block mt-1 px-2 py-1 bg-red-600 text-white text-xs rounded">
+                                {item.saleLabel}
+                              </span>
+                            )}
+                          </div>
+                          <button
+                            onClick={() => setEditingPrice(item.service)}
+                            className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
+                          >
+                            Edit
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                          <div>
+                            <span className="text-gold font-semibold">Base Price:</span>
+                            <p className="text-white text-lg">₹{(item.basePrice / 100).toFixed(2)}</p>
+                          </div>
+                          <div>
+                            <span className="text-gold font-semibold">Discount:</span>
+                            <p className="text-white text-lg">{item.discount}%</p>
+                          </div>
+                          <div>
+                            <span className="text-gold font-semibold">Current Price:</span>
+                            <p className="text-green-400 text-lg font-bold">₹{(item.currentPrice / 100).toFixed(2)}</p>
+                          </div>
+                          <div>
+                            <span className="text-gold font-semibold">Status:</span>
+                            <p className={`text-lg font-semibold ${item.saleActive ? 'text-green-400' : 'text-gray-400'}`}>
+                              {item.saleActive ? 'Sale Active' : 'Normal'}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </motion.div>
         )}
 

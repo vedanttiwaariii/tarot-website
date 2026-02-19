@@ -31,8 +31,7 @@ const bookingSchema = new mongoose.Schema({
       'tarot',
       'reiki', 
       'water-divination',
-      'spiritual-consultation',
-      'group-session'
+      'spiritual-consultation'
     ]
   },
   date: {
@@ -67,7 +66,7 @@ const bookingSchema = new mongoose.Schema({
   },
   paymentStatus: {
     type: String,
-    enum: ['pending', 'COMPLETED', 'failed', 'SKIPPED_MANUAL'],
+    enum: ['pending', 'completed', 'failed', 'skipped'],
     default: 'pending'
   },
   finalAmount: {
@@ -78,6 +77,21 @@ const bookingSchema = new mongoose.Schema({
     type: String,
     trim: true,
     uppercase: true
+  },
+  paymentId: {
+    type: String,
+    trim: true
+  },
+  orderId: {
+    type: String,
+    trim: true
+  },
+  paidAt: {
+    type: Date
+  },
+  failureReason: {
+    type: String,
+    trim: true
   },
   createdAt: {
     type: Date,
