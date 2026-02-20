@@ -630,7 +630,7 @@ const Landing = () => {
       {/* SERVICES SECTION */}
       <section id="services" className="py-4 md:py-10 px-4 sm:px-6 lg:px-8">
         {/* Mobile Services */}
-        <div className="md:hidden px-4 py-8">
+        <div className="md:hidden px-4 py-6">
           {/* Title */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -1095,10 +1095,102 @@ const Landing = () => {
         </div>
       </section>
 
+      {/* ABOUT MY JOURNEY SECTION - Mobile Only */}
+      <section className="md:hidden px-4 py-8">
+        {/* Title */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-6"
+        >
+          <h2 className="font-mystical text-[1.8rem] font-bold text-gold mb-2">
+            About My Journey
+          </h2>
+        </motion.div>
+
+        <div className="space-y-4">
+          {/* Journey Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-5 shadow-lg shadow-gold/10"
+          >
+            <p className="text-gray-300 text-sm leading-relaxed text-center">
+              The seeds were always within me. Through years of study in tarot, energy healing, and ancient wisdom traditions, I discovered that true knowledge comes from quiet moments of connection.
+            </p>
+            <p className="text-gray-300 text-sm leading-relaxed text-center mt-3">
+              When this journey led me to understand myself, I felt called to help others discover their inner clarity.
+            </p>
+          </motion.div>
+
+          {/* Qualifications Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-5 shadow-lg shadow-gold/10"
+          >
+            <h3 className="text-gold font-semibold text-sm mb-3 text-center">Qualifications</h3>
+            <div className="space-y-2">
+              <div className="flex items-start gap-2 text-xs">
+                <span className="text-gold mt-0.5">✓</span>
+                <span className="text-gray-300">Certified Tarot Reader (10+ years)</span>
+              </div>
+              <div className="flex items-start gap-2 text-xs">
+                <span className="text-gold mt-0.5">✓</span>
+                <span className="text-gray-300">Reiki Master Teacher</span>
+              </div>
+              <div className="flex items-start gap-2 text-xs">
+                <span className="text-gold mt-0.5">✓</span>
+                <span className="text-gray-300">Traditional Jal Jyotishi Specialist</span>
+              </div>
+              <div className="flex items-start gap-2 text-xs">
+                <span className="text-gold mt-0.5">✓</span>
+                <span className="text-gray-300">Crystal Healing Therapist</span>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Core Values Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-5 shadow-lg shadow-gold/10"
+          >
+            <h3 className="text-gold font-semibold text-sm mb-4 text-center">Core Values</h3>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="text-center">
+                <div className="text-xl mb-1">✨</div>
+                <div className="text-white font-semibold text-xs mb-0.5">Authenticity</div>
+                <div className="text-gray-400 text-[10px]">Genuine guidance</div>
+              </div>
+              <div className="text-center">
+                <div className="text-xl mb-1">💖</div>
+                <div className="text-white font-semibold text-xs mb-0.5">Compassion</div>
+                <div className="text-gray-400 text-[10px]">Caring support</div>
+              </div>
+              <div className="text-center">
+                <div className="text-xl mb-1">⚖️</div>
+                <div className="text-white font-semibold text-xs mb-0.5">Integrity</div>
+                <div className="text-gray-400 text-[10px]">Honest practices</div>
+              </div>
+              <div className="text-center">
+                <div className="text-xl mb-1">💪</div>
+                <div className="text-white font-semibold text-xs mb-0.5">Empowerment</div>
+                <div className="text-gray-400 text-[10px]">Inner strength</div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* BOOK APPOINTMENT SECTION */}
-      <section id="book" className="py-4 md:py-10 px-4 sm:px-6 lg:px-8 pb-24 md:pb-10">
+      <section id="book" className="py-4 md:py-10 px-4 sm:px-6 lg:px-8">
         {/* Mobile Booking Form - Wizard */}
-        <div className="md:hidden px-4 py-6 pb-24">
+        <div className="md:hidden px-4 py-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -1398,9 +1490,9 @@ const Landing = () => {
         </div>
       </section>
 
-      <section id="contact" className="py-4 md:py-10 px-4 sm:px-6 lg:px-8 pb-24 md:pb-10">
+      <section id="contact" className="py-4 md:py-10 px-4 sm:px-6 lg:px-8">
         {/* Mobile Contact */}
-        <div className="md:hidden px-4 py-6 pb-24">
+        <div className="md:hidden px-4 py-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
