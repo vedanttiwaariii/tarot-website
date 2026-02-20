@@ -184,7 +184,7 @@ if (process.env.USE_HTTPS === 'true') {
     process.exit(1);
   }
 } else {
-  app.listen(PORT, () => {
+  app.listen(PORT, '0.0.0.0', () => {
     console.log(`🔮 Server running on port ${PORT}`);
     console.log(`✨ Environment: ${process.env.NODE_ENV}`);
     console.log(`🔒 Security: Enhanced`);

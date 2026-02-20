@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-const BookingWizard = ({ onSubmit, isSubmitting, submitMessage, register, errors, watch, setValue, availableTimeSlots, selectedDate, disclaimerAccepted, setDisclaimerAccepted }) => {
+const BookingWizard = ({ onSubmit, isSubmitting, submitMessage, register, errors, watch, setValue, availableTimeSlots, selectedDate, disclaimerAccepted, setDisclaimerAccepted, reset }) => {
   const [currentStep, setCurrentStep] = useState(1)
   const totalSteps = 8
 
@@ -112,6 +112,9 @@ const BookingWizard = ({ onSubmit, isSubmitting, submitMessage, register, errors
         return (
           <select
             {...register(step.field, { required: 'Please select a time' })}
+            onChange={(e) => {
+              setValue(step.field, e.target.value, { shouldValidate: true })
+            }}
             disabled={!selectedDate}
             className="w-full px-4 py-3 bg-cosmic-blue/50 border-2 border-gold/30 rounded-xl text-white text-sm focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all appearance-none disabled:opacity-50"
           >
@@ -171,7 +174,16 @@ const BookingWizard = ({ onSubmit, isSubmitting, submitMessage, register, errors
       <div className="mb-4">
         <div className="flex justify-between items-center mb-2">
           <span className="text-gold text-xs font-medium">Step {currentStep} of {totalSteps}</span>
-          <span className="text-gray-400 text-xs">{Math.round((currentStep / totalSteps) * 100)}%</span>
+          <button
+            type="button"
+            onClick={() => {
+              reset()
+              setCurrentStep(1)
+            }}
+            className="text-gray-400 hover:text-gold text-xs transition-colors"
+          >
+            Reset Form
+          </button>
         </div>
         <div className="w-full h-1.5 bg-cosmic-blue/50 rounded-full overflow-hidden">
           <motion.div
@@ -184,21 +196,13 @@ const BookingWizard = ({ onSubmit, isSubmitting, submitMessage, register, errors
       </div>
 
       {/* Step Content */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={currentStep}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
-          transition={{ duration: 0.3 }}
-        >
-          <h3 className="text-gold text-base font-semibold mb-3">{steps[currentStep - 1].label}</h3>
-          {renderStep()}
-          {errors[steps[currentStep - 1].field] && (
-            <p className="text-red-400 text-xs mt-1.5">{errors[steps[currentStep - 1].field].message}</p>
-          )}
-        </motion.div>
-      </AnimatePresence>
+      <div>
+        <h3 className="text-gold text-base font-semibold mb-3">{steps[currentStep - 1].label}</h3>
+        {renderStep()}
+        {errors[steps[currentStep - 1].field] && (
+          <p className="text-red-400 text-xs mt-1.5">{errors[steps[currentStep - 1].field].message}</p>
+        )}
+      </div>
 
       {/* Navigation Buttons */}
       <div className="mt-4 flex gap-2">

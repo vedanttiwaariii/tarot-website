@@ -38,46 +38,6 @@ const Landing = () => {
     }
   })
 
-  // FIXED: Autofill detection - no refs needed, use native browser events
-  useEffect(() => {
-    const handleAutofill = (e) => {
-      const target = e.target
-      if (target.value && target.name) {
-        setValue(target.name, target.value, { 
-          shouldValidate: false,
-          shouldDirty: true 
-        })
-      }
-    }
-
-    // Listen for both input and change events to catch autofill
-    const inputs = document.querySelectorAll('input[name], textarea[name]')
-    inputs.forEach(input => {
-      input.addEventListener('input', handleAutofill)
-      input.addEventListener('change', handleAutofill)
-    })
-
-    // Also check for autofilled values after a short delay
-    const timer = setTimeout(() => {
-      inputs.forEach(input => {
-        if (input.value && input.name) {
-          setValue(input.name, input.value, { 
-            shouldValidate: false,
-            shouldDirty: true 
-          })
-        }
-      })
-    }, 500)
-
-    return () => {
-      inputs.forEach(input => {
-        input.removeEventListener('input', handleAutofill)
-        input.removeEventListener('change', handleAutofill)
-      })
-      clearTimeout(timer)
-    }
-  }, [setValue])
-
   // Check Razorpay script availability
   useEffect(() => {
     const checkRazorpay = () => {
@@ -161,7 +121,26 @@ const Landing = () => {
   // Contact form state
   const [isContactSubmitting, setIsContactSubmitting] = useState(false)
   const [contactSubmitMessage, setContactSubmitMessage] = useState('')
-  const { register: registerContact, handleSubmit: handleContactSubmit, formState: { errors: contactErrors }, reset: resetContact } = useForm()
+  const { 
+    register: registerContact, 
+    handleSubmit: handleContactSubmit, 
+    formState: { errors: contactErrors }, 
+    reset: resetContact 
+  } = useForm({
+    mode: 'onSubmit'
+  })
+
+  // Mobile contact form state (separate instance)
+  const [isMobileContactSubmitting, setIsMobileContactSubmitting] = useState(false)
+  const [mobileContactSubmitMessage, setMobileContactSubmitMessage] = useState('')
+  const { 
+    register: registerMobileContact, 
+    handleSubmit: handleMobileContactSubmit, 
+    formState: { errors: mobileContactErrors }, 
+    reset: resetMobileContact 
+  } = useForm({
+    mode: 'onSubmit'
+  })
 
   const services = [
     {
@@ -464,6 +443,28 @@ const Landing = () => {
     }
   }
 
+  const onMobileContactSubmit = async (data) => {
+    console.log('Mobile contact form submitted with data:', data)
+    setIsMobileContactSubmitting(true)
+    setMobileContactSubmitMessage('')
+    
+    try {
+      const response = await api.post('/api/contact', data)
+      console.log('Contact response:', response.data)
+      setMobileContactSubmitMessage('Your message has been sent successfully! We will get back to you within 24 hours.')
+      resetMobileContact()
+    } catch (error) {
+      console.error('Contact error:', error)
+      if (error.response?.data?.message) {
+        setMobileContactSubmitMessage(error.response.data.message)
+      } else {
+        setMobileContactSubmitMessage('There was an error sending your message. Please try again or contact us directly.')
+      }
+    } finally {
+      setIsMobileContactSubmitting(false)
+    }
+  }
+
   const onContactSubmit = async (data) => {
     setIsContactSubmitting(true)
     setContactSubmitMessage('')
@@ -485,10 +486,10 @@ const Landing = () => {
   }
 
   return (
-    <div className="min-h-screen relative">
+    <div className="min-h-screen relative pb-20" style={{ overscrollBehavior: 'none' }}>
       {/* Threads Background */}
-      <div className="fixed inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-br from-cosmic-blue via-deep-purple to-midnight-blue"></div>
+      <div className="fixed inset-0 -z-10" style={{ paddingBottom: '100px' }}>
+        <div className="absolute inset-0 bg-gradient-to-br from-cosmic-blue via-deep-purple to-midnight-blue" style={{ height: 'calc(100% + 150px)' }}></div>
         <Threads
           color={[1, 0.843, 0]} // Gold color
           amplitude={1.2}
@@ -1221,6 +1222,7 @@ const Landing = () => {
                 selectedDate={selectedDate}
                 disclaimerAccepted={disclaimerAccepted}
                 setDisclaimerAccepted={setDisclaimerAccepted}
+                reset={reset}
               />
             </form>
           </motion.div>
@@ -1565,37 +1567,39 @@ const Landing = () => {
             className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-5 shadow-lg shadow-gold/10"
           >
             <h3 className="font-mystical text-base text-gold mb-4 text-center">Send Message</h3>
-            <form onSubmit={handleContactSubmit(onContactSubmit)} className="space-y-3">
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <input
-                    type="text"
-                    {...registerContact('name', { required: 'Name is required' })}
-                    className="w-full px-3 py-2 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white placeholder-gray-400 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all text-xs"
-                    placeholder="Name"
-                  />
-                  {contactErrors.name && <p className="text-red-400 text-xs mt-1">{contactErrors.name.message}</p>}
-                </div>
-                <div>
-                  <input
-                    type="email"
-                    {...registerContact('email', { 
-                      required: 'Email is required',
-                      pattern: {
-                        value: /^\S+@\S+$/i,
-                        message: 'Invalid email'
-                      }
-                    })}
-                    className="w-full px-3 py-2 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white placeholder-gray-400 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all text-xs"
-                    placeholder="Email"
-                  />
-                  {contactErrors.email && <p className="text-red-400 text-xs mt-1">{contactErrors.email.message}</p>}
-                </div>
+            <form onSubmit={handleMobileContactSubmit(onMobileContactSubmit)} className="space-y-3">
+              <div>
+                <input
+                  type="text"
+                  autoComplete="name"
+                  {...registerMobileContact('name', { required: 'Name is required' })}
+                  className="w-full px-3 py-2 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white placeholder-gray-400 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all text-xs"
+                  placeholder="Name"
+                />
+                {mobileContactErrors.name && <p className="text-red-400 text-xs mt-1">{mobileContactErrors.name.message}</p>}
+              </div>
+
+              <div>
+                <input
+                  type="email"
+                  autoComplete="email"
+                  {...registerMobileContact('email', { 
+                    required: 'Email is required',
+                    pattern: {
+                      value: /^\S+@\S+$/i,
+                      message: 'Invalid email'
+                    }
+                  })}
+                  className="w-full px-3 py-2 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white placeholder-gray-400 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all text-xs"
+                  placeholder="Email"
+                />
+                {mobileContactErrors.email && <p className="text-red-400 text-xs mt-1">{mobileContactErrors.email.message}</p>}
               </div>
 
               <div>
                 <select
-                  {...registerContact('subject', { required: 'Please select a subject' })}
+                  autoComplete="off"
+                  {...registerMobileContact('subject', { required: 'Please select a subject' })}
                   className="w-full px-3 py-2 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all appearance-none text-xs"
                 >
                   <option value="" className="bg-cosmic-blue text-gray-400">Subject...</option>
@@ -1604,34 +1608,41 @@ const Landing = () => {
                   <option value="service-information" className="bg-cosmic-blue text-white">Service Info</option>
                   <option value="other" className="bg-cosmic-blue text-white">Other</option>
                 </select>
-                {contactErrors.subject && <p className="text-red-400 text-xs mt-1">{contactErrors.subject.message}</p>}
+                {mobileContactErrors.subject && <p className="text-red-400 text-xs mt-1">{mobileContactErrors.subject.message}</p>}
               </div>
 
               <div>
                 <textarea
-                  {...registerContact('message', { required: 'Message is required' })}
-                  rows="3"
+                  autoComplete="off"
+                  {...registerMobileContact('message', { 
+                    required: 'Message is required',
+                    minLength: {
+                      value: 25,
+                      message: 'Message must be at least 25 characters'
+                    }
+                  })}
+                  rows="4"
                   className="w-full px-3 py-2 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white placeholder-gray-400 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all resize-none text-xs"
-                  placeholder="Your message..."
+                  placeholder="Your message (minimum 25 characters)..."
                 ></textarea>
-                {contactErrors.message && <p className="text-red-400 text-xs mt-1">{contactErrors.message.message}</p>}
+                {mobileContactErrors.message && <p className="text-red-400 text-xs mt-1">{mobileContactErrors.message.message}</p>}
               </div>
 
               <button
                 type="submit"
-                disabled={isContactSubmitting}
+                disabled={isMobileContactSubmitting}
                 className="w-full py-2.5 bg-gradient-to-r from-[#f5d000] to-[#18c2a4] text-deep-purple font-bold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 text-xs"
               >
-                {isContactSubmitting ? 'Sending...' : 'Send Message'}
+                {isMobileContactSubmitting ? 'Sending...' : 'Send Message'}
               </button>
 
-              {contactSubmitMessage && (
+              {mobileContactSubmitMessage && (
                 <div className={`text-center p-3 rounded-xl text-xs ${
-                  contactSubmitMessage.includes('successfully') 
+                  mobileContactSubmitMessage.includes('successfully') 
                     ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
                     : 'bg-red-500/20 text-red-400 border border-red-500/30'
                 }`}>
-                  {contactSubmitMessage}
+                  {mobileContactSubmitMessage}
                 </div>
               )}
             </form>
