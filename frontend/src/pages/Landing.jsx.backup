@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import ServiceCard from '../components/ServiceCard'
 import ShinyText from '../components/ShinyText'
 import Threads from '../components/Threads'
@@ -673,7 +673,7 @@ const Landing = () => {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className={`backdrop-blur-xl bg-gradient-to-br from-deep-purple/40 to-midnight-blue/30 border border-gold/30 p-4 shadow-lg shadow-gold/10 overflow-hidden ${
+              className={`backdrop-blur-xl bg-gradient-to-br from-deep-purple/40 to-midnight-blue/30 border border-gold/30 p-4 shadow-lg shadow-gold/10 transition-all duration-300 ease-in-out ${
                 expandedCards.tarot ? 'rounded-3xl shadow-xl shadow-gold/20 bg-deep-purple/50' : 'rounded-2xl'
               }`}
             >
@@ -687,8 +687,14 @@ const Landing = () => {
                 <div className="text-[#18c2a4] font-bold text-lg leading-none">₹1,100</div>
               </div>
               
-              {!expandedCards.tarot ? (
-                <div>
+              
+              <div className="relative">
+                <motion.div
+                  initial={false}
+                  animate={{ opacity: expandedCards.tarot ? 0 : 1 }}
+                  transition={{ duration: 0.3 }}
+                  className={expandedCards.tarot ? 'absolute inset-0 pointer-events-none' : ''}
+                >
                   <p className="text-gray-300 text-xs mb-2 leading-relaxed">Personalized guidance for clarity</p>
                   <div className="space-y-1 mb-3">
                     <div className="flex items-start gap-1.5 text-xs">
@@ -711,12 +717,13 @@ const Landing = () => {
                     <span>View Details</span>
                     <span>▼</span>
                   </button>
-                </div>
-              ) : (
+                </motion.div>
+
                 <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  transition={{ duration: 0.4, ease: 'easeOut' }}
+                  initial={false}
+                  animate={{ opacity: expandedCards.tarot ? 1 : 0 }}
+                  transition={{ duration: 0.3 }}
+                  className={!expandedCards.tarot ? 'absolute inset-0 pointer-events-none' : ''}
                 >
                   <p className="text-gray-300 text-xs mb-3 leading-relaxed">
                     Personalized guidance for clarity, direction, and confident decisions.
@@ -761,7 +768,7 @@ const Landing = () => {
                     <span className="rotate-180">▼</span>
                   </button>
                 </motion.div>
-              )}
+              </div>
             </motion.div>
 
             {/* Reiki Healing */}
@@ -769,7 +776,7 @@ const Landing = () => {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className={`backdrop-blur-xl bg-gradient-to-br from-deep-purple/40 to-midnight-blue/30 border border-gold/30 p-4 shadow-lg shadow-gold/10 overflow-hidden ${
+              className={`backdrop-blur-xl bg-gradient-to-br from-deep-purple/40 to-midnight-blue/30 border border-gold/30 p-4 shadow-lg shadow-gold/10 transition-all duration-300 ease-in-out ${
                 expandedCards.reiki ? 'rounded-3xl shadow-xl shadow-gold/20 bg-deep-purple/50' : 'rounded-2xl'
               }`}
             >
@@ -783,8 +790,14 @@ const Landing = () => {
                 <div className="text-[#18c2a4] font-bold text-lg leading-none">₹1,551</div>
               </div>
               
-              {!expandedCards.reiki ? (
-                <div>
+              
+              <div className="relative">
+                <motion.div
+                  initial={false}
+                  animate={{ opacity: expandedCards.reiki ? 0 : 1 }}
+                  transition={{ duration: 0.3 }}
+                  className={expandedCards.reiki ? 'absolute inset-0 pointer-events-none' : ''}
+                >
                   <p className="text-gray-300 text-xs mb-2 leading-relaxed">Structured 21-day healing journey</p>
                   <div className="space-y-1 mb-3">
                     <div className="flex items-start gap-1.5 text-xs">
@@ -807,12 +820,13 @@ const Landing = () => {
                     <span>View Details</span>
                     <span>▼</span>
                   </button>
-                </div>
-              ) : (
+                </motion.div>
+
                 <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  transition={{ duration: 0.4, ease: 'easeOut' }}
+                  initial={false}
+                  animate={{ opacity: expandedCards.reiki ? 1 : 0 }}
+                  transition={{ duration: 0.3 }}
+                  className={!expandedCards.reiki ? 'absolute inset-0 pointer-events-none' : ''}
                 >
                   <p className="text-gray-300 text-xs mb-3 leading-relaxed">
                     A structured 21-day healing journey for deep energetic reset.
@@ -857,7 +871,7 @@ const Landing = () => {
                     <span className="rotate-180">▼</span>
                   </button>
                 </motion.div>
-              )}
+              </div>
             </motion.div>
 
             {/* Jal Jyotish */}
@@ -865,7 +879,7 @@ const Landing = () => {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className={`backdrop-blur-xl bg-gradient-to-br from-deep-purple/40 to-midnight-blue/30 border border-gold/30 p-4 shadow-lg shadow-gold/10 overflow-hidden ${
+              className={`backdrop-blur-xl bg-gradient-to-br from-deep-purple/40 to-midnight-blue/30 border border-gold/30 p-4 shadow-lg shadow-gold/10 transition-all duration-300 ease-in-out ${
                 expandedCards.jal ? 'rounded-3xl shadow-xl shadow-gold/20 bg-deep-purple/50' : 'rounded-2xl'
               }`}
             >
@@ -879,8 +893,14 @@ const Landing = () => {
                 <div className="text-[#18c2a4] font-bold text-lg leading-none">₹21,000</div>
               </div>
               
-              {!expandedCards.jal ? (
-                <div>
+              
+              <div className="relative">
+                <motion.div
+                  initial={false}
+                  animate={{ opacity: expandedCards.jal ? 0 : 1 }}
+                  transition={{ duration: 0.3 }}
+                  className={expandedCards.jal ? 'absolute inset-0 pointer-events-none' : ''}
+                >
                   <p className="text-gray-300 text-xs mb-2 leading-relaxed">Strategic water source assessment</p>
                   <div className="space-y-1 mb-3">
                     <div className="flex items-start gap-1.5 text-xs">
@@ -903,12 +923,13 @@ const Landing = () => {
                     <span>View Details</span>
                     <span>▼</span>
                   </button>
-                </div>
-              ) : (
+                </motion.div>
+
                 <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  transition={{ duration: 0.4, ease: 'easeOut' }}
+                  initial={false}
+                  animate={{ opacity: expandedCards.jal ? 1 : 0 }}
+                  transition={{ duration: 0.3 }}
+                  className={!expandedCards.jal ? 'absolute inset-0 pointer-events-none' : ''}
                 >
                   <p className="text-gray-300 text-xs mb-3 leading-relaxed">
                     Strategic water source assessment using traditional methods.
@@ -953,7 +974,7 @@ const Landing = () => {
                     <span className="rotate-180">▼</span>
                   </button>
                 </motion.div>
-              )}
+              </div>
             </motion.div>
           </div>
         </div>
@@ -1095,10 +1116,119 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* BOOK APPOINTMENT SECTION */}
-      <section id="book" className="py-4 md:py-10 px-4 sm:px-6 lg:px-8 pb-24 md:pb-10">
+      {/* ABOUT SECTION */}
+      <section id="about" className="py-4 md:py-10 px-4 sm:px-6 lg:px-8">
+        {/* Mobile About */}
+        <div className="md:hidden px-4 py-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-6"
+          >
+            <h2 className="font-mystical text-[1.8rem] font-bold text-gold mb-2">
+              About
+            </h2>
+          </motion.div>
+
+          <div className="space-y-4">
+            {/* My Journey Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-5 shadow-lg shadow-gold/10"
+            >
+              <div className="text-center mb-3">
+                <span className="text-2xl">✨</span>
+                <h3 className="text-gold font-bold text-base mt-2">My Journey</h3>
+              </div>
+              <p className="text-gray-300 text-sm leading-relaxed text-center italic">
+                The seeds were always within me. Through years of study in tarot, energy healing, and ancient wisdom traditions, I discovered that true knowledge comes from quiet moments of connection.
+              </p>
+              <p className="text-gray-300 text-sm leading-relaxed text-center italic mt-3">
+                When this journey led me to understand myself, I felt called to help others discover their inner clarity.
+              </p>
+            </motion.div>
+
+            {/* Qualifications Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-5 shadow-lg shadow-gold/10"
+            >
+              <div className="text-center mb-4">
+                <span className="text-2xl">🎓</span>
+                <h3 className="text-gold font-bold text-base mt-2">Qualifications</h3>
+              </div>
+              <div className="space-y-2">
+                <div className="flex items-start gap-2">
+                  <span className="text-gold mt-0.5">✓</span>
+                  <span className="text-gray-300 text-sm">Certified Tarot Reader (10+ years)</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-gold mt-0.5">✓</span>
+                  <span className="text-gray-300 text-sm">Reiki Master Teacher</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-gold mt-0.5">✓</span>
+                  <span className="text-gray-300 text-sm">Traditional Jal Jyotishi Specialist</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-gold mt-0.5">✓</span>
+                  <span className="text-gray-300 text-sm">Crystal Healing Therapist</span>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Core Values Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-5 shadow-lg shadow-gold/10"
+            >
+              <div className="text-center mb-4">
+                <span className="text-2xl">💫</span>
+                <h3 className="text-gold font-bold text-base mt-2">Core Values</h3>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="text-center p-3 bg-cosmic-blue/20 rounded-xl border border-gold/20">
+                  <div className="text-xl mb-1">🌟</div>
+                  <div className="text-white font-semibold text-xs mb-1">Authenticity</div>
+                  <div className="text-gray-400 text-[10px]">Genuine guidance</div>
+                </div>
+                <div className="text-center p-3 bg-cosmic-blue/20 rounded-xl border border-gold/20">
+                  <div className="text-xl mb-1">💖</div>
+                  <div className="text-white font-semibold text-xs mb-1">Compassion</div>
+                  <div className="text-gray-400 text-[10px]">Caring support</div>
+                </div>
+                <div className="text-center p-3 bg-cosmic-blue/20 rounded-xl border border-gold/20">
+                  <div className="text-xl mb-1">⚖️</div>
+                  <div className="text-white font-semibold text-xs mb-1">Integrity</div>
+                  <div className="text-gray-400 text-[10px]">Honest practices</div>
+                </div>
+                <div className="text-center p-3 bg-cosmic-blue/20 rounded-xl border border-gold/20">
+                  <div className="text-xl mb-1">💪</div>
+                  <div className="text-white font-semibold text-xs mb-1">Empowerment</div>
+                  <div className="text-gray-400 text-[10px]">Inner strength</div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Desktop About - Keep existing */}
+        <div className="hidden md:block">
+          {/* Desktop content here if needed */}
+        </div>
+      </section>
+
+      {/* BOOK APPOINTMENT SECTION */
+      <section id="book" className="py-4 md:py-10 px-4 sm:px-6 lg:px-8">
         {/* Mobile Booking Form - Wizard */}
-        <div className="md:hidden px-4 py-6 pb-24">
+        <div className="md:hidden px-4 py-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -1398,9 +1528,9 @@ const Landing = () => {
         </div>
       </section>
 
-      <section id="contact" className="py-4 md:py-10 px-4 sm:px-6 lg:px-8 pb-24 md:pb-10">
+      <section id="contact" className="py-4 md:py-10 px-4 sm:px-6 lg:px-8">
         {/* Mobile Contact */}
-        <div className="md:hidden px-4 py-6 pb-24">
+        <div className="md:hidden px-4 py-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -1479,6 +1609,82 @@ const Landing = () => {
                   <input
                     type="text"
                     {...registerContact('name', { required: 'Name is required' })}
+                    className="w-full px-3 py-2 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white placeholder-gray-400 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all text-xs"
+                    placeholder="Name"
+                  />
+                  {contactErrors.name && <p className="text-red-400 text-xs mt-1">{contactErrors.name.message}</p>}
+                </div>
+                <div>
+                  <input
+                    type="email"
+                    {...registerContact('email', { 
+                      required: 'Email is required',
+                      pattern: {
+                        value: /^\S+@\S+$/i,
+                        message: 'Invalid email'
+                      }
+                    })}
+                    className="w-full px-3 py-2 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white placeholder-gray-400 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all text-xs"
+                    placeholder="Email"
+                  />
+                  {contactErrors.email && <p className="text-red-400 text-xs mt-1">{contactErrors.email.message}</p>}
+                </div>
+              </div>
+
+              <div>
+                <select
+                  {...registerContact('subject', { required: 'Please select a subject' })}
+                  className="w-full px-3 py-2 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all appearance-none text-xs"
+                >
+                  <option value="" className="bg-cosmic-blue text-gray-400">Subject...</option>
+                  <option value="general-inquiry" className="bg-cosmic-blue text-white">General Inquiry</option>
+                  <option value="booking-question" className="bg-cosmic-blue text-white">Booking Question</option>
+                  <option value="service-information" className="bg-cosmic-blue text-white">Service Info</option>
+                  <option value="other" className="bg-cosmic-blue text-white">Other</option>
+                </select>
+                {contactErrors.subject && <p className="text-red-400 text-xs mt-1">{contactErrors.subject.message}</p>}
+              </div>
+
+              <div>
+                <textarea
+                  {...registerContact('message', { required: 'Message is required' })}
+                  rows="3"
+                  className="w-full px-3 py-2 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white placeholder-gray-400 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all resize-none text-xs"
+                  placeholder="Your message..."
+                ></textarea>
+                {contactErrors.message && <p className="text-red-400 text-xs mt-1">{contactErrors.message.message}</p>}
+              </div>
+
+              <button
+                type="submit"
+                disabled={isContactSubmitting}
+                className="w-full py-2.5 bg-gradient-to-r from-[#f5d000] to-[#18c2a4] text-deep-purple font-bold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 text-xs"
+              >
+                {isContactSubmitting ? 'Sending...' : 'Send Message'}
+              </button>
+
+              {contactSubmitMessage && (
+                <div className={`text-center p-3 rounded-xl text-xs ${
+                  contactSubmitMessage.includes('successfully') 
+                    ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
+                    : 'bg-red-500/20 text-red-400 border border-red-500/30'
+                }`}>
+                  {contactSubmitMessage}
+                </div>
+              )}
+            </form>
+          </motion.div>
+        </div>
+
+        {/* Desktop Contact - Keep existing */}
+        <div className="hidden md:block max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <h1 className="font-mystical text-[3.5rem] md:text-[4.25rem] font-bold text-gradient mb-6">
                     className="w-full px-3 py-2 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white placeholder-gray-400 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all text-xs"
                     placeholder="Name"
                   />

@@ -28,9 +28,8 @@ const BookingWizard = ({ onSubmit, isSubmitting, submitMessage, register, errors
     const currentField = steps[currentStep - 1].field
     const value = watch(currentField)
     
-    // Allow moving forward if field is optional (message) or has a value
     if (currentStep < 8) {
-      if (currentField === 'message' || (value && value !== '')) {
+      if (currentField === 'message' || value) {
         setCurrentStep(currentStep + 1)
       }
     }
