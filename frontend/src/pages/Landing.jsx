@@ -199,139 +199,34 @@ const Landing = () => {
       </div>
       
       {/* HOME SECTION */}
-      <section id="home" className="relative py-4 md:py-12 lg:pt-24 px-4">
-        {/* Mobile Hero - Compact Design */}
-        <div className="md:hidden">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8 }}
-            className="text-center py-8 px-4"
-          >
-            {/* Logo */}
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-gold/20 to-aqua/20 border-2 border-gold/40 flex items-center justify-center shadow-lg shadow-gold/30 overflow-hidden">
-              <img src="/images/logo.png" alt="Krushnalaya" className="w-full h-full object-cover" />
-            </div>
-            
-            {/* Brand Name */}
-            <h1 className="font-mystical text-[2rem] font-bold text-gold mb-1">
-              Krushnalaya
-            </h1>
-            
-            {/* Tagline */}
-            <p className="text-aqua text-xs font-semibold tracking-[0.3em] mb-3">
-              KNOW · HEAL · GROW
-            </p>
-            
-            {/* Description */}
-            <p className="text-gray-300 text-sm leading-relaxed mb-6 max-w-xs mx-auto">
-              When life feels uncertain, clarity begins within. Discover your direction through spiritual guidance.
-            </p>
-            
-
-          </motion.div>
-        </div>
-
-        {/* Desktop Hero - Unchanged */}
-        <section className="hidden md:block relative py-6 md:py-8 px-4 sm:px-6 lg:px-8">
-          <div className="relative max-w-4xl mx-auto text-center flex flex-col items-center justify-center min-h-[60vh]">
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="flex flex-col items-center"
-            >
-              <h1 className="font-mystical text-[2.8rem] md:text-[4.25rem] font-bold mb-8 text-white drop-shadow-2xl text-center">
-                When life feels uncertain, clarity begins within.
-              </h1>
-              <p className="text-lg md:text-xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed text-center">
-                Through Tarot Reading, Reiki Healing, and Jal Jyotishi, we help you understand what's blocking you — and how to move forward with confidence.
-              </p>
-              <div className="flex justify-center">
-                <a href="#book" className="btn-primary text-lg px-8 sm:px-12 py-4">
-                  <span className="hidden sm:inline">Begin Your Guidance Journey</span>
-                  <span className="sm:hidden">Begin Your Journey</span>
-                </a>
-              </div>
-            </motion.div>
+      <section id="home" className="relative py-4 px-4">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+          className="text-center py-8 px-4"
+        >
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-gold/20 to-aqua/20 border-2 border-gold/40 flex items-center justify-center shadow-lg shadow-gold/30 overflow-hidden">
+            <img src="/images/logo.png" alt="Krushnalaya" className="w-full h-full object-cover" />
           </div>
-        </section>
-
-        {/* Desktop Who We Are Section - Unchanged */}
-        <section className="hidden md:block py-20 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, ease: "easeOut" }}
-              viewport={{ once: true }}
-            >
-              <h2 className="font-mystical text-[2.1rem] md:text-[2.8rem] font-bold text-gradient mb-8">
-                A Sacred Space for Guidance & Healing
-              </h2>
-            </motion.div>
-            
-            <div className="text-lg text-gray-300 leading-relaxed space-y-6">
-              <motion.p
-                initial={{ opacity: 0, y: 14 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, ease: "easeOut", delay: 0.4 }}
-                viewport={{ once: true }}
-              >
-                <ShinyText
-                  text="Krushnalaya"
-                  speed={3}
-                  color="#FFD700"
-                  shineColor="#FFFFFF"
-                  spread={120}
-                  direction="left"
-                />{' '}is where ancient wisdom meets compassionate guidance.
-              </motion.p>
-              
-              <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, ease: "easeOut", delay: 0.5 }}
-                viewport={{ once: true }}
-                className="w-12 h-0.5 bg-gradient-to-r from-gold to-aqua rounded-full mx-auto"
-              />
-              
-              <motion.p
-                initial={{ opacity: 0, y: 14 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, ease: "easeOut", delay: 0.7 }}
-                viewport={{ once: true }}
-              >
-                When life feels overwhelming or unclear, we create space for you to reconnect with your inner knowing and find the direction you seek.
-              </motion.p>
-              
-              <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, ease: "easeOut", delay: 0.8 }}
-                viewport={{ once: true }}
-                className="w-12 h-0.5 bg-gradient-to-r from-gold to-aqua rounded-full mx-auto"
-              />
-              
-              <motion.p
-                initial={{ opacity: 0, y: 14 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, ease: "easeOut", delay: 1 }}
-                viewport={{ once: true }}
-              >
-                Every session is an invitation to pause, breathe, and discover the clarity that already lives within you.
-              </motion.p>
-            </div>
-          </div>
-        </section>
-
-
+          
+          <h1 className="font-mystical text-[2rem] font-bold text-gold mb-1">
+            Krushnalaya
+          </h1>
+          
+          <p className="text-aqua text-xs font-semibold tracking-[0.3em] mb-3">
+            KNOW · HEAL · GROW
+          </p>
+          
+          <p className="text-gray-300 text-sm leading-relaxed mb-6 max-w-xs mx-auto">
+            When life feels uncertain, clarity begins within. Discover your direction through spiritual guidance.
+          </p>
+        </motion.div>
       </section>
 
       {/* SERVICES SECTION */}
-      <section id="services" className="py-4 md:py-10 px-4 sm:px-6 lg:px-8">
-        {/* Mobile Services */}
-        <div className="md:hidden px-4 py-6">
+      <section id="services" className="py-4 px-4">
+        <div className="px-4 py-6">
           {/* Title */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -658,146 +553,10 @@ const Landing = () => {
             </motion.div>
           </div>
         </div>
-
-        {/* Desktop Services - Keep existing */}
-        <div className="hidden md:block max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <h1 className="font-mystical text-[3.5rem] md:text-[4.25rem] font-bold text-gradient mb-6">
-              Sacred Services
-            </h1>
-            <p className="text-xl text-gray-300 max-w-4xl mx-auto">
-              Discover our range of spiritual services at <ShinyText
-                text="Krushnalaya"
-                speed={3}
-                color="#FFD700"
-                shineColor="#FFFFFF"
-                spread={120}
-                direction="left"
-              />{' '}designed to guide you on your journey of 
-              self-discovery, healing, and enlightenment.
-            </p>
-          </motion.div>
-
-          {/* Desktop Grid */}
-          <div className="hidden lg:grid lg:grid-cols-3 gap-8 mb-20">
-            {services.map((service, index) => (
-              <motion.div
-                key={service.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
-                className="bg-gradient-to-br from-deep-purple/30 to-midnight-blue/30 backdrop-blur-lg border border-gold/30 rounded-3xl p-8 text-white"
-              >
-                <div className="text-center mb-8">
-                  <div className="text-6xl mb-6">{service.icon}</div>
-                  <h2 className="font-mystical text-[2.1rem] font-bold text-gold mb-4">{service.title}</h2>
-                  <div className="text-2xl font-bold text-aqua mb-6">{service.price}</div>
-                </div>
-                
-                <p className="text-gray-300 text-lg leading-relaxed mb-8 text-center">
-                  {service.description}
-                </p>
-                
-                <div className="grid grid-cols-1 gap-3 mb-8">
-                  {service.features.map((feature, idx) => (
-                    <div key={idx} className="flex items-start text-gray-300">
-                      <span className="text-gold mr-3 mt-1 flex-shrink-0">✨</span>
-                      <span className="text-sm">{feature}</span>
-                    </div>
-                  ))}
-                </div>
-                
-                <div className="text-center pt-4">
-                  <button
-                    onClick={() => handleServiceSelect(service.title === 'Tarot Reading' ? 'tarot' : service.title === 'Reiki Healing' ? 'reiki' : 'water-divination')}
-                    className="btn-primary px-8 py-3"
-                  >
-                    Book {service.title}
-                  </button>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Mobile/Portrait Horizontal Swipable Cards */}
-          <div className="lg:hidden">
-            <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-4 pb-4 -mx-4 scrollbar-hide">
-              {[...services, ...services, ...services].map((service, index) => {
-                const cardKey = `${service.title}-${index}`
-                
-                return (
-                  <motion.div
-                    key={cardKey}
-                    initial={{ opacity: 0, x: 50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.6, delay: (index % 3) * 0.1 }}
-                    className="flex-none w-[85vw] snap-center bg-gradient-to-br from-deep-purple/30 to-midnight-blue/30 backdrop-blur-lg border border-gold/30 rounded-2xl overflow-hidden"
-                  >
-                    <div className="p-6">
-                      <div className="text-center mb-6">
-                        <div className="text-5xl mb-4">{service.icon}</div>
-                        <h2 className="font-mystical text-[1.4rem] font-bold text-gold mb-3">{service.title}</h2>
-                        <div className="text-xl font-bold text-aqua mb-4">{service.price}</div>
-                      </div>
-                      
-                      <p className="text-gray-300 text-base leading-relaxed mb-6 text-center">
-                        {service.description}
-                      </p>
-                      
-                      {/* Expandable Content */}
-                      <motion.div
-                        initial={false}
-                        animate={{ height: allCardsExpanded ? 'auto' : 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="overflow-hidden"
-                      >
-                        <div className="space-y-3 mb-6">
-                          {service.features.map((feature, idx) => (
-                            <div key={idx} className="flex items-start text-gray-300">
-                              <span className="text-gold mr-3 mt-1 flex-shrink-0">✨</span>
-                              <span className="text-sm">{feature}</span>
-                            </div>
-                          ))}
-                        </div>
-                        
-                        <div className="text-center mb-4">
-                          <button
-                            onClick={() => handleServiceSelect(service.title === 'Tarot Reading' ? 'tarot' : service.title === 'Reiki Healing' ? 'reiki' : 'water-divination')}
-                            className="btn-primary px-4 py-2 text-sm whitespace-nowrap"
-                          >
-                            Book Now
-                          </button>
-                        </div>
-                      </motion.div>
-                      
-                      {/* Expand/Collapse Button */}
-                      <div className="text-center">
-                        <button
-                          onClick={() => setAllCardsExpanded(!allCardsExpanded)}
-                          className="text-gold hover:text-white transition-colors duration-300 flex items-center justify-center mx-auto"
-                        >
-                          <span className="mr-2">{allCardsExpanded ? 'Show Less' : 'Show More'}</span>
-                          <div className={`transition-transform duration-300 ${allCardsExpanded ? 'rotate-180' : ''}`}>
-                            ▼
-                          </div>
-                        </button>
-                      </div>
-                    </div>
-                  </motion.div>
-                )
-              })}
-            </div>
-          </div>
-        </div>
       </section>
 
-      {/* ABOUT MY JOURNEY SECTION - Mobile Only */}
-      <section className="md:hidden px-4 py-8">
+      {/* ABOUT MY JOURNEY SECTION */}
+      <section className="px-4 py-8">
         {/* Title */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -889,9 +648,8 @@ const Landing = () => {
       </section>
 
       {/* BOOK APPOINTMENT SECTION */}
-      <section id="book" className="py-4 md:py-10 px-4 sm:px-6 lg:px-8">
-        {/* Mobile Booking Form */}
-        <div className="md:hidden px-4 py-6">
+      <section id="book" className="py-4 px-4">
+        <div className="px-4 py-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -912,57 +670,10 @@ const Landing = () => {
             <BookingForm onSuccess={(data) => console.log('Booking success:', data)} />
           </motion.div>
         </div>
-
-        {/* Desktop Booking - Temporarily Disabled */}
-        <div className="hidden md:block max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
-            <h1 className="font-mystical text-[3.5rem] md:text-[4.25rem] font-bold text-gradient mb-6">
-              Book Your Session
-            </h1>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Take the first step on your spiritual journey. Choose your preferred service and 
-              schedule a time that works for you.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="card-mystical"
-          >
-            <BookingForm onSuccess={(data) => console.log('Booking success:', data)} />
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-center mt-12"
-          >
-            <p className="text-gray-300 mb-4">
-              Prefer to book directly? Contact us via WhatsApp for immediate assistance.
-            </p>
-            <a
-              href="https://wa.me/919893578135"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-secondary text-lg px-8 py-3"
-            >
-              WhatsApp Booking
-            </a>
-          </motion.div>
-        </div>
       </section>
 
-      <section id="contact" className="py-4 md:py-10 px-4 sm:px-6 lg:px-8">
-        {/* Mobile Contact */}
-        <div className="md:hidden px-4 py-6">
+      <section id="contact" className="py-4 px-4">
+        <div className="px-4 py-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -1114,256 +825,6 @@ const Landing = () => {
                 </div>
               )}
             </form>
-          </motion.div>
-        </div>
-
-        {/* Desktop Contact - Keep existing */}
-        <div className="hidden md:block max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <h1 className="font-mystical text-[3.5rem] md:text-[4.25rem] font-bold text-gradient mb-6">
-              Get in Touch
-            </h1>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Ready to begin your spiritual journey? We're here to answer your questions 
-              and help you find the perfect service for your needs.
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              <h2 className="font-mystical text-[2.1rem] font-bold text-gradient mb-8">
-                Contact Information
-              </h2>
-              
-              <div className="space-y-6 mb-8">
-                {contactInfo.map((info, index) => (
-                  <motion.div
-                    key={info.title}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
-                    className="card-mystical"
-                  >
-                    <div className="flex items-start space-x-4">
-                      <div className="text-3xl">{info.icon}</div>
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-gold mb-2">{info.title}</h3>
-                        {info.details.map((detail, idx) => (
-                          <p key={idx} className="text-gray-300 text-sm">
-                            {info.action && idx === 0 ? (
-                              <a 
-                                href={info.action}
-                                className="hover:text-gold transition-colors"
-                                target={info.action.startsWith('http') ? '_blank' : undefined}
-                                rel={info.action.startsWith('http') ? 'noopener noreferrer' : undefined}
-                              >
-                                {detail}
-                              </a>
-                            ) : (
-                              detail
-                            )}
-                          </p>
-                        ))}
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.7 }}
-                className="space-y-4"
-              >
-                <h3 className="font-mystical text-[1.4rem] font-bold text-gradient mb-4">
-                  Quick Actions
-                </h3>
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <a
-                    href="https://wa.me/919893578135"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-primary text-center"
-                  >
-                    WhatsApp Chat
-                  </a>
-                  <a
-                    href="#book"
-                    className="btn-secondary text-center"
-                  >
-                    Book Appointment
-                  </a>
-                </div>
-              </motion.div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="card-mystical"
-            >
-              <h2 className="font-mystical text-[2.1rem] font-bold text-gradient mb-6">
-                Send a Message
-              </h2>
-              
-              <form onSubmit={handleContactSubmit(onContactSubmit)} className="space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-gold font-semibold mb-2">Name *</label>
-                    <input
-                      type="text"
-                      {...registerContact('name', { required: 'Name is required' })}
-                      className="w-full px-4 py-3 bg-cosmic-blue/50 border border-gold/30 rounded-lg text-white placeholder-gray-400 focus:border-gold focus:outline-none transition-colors"
-                      placeholder="Your name"
-                    />
-                    {contactErrors.name && <p className="text-red-400 text-sm mt-1">{contactErrors.name.message}</p>}
-                  </div>
-
-                  <div>
-                    <label className="block text-gold font-semibold mb-2">Email *</label>
-                    <input
-                      type="email"
-                      {...registerContact('email', { 
-                        required: 'Email is required',
-                        pattern: {
-                          value: /^\S+@\S+$/i,
-                          message: 'Invalid email address'
-                        }
-                      })}
-                      className="w-full px-4 py-3 bg-cosmic-blue/50 border border-gold/30 rounded-lg text-white placeholder-gray-400 focus:border-gold focus:outline-none transition-colors"
-                      placeholder="your@email.com"
-                    />
-                    {contactErrors.email && <p className="text-red-400 text-sm mt-1">{contactErrors.email.message}</p>}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-gold font-semibold mb-2">Phone</label>
-                  <div className="relative">
-                    <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
-                      +91
-                    </div>
-                    <input
-                      type="tel"
-                      {...registerContact('phone', {
-                        pattern: {
-                          value: /^[0-9]{10}$/,
-                          message: 'Phone number must be exactly 10 digits'
-                        }
-                      })}
-                      className="w-full pl-12 pr-4 py-3 bg-cosmic-blue/50 border border-gold/30 rounded-lg text-white placeholder-gray-400 focus:border-gold focus:outline-none transition-colors"
-                      placeholder="Enter 10-digit phone number"
-                      maxLength="10"
-                      onInput={(e) => {
-                        e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 10)
-                      }}
-                    />
-                  </div>
-                  {contactErrors.phone && <p className="text-red-400 text-sm mt-1">{contactErrors.phone.message}</p>}
-                </div>
-
-                <div>
-                  <label className="block text-gold font-semibold mb-2">Subject *</label>
-                  <select
-                    {...registerContact('subject', { required: 'Please select a subject' })}
-                    className="w-full px-4 py-3 bg-cosmic-blue/50 border border-gold/30 rounded-lg text-white focus:border-gold focus:outline-none transition-colors appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iOCIgdmlld0JveD0iMCAwIDEyIDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xIDFMNiA2TDExIDEiIHN0cm9rZT0iI0ZGRDcwMCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+')] bg-no-repeat bg-[right_1rem_center] pr-12"
-                  >
-                    <option value="" className="bg-cosmic-blue text-gray-400">Choose a subject...</option>
-                    <option value="general-inquiry" className="bg-cosmic-blue text-white">General Inquiry</option>
-                    <option value="booking-question" className="bg-cosmic-blue text-white">Booking Question</option>
-                    <option value="service-information" className="bg-cosmic-blue text-white">Service Information</option>
-                    <option value="pricing" className="bg-cosmic-blue text-white">Pricing</option>
-                    <option value="partnership" className="bg-cosmic-blue text-white">Partnership/Collaboration</option>
-                    <option value="feedback" className="bg-cosmic-blue text-white">Feedback</option>
-                    <option value="other" className="bg-cosmic-blue text-white">Other</option>
-                  </select>
-                  {contactErrors.subject && <p className="text-red-400 text-sm mt-1">{contactErrors.subject.message}</p>}
-                </div>
-
-                <div>
-                  <label className="block text-gold font-semibold mb-2">Message *</label>
-                  <textarea
-                    {...registerContact('message', { required: 'Message is required' })}
-                    rows="5"
-                    className="w-full px-4 py-3 bg-cosmic-blue/50 border border-gold/30 rounded-lg text-white placeholder-gray-400 focus:border-gold focus:outline-none transition-colors resize-none"
-                    placeholder="Tell us how we can help you..."
-                  ></textarea>
-                  {contactErrors.message && <p className="text-red-400 text-sm mt-1">{contactErrors.message.message}</p>}
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isContactSubmitting}
-                  className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isContactSubmitting ? 'Sending...' : 'Send Message'}
-                </button>
-
-                {contactSubmitMessage && (
-                  <div className={`text-center p-4 rounded-lg ${
-                    contactSubmitMessage.includes('successfully') 
-                      ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
-                      : 'bg-red-500/20 text-red-400 border border-red-500/30'
-                  }`}>
-                    {contactSubmitMessage}
-                  </div>
-                )}
-              </form>
-            </motion.div>
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mt-20"
-          >
-            <h2 className="font-mystical text-[2.8rem] font-bold text-center text-gradient mb-12">
-              Frequently Asked Questions
-            </h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {[
-                {
-                  question: "How do I prepare for my session?",
-                  answer: "Come with an open mind and specific questions you'd like guidance on. We'll send preparation guidelines after booking."
-                },
-                {
-                  question: "Are online sessions as effective?",
-                  answer: "Yes! Energy transcends physical boundaries. Online sessions are just as powerful and insightful as in-person meetings."
-                },
-                {
-                  question: "What if I need to reschedule?",
-                  answer: "Please give us 24 hours notice for rescheduling. We understand life happens and are flexible with our clients."
-                },
-                {
-                  question: "Do you offer group sessions?",
-                  answer: "Yes! We offer group healing circles and spiritual workshops. Contact us for upcoming events and private group bookings."
-                }
-              ].map((faq, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="card-mystical"
-                >
-                  <h3 className="font-semibold text-gold mb-3">{faq.question}</h3>
-                  <p className="text-gray-300 text-sm">{faq.answer}</p>
-                </motion.div>
-              ))}
-            </div>
           </motion.div>
         </div>
       </section>

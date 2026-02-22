@@ -36,22 +36,21 @@ const Navbar = () => {
   }
 
   return (
-    <nav className={`hidden lg:block fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-deep-purple/30 border-b border-gold/20 shadow-lg transition-transform duration-300 will-change-transform ${showNavbar ? 'translate-y-0' : '-translate-y-full'}`}>
-      <div className="max-w-7xl mx-auto px-8 py-3">
+    <nav className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-deep-purple/30 border-b border-gold/20 shadow-lg transition-transform duration-300 will-change-transform ${
+      showNavbar ? 'translate-y-0' : '-translate-y-full'
+    }`}>
+      <div className="max-w-7xl mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
-          {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3">
-            <img src="/images/logo.png" alt="Krushnalaya" className="w-9 h-9 rounded-full shadow-[0_0_15px_rgba(255,215,0,0.5)]" />
-            <span className="font-mystical text-lg text-gold">Krushnalaya</span>
+          <Link to="/" className="flex items-center space-x-2">
+            <img src="/images/logo.png" alt="Krushnalaya" className="w-8 h-8 rounded-full shadow-[0_0_15px_rgba(255,215,0,0.5)]" />
+            <span className="font-mystical text-base text-gold">Krushnalaya</span>
           </Link>
           
-          {/* Nav Links */}
-          <div className="flex items-center space-x-6">
-            <Link to="/#home" className="text-gray-300 hover:text-gold transition-colors text-sm font-medium">Home</Link>
-            <Link to="/#services" className="text-gray-300 hover:text-gold transition-colors text-sm font-medium">Sacred Services</Link>
-            <Link to="/#about" className="text-gray-300 hover:text-gold transition-colors text-sm font-medium">About</Link>
-            <Link to="/#book" className="text-gray-300 hover:text-gold transition-colors text-sm font-medium">Book Session</Link>
-            <Link to="/#contact" className="text-gray-300 hover:text-gold transition-colors text-sm font-medium">Contact</Link>
+          <div className="flex items-center space-x-4">
+            <Link to="/#home" className="text-gray-300 hover:text-gold transition-colors text-xs font-medium">Home</Link>
+            <Link to="/#services" className="text-gray-300 hover:text-gold transition-colors text-xs font-medium">Services</Link>
+            <Link to="/#book" className="text-gray-300 hover:text-gold transition-colors text-xs font-medium">Book</Link>
+            <Link to="/#contact" className="text-gray-300 hover:text-gold transition-colors text-xs font-medium">Contact</Link>
           </div>
         </div>
       </div>
