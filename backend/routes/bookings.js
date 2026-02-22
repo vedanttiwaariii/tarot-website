@@ -113,8 +113,7 @@ router.post('/', bookingRateLimit, validate(bookingSchema), async (req, res, nex
     const existingBooking = await Booking.findOne({ 
       date: new Date(date), 
       time,
-      status: { $ne: 'cancelled' },
-      paymentStatus: { $ne: 'failed' }
+      status: { $ne: 'cancelled' }
     })
 
     if (existingBooking) {
@@ -253,8 +252,7 @@ router.get('/available-slots/:date', async (req, res, next) => {
 
     const bookedSlots = await Booking.find({
       date: requestedDate,
-      status: { $ne: 'cancelled' },
-      paymentStatus: { $ne: 'failed' }
+      status: { $ne: 'cancelled' }
     }).select('time').lean()
 
     const bookedTimes = bookedSlots.map(b => b.time)
@@ -368,7 +366,6 @@ router.put('/reschedule/:id', async (req, res, next) => {
       date: new Date(date),
       time,
       status: { $ne: 'cancelled' },
-      paymentStatus: { $ne: 'failed' },
       _id: { $ne: req.params.id }
     })
 
