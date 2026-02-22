@@ -21,6 +21,7 @@ const AdminDashboard = () => {
   const [editFormSubmitting, setEditFormSubmitting] = useState(false)
   const [editFormMessage, setEditFormMessage] = useState('')
   const [showCancelled, setShowCancelled] = useState(false)
+  const [showFailedPayments, setShowFailedPayments] = useState(false)
   const { register: registerAdd, handleSubmit: handleAddSubmit, formState: { errors: addErrors }, reset: resetAdd } = useForm()
   const { register: registerEdit, handleSubmit: handleEditSubmit, formState: { errors: editErrors }, reset: resetEdit, setValue } = useForm()
 
@@ -133,7 +134,11 @@ const AdminDashboard = () => {
     }
   }
 
-  const filteredBookings = showCancelled ? bookings : bookings.filter(b => b.status !== 'cancelled')
+  const filteredBookings = showFailedPayments 
+    ? bookings.filter(b => b.paymentStatus === 'failed')
+    : showCancelled 
+      ? bookings 
+      : bookings.filter(b => b.status !== 'cancelled' && b.paymentStatus !== 'failed')
 
   const generateSingleUseCode = async () => {
     try {
@@ -395,7 +400,15 @@ const AdminDashboard = () => {
               <h2 className="text-2xl font-bold text-gold">Bookings ({filteredBookings.length})</h2>
               <div className="flex gap-2">
                 <button 
-                  onClick={() => setShowCancelled(!showCancelled)}
+                  onClick={() => { setShowFailedPayments(!showFailedPayments); setShowCancelled(false); }}
+                  className={`px-3 py-1 text-sm rounded transition-colors ${
+                    showFailedPayments ? 'bg-orange-600 text-white' : 'bg-gray-600 text-gray-300'
+                  }`}
+                >
+                  {showFailedPayments ? 'Hide Failed Payments' : `Failed Payments (${bookings.filter(b => b.paymentStatus === 'failed').length})`}
+                </button>
+                <button 
+                  onClick={() => { setShowCancelled(!showCancelled); setShowFailedPayments(false); }}
                   className={`px-3 py-1 text-sm rounded transition-colors ${
                     showCancelled ? 'bg-red-600 text-white' : 'bg-gray-600 text-gray-300'
                   }`}

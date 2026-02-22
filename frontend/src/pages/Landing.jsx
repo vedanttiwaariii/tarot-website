@@ -1,124 +1,18 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import ServiceCard from '../components/ServiceCard'
 import ShinyText from '../components/ShinyText'
-import Threads from '../components/Threads'
-import BookingWizard from '../components/BookingWizard'
-import { useState, useMemo, useEffect, useRef } from 'react'
+import { lazy, Suspense, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import api from '../api/axios'
+import BookingForm from '../components/booking/BookingForm'
+
+const Threads = lazy(() => import('../components/Threads'))
 
 
 const Landing = () => {
-  // Booking form state - FIXED: Removed mode configuration that was causing issues
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitMessage, setSubmitMessage] = useState('')
-  const [showExistingBookingModal, setShowExistingBookingModal] = useState(false)
-  const [existingBookingData, setExistingBookingData] = useState(null)
-  
-  // FIXED: Simplified form initialization - no complex validation modes
-  const { 
-    register, 
-    handleSubmit, 
-    formState: { errors }, 
-    reset, 
-    watch, 
-    setValue 
-  } = useForm({
-    mode: 'onSubmit', // Only validate on submit, not during typing
-    defaultValues: {
-      name: '',
-      phone: '',
-      email: '',
-      service: '',
-      date: '',
-      time: '',
-      sessionType: '',
-      message: '',
-      accessCode: ''
-    }
-  })
-
-  // Check Razorpay script availability
-  useEffect(() => {
-    const checkRazorpay = () => {
-      if (window.Razorpay) {
-        setRazorpayReady(true)
-      } else {
-        setTimeout(checkRazorpay, 100)
-      }
-    }
-    checkRazorpay()
-  }, [])
-
-  // Global expansion state for all mobile cards
   const [allCardsExpanded, setAllCardsExpanded] = useState(false)
-  const [aboutCardsExpanded, setAboutCardsExpanded] = useState(false)
   const [expandedCards, setExpandedCards] = useState({ tarot: false, reiki: false, jal: false })
-  const [disclaimerAccepted, setDisclaimerAccepted] = useState(false)
-  const [showDisclaimerModal, setShowDisclaimerModal] = useState(false)
-  const [bookedSlots, setBookedSlots] = useState([])
-  const [fetchingSlots, setFetchingSlots] = useState(false)
-  const [razorpayReady, setRazorpayReady] = useState(false)
 
-  // Watch the selected date to filter time slots
-  const selectedDate = watch('date')
-
-  // Fetch booked slots when date changes
-  useEffect(() => {
-    if (selectedDate) {
-      fetchBookedSlots(selectedDate)
-    } else {
-      setBookedSlots([])
-    }
-  }, [selectedDate])
-
-  const fetchBookedSlots = async (date) => {
-    setFetchingSlots(true)
-    try {
-      const response = await api.get(`/api/bookings/available-slots/${date}`)
-      setBookedSlots(response.data.data.bookedSlots || [])
-    } catch (error) {
-      console.error('Error fetching booked slots:', error)
-      setBookedSlots([])
-    } finally {
-      setFetchingSlots(false)
-    }
-  }
-
-  // Filter time slots based on selected date
-  const availableTimeSlots = useMemo(() => {
-    const allTimeSlots = ['9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM', '6:00 PM']
-    
-    if (!selectedDate) return allTimeSlots
-    
-    const today = new Date()
-    const selected = new Date(selectedDate)
-    
-    // If selected date is today, filter out past time slots
-    let filteredSlots = allTimeSlots
-    if (selected.toDateString() === today.toDateString()) {
-      const currentHour = today.getHours()
-      const currentMinute = today.getMinutes()
-      
-      filteredSlots = allTimeSlots.filter(timeSlot => {
-        const [time, period] = timeSlot.split(' ')
-        const [hours, minutes] = time.split(':').map(Number)
-        let hour24 = hours
-        if (period === 'PM' && hours !== 12) hour24 += 12
-        if (period === 'AM' && hours === 12) hour24 = 0
-        
-        const slotTime = hour24 * 60 + minutes
-        const currentTime = currentHour * 60 + currentMinute
-        
-        return slotTime > currentTime
-      })
-    }
-    
-    // Filter out booked slots
-    return filteredSlots.filter(slot => !bookedSlots.includes(slot))
-  }, [selectedDate, bookedSlots])
-
-  // Contact form state
   const [isContactSubmitting, setIsContactSubmitting] = useState(false)
   const [contactSubmitMessage, setContactSubmitMessage] = useState('')
   const { 
@@ -247,202 +141,6 @@ const Landing = () => {
     }
   ]
 
-  const onBookingSubmit = async (data) => {
-    if (!disclaimerAccepted) {
-      setShowDisclaimerModal(true)
-      return
-    }
-    
-    setIsSubmitting(true)
-    setSubmitMessage('')
-    
-    try {
-      console.log('Starting booking process...')
-      console.log('Form data:', data)
-      
-      // Check if access code is provided (skip payment)
-      if (data.accessCode && data.accessCode.trim()) {
-        console.log('Access code provided, skipping payment')
-        const response = await api.post('/api/bookings', data)
-        setSubmitMessage(
-          <div className="text-center">
-            <div className="text-lg font-semibold mb-2">Booking Confirmed!</div>
-            <div className="bg-gold/20 border border-gold/50 rounded-lg p-4 mb-4">
-              <div className="text-gold font-bold text-xl mb-1">Your Booking Number</div>
-              <div className="font-mono text-2xl text-white">{response.data.data.bookingNumber}</div>
-            </div>
-            <div className="text-sm text-gray-300">Access code applied. No payment required.</div>
-          </div>
-        )
-        reset()
-        setDisclaimerAccepted(false)
-        return
-      }
-
-      console.log('No access code, proceeding with payment flow')
-      // Create booking first
-      const bookingResponse = await api.post('/api/bookings', data)
-      console.log('Booking response:', bookingResponse.data)
-      const bookingData = bookingResponse.data
-      
-      // Check if payment is required
-      if (bookingData.requiresPayment) {
-        console.log('Payment required, opening Razorpay')
-        const booking = bookingData.data
-
-        // Create Razorpay order
-        const orderResponse = await api.post('/api/payments/create-order', {
-          service: data.service,
-          bookingId: booking.id
-        })
-
-        const { orderId, amount, keyId } = orderResponse.data.data
-
-        // Check Razorpay availability
-        if (!window.Razorpay) {
-          console.error('Razorpay not available')
-          setSubmitMessage('Payment system not ready. Please refresh and try again.')
-          return
-        }
-
-        console.log('Razorpay available, creating options:', {
-          key: keyId,
-          amount: amount,
-          currency: 'INR',
-          order_id: orderId
-        })
-
-        // Initialize Razorpay payment
-        const options = {
-          key: keyId,
-          amount: amount,
-          currency: 'INR',
-          name: 'Krushnalaya',
-          description: `${data.service.replace('-', ' ')} booking`,
-          order_id: orderId,
-          handler: async function (response) {
-            try {
-              // Verify payment
-              await api.post('/api/payments/verify', {
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
-                bookingId: booking.id
-              })
-
-              setSubmitMessage(
-                <div className="text-center">
-                  <div className="text-lg font-semibold mb-2">Payment Successful!</div>
-                  <div className="bg-gold/20 border border-gold/50 rounded-lg p-4 mb-4">
-                    <div className="text-gold font-bold text-xl mb-1">Your Booking Number</div>
-                    <div className="font-mono text-2xl text-white">{booking.bookingNumber}</div>
-                  </div>
-                  <div className="text-sm text-gray-300">Payment completed. Booking confirmed!</div>
-                </div>
-              )
-              reset()
-              setDisclaimerAccepted(false)
-            } catch (error) {
-              setSubmitMessage('Payment verification failed. Please contact support.')
-            }
-          },
-          prefill: {
-            name: data.name,
-            email: data.email,
-            contact: `+91${data.phone}`
-          },
-          theme: {
-            color: '#FFD700'
-          },
-          modal: {
-            ondismiss: function() {
-              setSubmitMessage('Payment cancelled.')
-            }
-          }
-        }
-
-        try {
-          console.log('Creating Razorpay instance...')
-          const rzp = new window.Razorpay(options)
-          console.log('Razorpay instance created, opening checkout...')
-          rzp.open()
-          console.log('Razorpay checkout opened')
-        } catch (error) {
-          console.error('Razorpay error:', error)
-          setSubmitMessage(`Payment system error: ${error.message}`)
-        }
-        
-      } else {
-        // Access code booking - already confirmed
-        const booking = bookingData.data
-        setSubmitMessage(
-          <div className="text-center">
-            <div className="text-lg font-semibold mb-2">Booking Confirmed!</div>
-            <div className="bg-gold/20 border border-gold/50 rounded-lg p-4 mb-4">
-              <div className="text-gold font-bold text-xl mb-1">Your Booking Number</div>
-              <div className="font-mono text-2xl text-white">{booking.bookingNumber}</div>
-            </div>
-            <div className="text-sm text-gray-300">Access code applied. No payment required.</div>
-          </div>
-        )
-        reset()
-        setDisclaimerAccepted(false)
-      }
-      
-    } catch (error) {
-      console.error('Booking error:', error)
-      console.error('Error response:', error.response?.data)
-      if (error.response?.status === 409 && error.response?.data?.message === 'existing_booking') {
-        setExistingBookingData(error.response.data.existingBooking)
-        setShowExistingBookingModal(true)
-      } else if (error.response?.data?.message) {
-        setSubmitMessage(error.response.data.message)
-      } else {
-        setSubmitMessage('There was an error processing your request. Please try again.')
-      }
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
-
-  const handleServiceSelect = (serviceValue) => {
-    // Set the service in the form and scroll to booking section
-    setValue('service', serviceValue)
-    document.getElementById('book').scrollIntoView({ behavior: 'smooth' })
-  }
-
-  const handleContinueBooking = async () => {
-    setIsSubmitting(true)
-    setShowExistingBookingModal(false)
-    
-    try {
-      const formData = watch() // Get current form data
-      const dataWithDuplicate = { ...formData, allowDuplicate: true }
-      
-      const response = await api.post('/api/bookings', dataWithDuplicate)
-      setSubmitMessage(
-        <div className="text-center">
-          <div className="text-lg font-semibold mb-2">Additional Booking Confirmed!</div>
-          <div className="bg-gold/20 border border-gold/50 rounded-lg p-4 mb-4">
-            <div className="text-gold font-bold text-xl mb-1">Your Booking Number</div>
-            <div className="font-mono text-2xl text-white">{response.data.data.bookingNumber}</div>
-          </div>
-          <div className="text-sm text-gray-300">Please save this number for your records. You now have multiple bookings.</div>
-        </div>
-      )
-      reset()
-    } catch (error) {
-      console.error('Continue booking error:', error)
-      if (error.response?.data?.message) {
-        setSubmitMessage(error.response.data.message)
-      } else {
-        setSubmitMessage('There was an error booking your appointment. Please try again or contact us directly.')
-      }
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
-
   const onMobileContactSubmit = async (data) => {
     console.log('Mobile contact form submitted with data:', data)
     setIsMobileContactSubmitting(true)
@@ -490,12 +188,14 @@ const Landing = () => {
       {/* Threads Background */}
       <div className="fixed inset-0 -z-10" style={{ paddingBottom: '100px' }}>
         <div className="absolute inset-0 bg-gradient-to-br from-cosmic-blue via-deep-purple to-midnight-blue" style={{ height: 'calc(100% + 150px)' }}></div>
-        <Threads
-          color={[1, 0.843, 0]} // Gold color
-          amplitude={1.2}
-          distance={0.5}
-          enableMouseInteraction={true}
-        />
+        <Suspense fallback={null}>
+          <Threads
+            color={[1, 0.843, 0]}
+            amplitude={1.2}
+            distance={0.5}
+            enableMouseInteraction={true}
+          />
+        </Suspense>
       </div>
       
       {/* HOME SECTION */}
@@ -1190,7 +890,7 @@ const Landing = () => {
 
       {/* BOOK APPOINTMENT SECTION */}
       <section id="book" className="py-4 md:py-10 px-4 sm:px-6 lg:px-8">
-        {/* Mobile Booking Form - Wizard */}
+        {/* Mobile Booking Form */}
         <div className="md:hidden px-4 py-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -1209,26 +909,11 @@ const Landing = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-5 shadow-lg shadow-gold/10"
           >
-            <form onSubmit={handleSubmit(onBookingSubmit)}>
-              <BookingWizard
-                onSubmit={onBookingSubmit}
-                isSubmitting={isSubmitting}
-                submitMessage={submitMessage}
-                register={register}
-                errors={errors}
-                watch={watch}
-                setValue={setValue}
-                availableTimeSlots={availableTimeSlots}
-                selectedDate={selectedDate}
-                disclaimerAccepted={disclaimerAccepted}
-                setDisclaimerAccepted={setDisclaimerAccepted}
-                reset={reset}
-              />
-            </form>
+            <BookingForm onSuccess={(data) => console.log('Booking success:', data)} />
           </motion.div>
         </div>
 
-        {/* Desktop Booking - Keep existing */}
+        {/* Desktop Booking - Temporarily Disabled */}
         <div className="hidden md:block max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -1251,224 +936,7 @@ const Landing = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="card-mystical"
           >
-            <form onSubmit={handleSubmit(onBookingSubmit)} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* FIXED: Removed refs, register handles everything */}
-                <div>
-                  <label htmlFor="name" className="block text-gold font-semibold mb-2">Full Name *</label>
-                  <input
-                    id="name"
-                    type="text"
-                    autoComplete="name"
-                    {...register('name', { required: 'Name is required' })}
-                    className="w-full px-4 py-3 bg-cosmic-blue/50 border border-gold/30 rounded-lg text-white placeholder-gray-400 focus:border-gold focus:outline-none transition-colors"
-                    placeholder="Enter your full name"
-                  />
-                  {errors.name && <p className="text-red-400 text-sm mt-1">{errors.name.message}</p>}
-                </div>
-
-                <div>
-                  <label htmlFor="phone" className="block text-gold font-semibold mb-2">Phone Number *</label>
-                  <div className="relative">
-                    <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
-                      +91
-                    </div>
-                    <input
-                      id="phone"
-                      type="tel"
-                      autoComplete="tel"
-                      {...register('phone', { 
-                        required: 'Phone number is required',
-                        pattern: {
-                          value: /^[0-9]{10}$/,
-                          message: 'Phone number must be exactly 10 digits'
-                        }
-                      })}
-                      className="w-full pl-12 pr-4 py-3 bg-cosmic-blue/50 border border-gold/30 rounded-lg text-white placeholder-gray-400 focus:border-gold focus:outline-none transition-colors"
-                      placeholder="Enter 10-digit phone number"
-                      maxLength="10"
-                      onInput={(e) => {
-                        e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 10)
-                      }}
-                    />
-                  </div>
-                  {errors.phone && <p className="text-red-400 text-sm mt-1">{errors.phone.message}</p>}
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="email" className="block text-gold font-semibold mb-2">Email Address *</label>
-                <input
-                  id="email"
-                  type="email"
-                  autoComplete="email"
-                  {...register('email', { 
-                    required: 'Email is required',
-                    pattern: {
-                      value: /^\S+@\S+$/i,
-                      message: 'Invalid email address'
-                    }
-                  })}
-                  className="w-full px-4 py-3 bg-cosmic-blue/50 border border-gold/30 rounded-lg text-white placeholder-gray-400 focus:border-gold focus:outline-none transition-colors"
-                  placeholder="Enter your email address"
-                />
-                {errors.email && <p className="text-red-400 text-sm mt-1">{errors.email.message}</p>}
-              </div>
-
-              <div>
-                <label htmlFor="service" className="block text-gold font-semibold mb-2">Select Service *</label>
-                <select
-                  id="service"
-                  autoComplete="off"
-                  {...register('service', { required: 'Please select a service' })}
-                  className="w-full px-4 py-3 bg-cosmic-blue/50 border border-gold/30 rounded-lg text-white focus:border-gold focus:outline-none transition-colors appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iOCIgdmlld0JveD0iMCAwIDEyIDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xIDFMNiA2TDExIDEiIHN0cm9rZT0iI0ZGRDcwMCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+')] bg-no-repeat bg-[right_1rem_center] pr-12"
-                >
-                  <option value="" className="bg-cosmic-blue text-gray-400">Choose a service...</option>
-                  {bookingServices.map((service) => (
-                    <option key={service.value} value={service.value} className="bg-cosmic-blue text-white">
-                      {service.label} ({service.duration})
-                    </option>
-                  ))}
-                </select>
-                {errors.service && <p className="text-red-400 text-sm mt-1">{errors.service.message}</p>}
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label htmlFor="date" className="block text-gold font-semibold mb-2">Preferred Date *</label>
-                  <input
-                    id="date"
-                    type="date"
-                    autoComplete="off"
-                    {...register('date', { required: 'Date is required' })}
-                    min={new Date().toISOString().split('T')[0]}
-                    className="w-full px-4 py-3 bg-cosmic-blue/50 border border-gold/30 rounded-lg text-white focus:border-gold focus:outline-none transition-colors"
-                  />
-                  {errors.date && <p className="text-red-400 text-sm mt-1">{errors.date.message}</p>}
-                </div>
-
-                <div>
-                  <label htmlFor="time" className="block text-gold font-semibold mb-2">Preferred Time *</label>
-                  <select
-                    id="time"
-                    autoComplete="off"
-                    {...register('time', { required: 'Please select a time' })}
-                    disabled={!selectedDate}
-                    className="w-full px-4 py-3 bg-cosmic-blue/50 border border-gold/30 rounded-lg text-white focus:border-gold focus:outline-none transition-colors appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iOCIgdmlld0JveD0iMCAwIDEyIDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xIDFMNiA2TDExIDEiIHN0cm9rZT0iI0ZGRDcwMCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+')] bg-no-repeat bg-[right_1rem_center] pr-12 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <option value="" className="bg-cosmic-blue text-gray-400">
-                      {!selectedDate ? 'Please select a date first' : 'Choose a time...'}
-                    </option>
-                    {selectedDate && availableTimeSlots.map((time) => (
-                      <option key={time} value={time} className="bg-cosmic-blue text-white">
-                        {time}
-                      </option>
-                    ))}
-                  </select>
-                  {availableTimeSlots.length === 0 && selectedDate && (
-                    <p className="text-yellow-400 text-sm mt-1">
-                      No time slots available for this date. Please select a different date.
-                    </p>
-                  )}
-                  {errors.time && <p className="text-red-400 text-sm mt-1">{errors.time.message}</p>}
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="message" className="block text-gold font-semibold mb-2">Message (Optional)</label>
-                <textarea
-                  id="message"
-                  autoComplete="off"
-                  {...register('message')}
-                  rows="4"
-                  className="w-full px-4 py-3 bg-cosmic-blue/50 border border-gold/30 rounded-lg text-white placeholder-gray-400 focus:border-gold focus:outline-none transition-colors resize-none"
-                  placeholder="Tell us about your intentions for this session or any specific questions you have..."
-                ></textarea>
-              </div>
-
-              <div>
-                <label className="block text-gold font-semibold mb-2">Session Type *</label>
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <label className="flex items-center">
-                    <input
-                      type="radio"
-                      value="in-person"
-                      autoComplete="off"
-                      {...register('sessionType', { required: 'Please select session type' })}
-                      className="mr-2 text-gold focus:ring-gold"
-                    />
-                    <span className="text-white">In-Person</span>
-                  </label>
-                  <label className="flex items-center">
-                    <input
-                      type="radio"
-                      value="online"
-                      autoComplete="off"
-                      {...register('sessionType', { required: 'Please select session type' })}
-                      className="mr-2 text-gold focus:ring-gold"
-                    />
-                    <span className="text-white">Online (Video Call)</span>
-                  </label>
-                </div>
-                {errors.sessionType && <p className="text-red-400 text-sm mt-1">{errors.sessionType.message}</p>}
-              </div>
-
-              <div>
-                <label htmlFor="accessCode" className="block text-gold font-semibold mb-2">Access Code (Optional)</label>
-                <input
-                  id="accessCode"
-                  type="text"
-                  autoComplete="off"
-                  {...register('accessCode')}
-                  className="w-full px-4 py-3 bg-cosmic-blue/50 border border-gold/30 rounded-lg text-white placeholder-gray-400 focus:border-gold focus:outline-none transition-colors"
-                  placeholder="Enter access code (if provided)"
-                />
-                <p className="text-gray-400 text-sm mt-1">
-                  Have an access code? Enter it here for special booking privileges.
-                </p>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <input
-                  type="checkbox"
-                  id="disclaimer"
-                  autoComplete="off"
-                  checked={disclaimerAccepted}
-                  onChange={(e) => setDisclaimerAccepted(e.target.checked)}
-                  className="mt-1 text-gold focus:ring-gold"
-                />
-                <label htmlFor="disclaimer" className="text-white text-sm">
-                  I have read and agree to the{' '}
-                  <a href="/disclaimer" target="_blank" className="text-gold hover:text-aqua underline">
-                    Disclaimer
-                  </a>
-                  .
-                </label>
-              </div>
-
-              <div className="text-center">
-                <button
-                  type="submit"
-                  disabled={isSubmitting || (!razorpayReady && !watch('accessCode'))}
-                  className="btn-primary text-lg px-12 py-4 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isSubmitting ? 'Processing...' : 'Book Appointment'}
-                </button>
-                <p className="text-gray-400 text-sm mt-2">
-                  {watch('accessCode') ? 'Special booking with access code' : 'Standard booking process'}
-                </p>
-              </div>
-
-              {submitMessage && (
-                <div className={`text-center p-4 rounded-lg ${
-                  typeof submitMessage === 'object' || (typeof submitMessage === 'string' && submitMessage.includes('successfully')) 
-                    ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
-                    : 'bg-red-500/20 text-red-400 border border-red-500/30'
-                }`}>
-                  {submitMessage}
-                </div>
-              )}
-            </form>
+            <BookingForm onSuccess={(data) => console.log('Booking success:', data)} />
           </motion.div>
 
           <motion.div
@@ -1899,92 +1367,6 @@ const Landing = () => {
           </motion.div>
         </div>
       </section>
-
-      {/* Disclaimer Modal */}
-      {showDisclaimerModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-gradient-to-br from-deep-purple/90 to-midnight-blue/90 backdrop-blur-sm border border-gold/30 rounded-xl p-8 max-w-md w-full"
-          >
-            <div className="text-center">
-              <div className="text-4xl mb-4">⚠️</div>
-              <h3 className="font-mystical text-[1.4rem] font-bold text-gold mb-4">Disclaimer Required</h3>
-              <p className="text-gray-300 mb-6">
-                Please check the "I have read and agree to the Disclaimer" box to proceed with your booking.
-              </p>
-              <button
-                onClick={() => setShowDisclaimerModal(false)}
-                className="btn-primary"
-              >
-                Close
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      )}
-
-      {/* Existing Booking Modal */}
-      {showExistingBookingModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-gradient-to-br from-deep-purple/90 to-midnight-blue/90 backdrop-blur-sm border border-gold/30 rounded-xl p-8 max-w-md w-full"
-          >
-            <div className="text-center">
-              <div className="text-4xl mb-4">⚠️</div>
-              <h3 className="font-mystical text-[1.4rem] font-bold text-gold mb-4">Existing Booking Found</h3>
-              <p className="text-gray-300 mb-6">
-                You already have a booking scheduled for:
-              </p>
-              <div className="bg-gold/20 border border-gold/50 rounded-lg p-4 mb-6">
-                <div className="text-gold font-bold mb-2">Booking #{existingBookingData?.bookingNumber}</div>
-                <div className="text-white">
-                  <div>Date: {existingBookingData?.date ? (() => {
-                    const date = new Date(existingBookingData.date)
-                    const day = date.getDate().toString().padStart(2, '0')
-                    const month = (date.getMonth() + 1).toString().padStart(2, '0')
-                    const year = date.getFullYear().toString().slice(-2)
-                    return `${day}/${month}/${year}`
-                  })() : 'N/A'}</div>
-                  <div>Time: {existingBookingData?.time}</div>
-                  <div>Service: {existingBookingData?.service}</div>
-                </div>
-              </div>
-              <p className="text-gray-300 text-sm mb-6">
-                Please contact us if you need to reschedule or book an additional session.
-              </p>
-              <div className="flex flex-col gap-3">
-                <button
-                  onClick={handleContinueBooking}
-                  disabled={isSubmitting}
-                  className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isSubmitting ? 'Booking...' : 'Continue Booking'}
-                </button>
-                <div className="flex gap-3">
-                  <button
-                    onClick={() => setShowExistingBookingModal(false)}
-                    className="btn-secondary flex-1"
-                  >
-                    Close
-                  </button>
-                  <a
-                    href="https://wa.me/919893578135"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-secondary flex-1 text-center"
-                  >
-                    Contact Us
-                  </a>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      )}
     </div>
   )
 }

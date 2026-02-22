@@ -1,9 +1,14 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-const BookingWizard = ({ onSubmit, isSubmitting, submitMessage, register, errors, watch, setValue, availableTimeSlots, selectedDate, disclaimerAccepted, setDisclaimerAccepted, reset }) => {
-  const [currentStep, setCurrentStep] = useState(1)
+const BookingWizard = ({ onSubmit, isSubmitting, submitMessage, register, errors, watch, setValue, availableTimeSlots, selectedDate, disclaimerAccepted, setDisclaimerAccepted, reset, wizardStep, setWizardStep }) => {
   const totalSteps = 8
+
+  // Reset wizard step when form is reset
+  const handleReset = () => {
+    reset()
+    setWizardStep(1)
+  }
 
   const steps = [
     { id: 1, field: 'name', label: 'Your Name', type: 'text', placeholder: 'Enter your full name', autoComplete: 'name' },
@@ -25,24 +30,17 @@ const BookingWizard = ({ onSubmit, isSubmitting, submitMessage, register, errors
   ]
 
   const nextStep = () => {
-    const currentField = steps[currentStep - 1].field
-    const value = watch(currentField)
-    
-    if (currentStep < 8) {
-      if (currentField === 'message' || value) {
-        setCurrentStep(currentStep + 1)
-      }
-    }
+    setWizardStep(wizardStep + 1)
   }
 
   const prevStep = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1)
+    if (wizardStep > 1) {
+      setWizardStep(wizardStep - 1)
     }
   }
 
   const renderStep = () => {
-    const step = steps[currentStep - 1]
+    const step = steps[wizardStep - 1]
 
     switch (step.type) {
       case 'text':
@@ -173,13 +171,10 @@ const BookingWizard = ({ onSubmit, isSubmitting, submitMessage, register, errors
       {/* Progress Bar */}
       <div className="mb-4">
         <div className="flex justify-between items-center mb-2">
-          <span className="text-gold text-xs font-medium">Step {currentStep} of {totalSteps}</span>
+          <span className="text-gold text-xs font-medium">Step {wizardStep} of {totalSteps}</span>
           <button
             type="button"
-            onClick={() => {
-              reset()
-              setCurrentStep(1)
-            }}
+            onClick={handleReset}
             className="text-gray-400 hover:text-gold text-xs transition-colors"
           >
             Reset Form
@@ -189,7 +184,7 @@ const BookingWizard = ({ onSubmit, isSubmitting, submitMessage, register, errors
           <motion.div
             className="h-full bg-gradient-to-r from-gold to-aqua"
             initial={{ width: 0 }}
-            animate={{ width: `${(currentStep / totalSteps) * 100}%` }}
+            animate={{ width: `${(wizardStep / totalSteps) * 100}%` }}
             transition={{ duration: 0.3 }}
           />
         </div>
@@ -197,16 +192,16 @@ const BookingWizard = ({ onSubmit, isSubmitting, submitMessage, register, errors
 
       {/* Step Content */}
       <div>
-        <h3 className="text-gold text-base font-semibold mb-3">{steps[currentStep - 1].label}</h3>
+        <h3 className="text-gold text-base font-semibold mb-3">{steps[wizardStep - 1].label}</h3>
         {renderStep()}
-        {errors[steps[currentStep - 1].field] && (
-          <p className="text-red-400 text-xs mt-1.5">{errors[steps[currentStep - 1].field].message}</p>
+        {errors[steps[wizardStep - 1].field] && (
+          <p className="text-red-400 text-xs mt-1.5">{errors[steps[wizardStep - 1].field].message}</p>
         )}
       </div>
 
       {/* Navigation Buttons */}
       <div className="mt-4 flex gap-2">
-        {currentStep > 1 && (
+        {wizardStep > 1 && (
           <button
             type="button"
             onClick={prevStep}
@@ -215,7 +210,7 @@ const BookingWizard = ({ onSubmit, isSubmitting, submitMessage, register, errors
             Back
           </button>
         )}
-        {currentStep < totalSteps ? (
+        {wizardStep < totalSteps ? (
           <button
             type="button"
             onClick={nextStep}

@@ -91,8 +91,9 @@ router.post('/', bookingRateLimit, validate(bookingSchema), async (req, res, nex
       const existingUserBooking = await Booking.findOne({
         $or: [{ email }, { phone }],
         date: { $gte: now },
-        status: { $ne: 'cancelled' }
-      })
+        status: { $nin: ['cancelled', 'completed'] },
+        paymentStatus: { $ne: 'failed' }
+      }).sort({ date: 1, time: 1 })
 
       if (existingUserBooking) {
         return res.status(409).json({
@@ -112,7 +113,8 @@ router.post('/', bookingRateLimit, validate(bookingSchema), async (req, res, nex
     const existingBooking = await Booking.findOne({ 
       date: new Date(date), 
       time,
-      status: { $ne: 'cancelled' }
+      status: { $ne: 'cancelled' },
+      paymentStatus: { $ne: 'failed' }
     })
 
     if (existingBooking) {
@@ -242,25 +244,38 @@ router.get('/available-slots/:date', async (req, res, next) => {
     const { date } = req.params
     const requestedDate = new Date(date)
 
-    // Check if date is valid and not in the past
-    if (isNaN(requestedDate.getTime()) || requestedDate < new Date().setHours(0, 0, 0, 0)) {
+    if (isNaN(requestedDate.getTime())) {
       return res.status(400).json({
         success: false,
-        message: 'Invalid date or date is in the past'
+        message: 'Invalid date'
       })
     }
 
-    // Get all booked time slots for the date
     const bookedSlots = await Booking.find({
       date: requestedDate,
-      status: { $ne: 'cancelled' }
-    }).select('time')
+      status: { $ne: 'cancelled' },
+      paymentStatus: { $ne: 'failed' }
+    }).select('time').lean()
 
-    const bookedTimes = bookedSlots.map(booking => booking.time)
-    const allTimeSlots = ['9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM', '6:00 PM']
-    const availableSlots = allTimeSlots.filter(slot => !bookedTimes.includes(slot))
+    const bookedTimes = bookedSlots.map(b => b.time)
+    const allSlots = ['9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM', '6:00 PM']
+    
+    let availableSlots = allSlots.filter(slot => !bookedTimes.includes(slot))
 
-    res.status(200).json({
+    // Filter past slots if today
+    const today = new Date()
+    if (requestedDate.toDateString() === today.toDateString()) {
+      const now = today.getHours() * 60 + today.getMinutes()
+      availableSlots = availableSlots.filter(slot => {
+        const [time, period] = slot.split(' ')
+        let [h, m] = time.split(':').map(Number)
+        if (period === 'PM' && h !== 12) h += 12
+        if (period === 'AM' && h === 12) h = 0
+        return (h * 60 + m) > now
+      })
+    }
+
+    res.json({
       success: true,
       data: {
         date: requestedDate,
@@ -268,7 +283,6 @@ router.get('/available-slots/:date', async (req, res, next) => {
         bookedSlots: bookedTimes
       }
     })
-
   } catch (error) {
     next(error)
   }
@@ -354,6 +368,7 @@ router.put('/reschedule/:id', async (req, res, next) => {
       date: new Date(date),
       time,
       status: { $ne: 'cancelled' },
+      paymentStatus: { $ne: 'failed' },
       _id: { $ne: req.params.id }
     })
 

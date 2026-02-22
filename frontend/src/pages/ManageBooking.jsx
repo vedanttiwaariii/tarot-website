@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
@@ -11,39 +11,34 @@ const ManageBooking = () => {
   const [selectedBooking, setSelectedBooking] = useState(null)
   const [rescheduleSubmitting, setRescheduleSubmitting] = useState(false)
   const [rescheduleMessage, setRescheduleMessage] = useState('')
+  const [availableSlots, setAvailableSlots] = useState([])
+  const [loadingSlots, setLoadingSlots] = useState(false)
 
   const { register: registerLookup, handleSubmit: handleLookupSubmit, formState: { errors: lookupErrors } } = useForm()
   const { register: registerReschedule, handleSubmit: handleRescheduleSubmit, formState: { errors: rescheduleErrors }, watch, reset: resetReschedule } = useForm()
 
   const selectedDate = watch('date')
 
-  const timeSlots = ['9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM', '6:00 PM']
-
-  const availableTimeSlots = useMemo(() => {
-    if (!selectedDate) return timeSlots
-    
-    const today = new Date()
-    const selected = new Date(selectedDate)
-    
-    if (selected.toDateString() === today.toDateString()) {
-      const currentHour = today.getHours()
-      const currentMinute = today.getMinutes()
-      
-      return timeSlots.filter(timeSlot => {
-        const [timeStr, period] = timeSlot.split(' ')
-        const [hours, minutes] = timeStr.split(':').map(Number)
-        let hour24 = hours
-        if (period === 'PM' && hours !== 12) hour24 += 12
-        if (period === 'AM' && hours === 12) hour24 = 0
-        
-        const slotTime = hour24 * 60 + minutes
-        const currentTime = currentHour * 60 + currentMinute
-        
-        return slotTime > currentTime
-      })
+  useEffect(() => {
+    if (!selectedDate) {
+      setAvailableSlots([])
+      return
     }
-    
-    return timeSlots
+
+    const fetchSlots = async () => {
+      setLoadingSlots(true)
+      try {
+        const res = await axios.get(`/api/bookings/available-slots/${selectedDate}`)
+        setAvailableSlots(res.data.data?.availableSlots || [])
+      } catch (err) {
+        console.error('Slot fetch error:', err)
+        setAvailableSlots([])
+      } finally {
+        setLoadingSlots(false)
+      }
+    }
+
+    fetchSlots()
   }, [selectedDate])
 
   const onLookupSubmit = async (data) => {
@@ -344,18 +339,21 @@ const ManageBooking = () => {
                   <label className="block text-gold font-semibold mb-1.5 md:mb-2 text-sm md:text-base">New Time *</label>
                   <select
                     {...registerReschedule('time', { required: 'Time is required' })}
-                    className="w-full px-3 py-2 bg-cosmic-blue/50 border border-gold/30 rounded text-white text-sm md:text-base focus:border-gold focus:outline-none"
+                    disabled={!selectedDate || loadingSlots}
+                    className="w-full px-3 py-2 bg-cosmic-blue/50 border border-gold/30 rounded text-white text-sm md:text-base focus:border-gold focus:outline-none disabled:opacity-50"
                   >
-                    <option value="">Choose a time...</option>
-                    {availableTimeSlots.map((time) => (
+                    <option value="">
+                      {!selectedDate ? 'Select date first' : loadingSlots ? 'Loading...' : 'Choose a time...'}
+                    </option>
+                    {availableSlots.map((time) => (
                       <option key={time} value={time}>
                         {time}
                       </option>
                     ))}
                   </select>
-                  {availableTimeSlots.length === 0 && selectedDate && (
+                  {availableSlots.length === 0 && selectedDate && !loadingSlots && (
                     <p className="text-yellow-400 text-xs md:text-sm mt-1">
-                      No time slots available for today. Please select a future date.
+                      No time slots available for this date.
                     </p>
                   )}
                   {rescheduleErrors.time && <p className="text-red-400 text-xs md:text-sm mt-1">{rescheduleErrors.time.message}</p>}
