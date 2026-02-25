@@ -269,13 +269,15 @@ const Landing = () => {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className={`backdrop-blur-xl bg-gradient-to-br from-deep-purple/40 to-midnight-blue/30 border border-gold/30 p-4 shadow-lg shadow-gold/10 overflow-hidden ${
+              className={`backdrop-blur-xl bg-gradient-to-br from-deep-purple/40 to-midnight-blue/30 border border-gold/30 p-4 shadow-lg shadow-gold/10 overflow-hidden relative ${
                 expandedCards.tarot ? 'rounded-3xl shadow-xl shadow-gold/20 bg-deep-purple/50' : 'rounded-2xl'
               }`}
             >
+              <div className="absolute inset-0 opacity-25 bg-center bg-cover" style={{ backgroundImage: 'url(/images/tarot.png)' }}></div>
+              <div className="relative z-10">
               <div className="flex items-start justify-between mb-2">
                 <div className="flex items-center gap-2">
-                  <span className="text-2xl leading-none">🔮</span>
+                  <img src="/images/tarot sti.png" alt="Tarot" className="w-8 h-8 object-contain" />
                   <div>
                     <h3 className="text-white font-bold text-base leading-tight">Tarot Reading</h3>
                   </div>
@@ -358,6 +360,7 @@ const Landing = () => {
                   </button>
                 </motion.div>
               )}
+              </div>
             </motion.div>
 
             {/* Reiki Healing */}
@@ -365,13 +368,15 @@ const Landing = () => {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className={`backdrop-blur-xl bg-gradient-to-br from-deep-purple/40 to-midnight-blue/30 border border-gold/30 p-4 shadow-lg shadow-gold/10 overflow-hidden ${
+              className={`backdrop-blur-xl bg-gradient-to-br from-deep-purple/40 to-midnight-blue/30 border border-gold/30 p-4 shadow-lg shadow-gold/10 overflow-hidden relative ${
                 expandedCards.reiki ? 'rounded-3xl shadow-xl shadow-gold/20 bg-deep-purple/50' : 'rounded-2xl'
               }`}
             >
+              <div className="absolute inset-0 opacity-25 bg-center bg-cover" style={{ backgroundImage: 'url(/images/reikei.png)' }}></div>
+              <div className="relative z-10">
               <div className="flex items-start justify-between mb-2">
                 <div className="flex items-center gap-2">
-                  <span className="text-2xl leading-none">✨</span>
+                  <img src="/images/reiki sti.png" alt="Reiki" className="w-8 h-8 object-contain" />
                   <div>
                     <h3 className="text-white font-bold text-base leading-tight">Reiki Healing</h3>
                   </div>
@@ -454,6 +459,7 @@ const Landing = () => {
                   </button>
                 </motion.div>
               )}
+              </div>
             </motion.div>
 
             {/* Jal Jyotish */}
@@ -461,13 +467,15 @@ const Landing = () => {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className={`backdrop-blur-xl bg-gradient-to-br from-deep-purple/40 to-midnight-blue/30 border border-gold/30 p-4 shadow-lg shadow-gold/10 overflow-hidden ${
+              className={`backdrop-blur-xl bg-gradient-to-br from-deep-purple/40 to-midnight-blue/30 border border-gold/30 p-4 shadow-lg shadow-gold/10 overflow-hidden relative ${
                 expandedCards.jal ? 'rounded-3xl shadow-xl shadow-gold/20 bg-deep-purple/50' : 'rounded-2xl'
               }`}
             >
+              <div className="absolute inset-0 opacity-25 bg-center bg-cover" style={{ backgroundImage: 'url(/images/water.png)' }}></div>
+              <div className="relative z-10">
               <div className="flex items-start justify-between mb-2">
                 <div className="flex items-center gap-2">
-                  <span className="text-2xl leading-none">💧</span>
+                  <img src="/images/jal sti.png" alt="Jal Jyotish" className="w-8 h-8 object-contain" />
                   <div>
                     <h3 className="text-white font-bold text-base leading-tight">Jal Jyotish</h3>
                   </div>
@@ -550,6 +558,7 @@ const Landing = () => {
                   </button>
                 </motion.div>
               )}
+              </div>
             </motion.div>
           </div>
         </div>

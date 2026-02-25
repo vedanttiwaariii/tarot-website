@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 
-const ServiceCard = ({ title, description, icon, price, features }) => {
+const ServiceCard = ({ title, description, icon, image, price, features }) => {
   const [showDetails, setShowDetails] = useState(false)
   
   return (
@@ -10,7 +10,11 @@ const ServiceCard = ({ title, description, icon, price, features }) => {
       className="card-mystical h-full"
     >
       <div className="text-center mb-4 md:mb-6">
-        <div className="text-4xl md:text-6xl mb-3 md:mb-4 animate-float">{icon}</div>
+        {image ? (
+          <img src={image} alt={title} className="w-20 h-20 md:w-28 md:h-28 mx-auto mb-3 md:mb-4 object-contain animate-float" />
+        ) : (
+          <div className="text-4xl md:text-6xl mb-3 md:mb-4 animate-float">{icon}</div>
+        )}
         <h3 className="font-mystical text-xl md:text-2xl font-semibold text-gold mb-2">{title}</h3>
         <div className="text-2xl md:text-3xl font-bold text-gradient mb-3 md:mb-4">{price}</div>
         

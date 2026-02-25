@@ -8,6 +8,7 @@ const Services = () => {
       title: "Tarot Reading",
       description: "Unlock the mysteries of your future with ancient tarot wisdom. Our comprehensive tarot readings provide deep insights into your life's journey, relationships, career, and spiritual path.",
       icon: "🔮",
+      image: "/images/tarot sti.png",
       price: "$75",
       features: [
         "30-minute detailed session",
@@ -22,6 +23,7 @@ const Services = () => {
       title: "Reiki Healing",
       description: "Restore balance and harmony through universal life energy. Experience deep relaxation and healing as we work to align your chakras and clear energy blockages.",
       icon: "🙏",
+      image: "/images/reiki sti.png",
       price: "$90",
       features: [
         "60-minute healing session",
@@ -36,6 +38,7 @@ const Services = () => {
       title: "Water Divination (Jal Jyotishi)",
       description: "Ancient water divination techniques passed down through generations. Discover hidden truths and receive spiritual guidance through the sacred element of water.",
       icon: "💧",
+      image: "/images/jal sti.png",
       price: "$65",
       features: [
         "Traditional Jal Jyotishi methods",

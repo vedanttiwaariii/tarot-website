@@ -27,6 +27,7 @@ const BookingForm = ({ onSuccess }) => {
   })
 
   const selectedDate = watch('date')
+  const selectedService = watch('service')
 
   useEffect(() => {
     if (!selectedDate) {
@@ -384,15 +385,17 @@ const BookingForm = ({ onSuccess }) => {
             />
             <span className="text-white text-sm">In-Person</span>
           </label>
-          <label className="flex items-center p-2.5 bg-cosmic-blue/50 border border-gold/30 rounded-xl">
-            <input
-              type="radio"
-              value="online"
-              {...register('sessionType', { required: 'Session type required' })}
-              className="mr-2"
-            />
-            <span className="text-white text-sm">Online</span>
-          </label>
+          {selectedService !== 'water-divination' && (
+            <label className="flex items-center p-2.5 bg-cosmic-blue/50 border border-gold/30 rounded-xl">
+              <input
+                type="radio"
+                value="online"
+                {...register('sessionType', { required: 'Session type required' })}
+                className="mr-2"
+              />
+              <span className="text-white text-sm">Online</span>
+            </label>
+          )}
           {errors.sessionType && <p className="text-red-400 text-xs">{errors.sessionType.message}</p>}
 
           <textarea

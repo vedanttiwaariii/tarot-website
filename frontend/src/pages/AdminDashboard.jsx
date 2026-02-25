@@ -216,6 +216,7 @@ const AdminDashboard = () => {
   const filteredBookings = bookings.filter(b => {
     if (filterStatus === 'all') return true
     if (filterStatus === 'active') return b.status === 'pending' || b.status === 'confirmed'
+    if (filterStatus === 'confirmed') return b.status === 'confirmed'
     if (filterStatus === 'failed') return b.paymentStatus === 'failed'
     if (filterStatus === 'cancelled') return b.status === 'cancelled'
     if (filterStatus === 'completed') return b.status === 'completed'
@@ -296,6 +297,14 @@ const AdminDashboard = () => {
               }`}
             >
               Active ({bookings.filter(b => b.status === 'pending' || b.status === 'confirmed').length})
+            </button>
+            <button
+              onClick={() => setFilterStatus('confirmed')}
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap ${
+                filterStatus === 'confirmed' ? 'bg-green-500 text-white' : 'bg-deep-purple/30 text-gray-300'
+              }`}
+            >
+              Confirmed ({bookings.filter(b => b.status === 'confirmed').length})
             </button>
             <button
               onClick={() => setFilterStatus('failed')}
