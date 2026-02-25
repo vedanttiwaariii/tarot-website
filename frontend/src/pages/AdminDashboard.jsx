@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import axios from 'axios'
 import AdminLogin from '../components/AdminLogin'
+import ContentManager from '../components/ContentManager'
 
 const AdminDashboard = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -274,6 +275,16 @@ const AdminDashboard = () => {
             Messages
             <span className="ml-1 text-xs">({messages.length})</span>
           </button>
+          <button
+            onClick={() => setActiveTab('content')}
+            className={`flex-1 min-w-[100px] px-4 py-3 text-sm font-semibold transition-colors ${
+              activeTab === 'content'
+                ? 'bg-gold/20 text-gold border-b-2 border-gold'
+                : 'text-gray-400'
+            }`}
+          >
+            Content
+          </button>
         </div>
       </div>
 
@@ -444,6 +455,9 @@ const AdminDashboard = () => {
           )}
         </div>
       )}
+
+      {/* Content Tab */}
+      {activeTab === 'content' && <ContentManager />}
 
       {/* Bulk Action Bar */}
       {selectionMode && (

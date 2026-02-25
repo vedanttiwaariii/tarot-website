@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import api from '../../api/axios'
 import { handlePaymentFlow } from '../../utils/razorpayHandler'
+import { usePricing } from '../../hooks/usePricing'
 
-const BookingForm = ({ onSuccess }) => {
+const BookingForm = ({ onSuccess, pricing }) => {
+  const dynamicPricing = pricing || usePricing()
   const [step, setStep] = useState(1)
   const [slots, setSlots] = useState([])
   const [loadingSlots, setLoadingSlots] = useState(false)
@@ -206,6 +208,22 @@ const BookingForm = ({ onSuccess }) => {
   }
 
   if (bookingDetails) {
+    const copyDetails = () => {
+      const text = `Booking Confirmed!
+
+Booking Number: ${bookingDetails.bookingNumber}
+Name: ${bookingDetails.name}
+Service: ${bookingDetails.service}
+Date: ${new Date(bookingDetails.date).toLocaleDateString('en-GB')}
+Time: ${bookingDetails.time}
+Session Type: ${bookingDetails.sessionType}${bookingDetails.paymentId ? `\nPayment ID: ${bookingDetails.paymentId}` : ''}`
+      
+      navigator.clipboard.writeText(text).then(() => {
+        setMessage('Details copied to clipboard!')
+        setTimeout(() => setMessage(''), 2000)
+      })
+    }
+
     return (
       <div className="space-y-4">
         <div className="text-center">
@@ -248,11 +266,24 @@ const BookingForm = ({ onSuccess }) => {
         </div>
 
         <button
+          onClick={copyDetails}
+          className="w-full py-2.5 border border-gold/30 text-gold rounded-xl hover:bg-gold/10 transition-colors"
+        >
+          📋 Copy Details
+        </button>
+
+        <button
           onClick={() => setBookingDetails(null)}
           className="w-full py-3 bg-gradient-to-r from-gold to-aqua text-deep-purple font-bold rounded-xl"
         >
           Book Another Appointment
         </button>
+
+        {message && (
+          <div className="text-center text-green-400 text-xs">
+            {message}
+          </div>
+        )}
       </div>
     )
   }
@@ -327,9 +358,9 @@ const BookingForm = ({ onSuccess }) => {
             className="w-full px-3 py-2.5 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white text-sm"
           >
             <option value="">Select Service *</option>
-            <option value="tarot">Tarot Reading - ₹1,100</option>
-            <option value="reiki">Reiki Healing - ₹1,551</option>
-            <option value="water-divination">Water Divination - ₹21,000</option>
+            <option value="tarot">Tarot Reading - ₹{dynamicPricing.tarot?.price || 1100}</option>
+            <option value="reiki">Reiki Healing - ₹{dynamicPricing.reiki?.price || 1551}</option>
+            <option value="water-divination">Water Divination - ₹{dynamicPricing['water-divination']?.price || 21000}</option>
           </select>
           {errors.service && <p className="text-red-400 text-xs">{errors.service.message}</p>}
 

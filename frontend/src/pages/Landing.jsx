@@ -1,17 +1,94 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import ServiceCard from '../components/ServiceCard'
 import ShinyText from '../components/ShinyText'
-import { lazy, Suspense, useState } from 'react'
+import PriceDisplay from '../components/PriceDisplay'
+import { lazy, Suspense, useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import api from '../api/axios'
+import axios from 'axios'
 import BookingForm from '../components/booking/BookingForm'
+import { usePricing } from '../hooks/usePricing'
 
 const Threads = lazy(() => import('../components/Threads'))
 
 
 const Landing = () => {
+  const pricing = usePricing()
+  const [content, setContent] = useState({
+    'hero-title': 'Krushnalaya',
+    'hero-tagline': 'KNOW · HEAL · GROW',
+    'hero-description': 'When life feels uncertain, clarity begins within. Discover your direction through spiritual guidance.',
+    'about-journey': 'The seeds were always within me. Through years of study in tarot, energy healing, and ancient wisdom traditions, I discovered that true knowledge comes from quiet moments of connection. When this journey led me to understand myself, I felt called to help others discover their inner clarity.'
+  })
   const [allCardsExpanded, setAllCardsExpanded] = useState(false)
   const [expandedCards, setExpandedCards] = useState({ tarot: false, reiki: false, jal: false })
+  const [isBooking, setIsBooking] = useState(false)
+  const [lockedPricing, setLockedPricing] = useState(null)
+  const [updateAvailable, setUpdateAvailable] = useState(false)
+
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        const response = await axios.get('/api/content')
+        setContent(prev => ({ ...prev, ...response.data.data }))
+      } catch (error) {
+        console.error('Error fetching content:', error)
+      }
+    }
+    fetchContent()
+  }, [])
+
+  // Smart polling - only when NOT booking
+  useEffect(() => {
+    if (isBooking) return // Don't poll during booking
+
+    const checkForUpdates = async () => {
+      try {
+        const [pricingRes, contentRes] = await Promise.all([
+          axios.get('/api/pricing'),
+          axios.get('/api/content')
+        ])
+        
+        // Check if pricing changed
+        const newPricing = {}
+        pricingRes.data.data.forEach(item => {
+          newPricing[item.serviceId] = item.price
+        })
+        
+        const currentPricing = {
+          tarot: pricing.tarot?.price,
+          reiki: pricing.reiki?.price,
+          'water-divination': pricing['water-divination']?.price
+        }
+        
+        if (JSON.stringify(newPricing) !== JSON.stringify(currentPricing)) {
+          setUpdateAvailable(true)
+        }
+      } catch (error) {
+        console.error('Error checking updates:', error)
+      }
+    }
+
+    const interval = setInterval(checkForUpdates, 10000) // Check every 10 seconds
+    return () => clearInterval(interval)
+  }, [isBooking, pricing])
+
+  const handleRefresh = () => {
+    window.location.reload()
+  }
+
+  const handleBookingStart = () => {
+    setIsBooking(true)
+    setLockedPricing(pricing)
+  }
+
+  const handleBookingComplete = () => {
+    setIsBooking(false)
+    setLockedPricing(null)
+    if (updateAvailable) {
+      setTimeout(() => window.location.reload(), 1000)
+    }
+  }
 
   const [isContactSubmitting, setIsContactSubmitting] = useState(false)
   const [contactSubmitMessage, setContactSubmitMessage] = useState('')
@@ -183,8 +260,26 @@ const Landing = () => {
     }
   }
 
+  const handleServiceSelect = (service) => {
+    // Scroll to booking section
+    document.getElementById('book')?.scrollIntoView({ behavior: 'smooth' })
+  }
+
   return (
     <div className="min-h-screen relative pb-20" style={{ overscrollBehavior: 'none' }}>
+      {/* Update Notification */}
+      {updateAvailable && !isBooking && (
+        <div className="fixed top-4 right-4 bg-gold text-cosmic-blue px-4 py-2 rounded-lg shadow-lg z-50 flex items-center gap-3 animate-pulse">
+          <span className="text-sm font-semibold">New updates available!</span>
+          <button
+            onClick={handleRefresh}
+            className="bg-cosmic-blue text-gold px-3 py-1 rounded text-xs font-bold hover:bg-deep-purple transition-colors"
+          >
+            Refresh
+          </button>
+        </div>
+      )}
+
       {/* Threads Background */}
       <div className="fixed inset-0 -z-10" style={{ paddingBottom: '100px' }}>
         <div className="absolute inset-0 bg-gradient-to-br from-cosmic-blue via-deep-purple to-midnight-blue" style={{ height: 'calc(100% + 150px)' }}></div>
@@ -211,15 +306,15 @@ const Landing = () => {
           </div>
           
           <h1 className="font-mystical text-[2rem] font-bold text-gold mb-1">
-            Krushnalaya
+            {content['hero-title']}
           </h1>
           
           <p className="text-aqua text-xs font-semibold tracking-[0.3em] mb-3">
-            KNOW · HEAL · GROW
+            {content['hero-tagline']}
           </p>
           
           <p className="text-gray-300 text-sm leading-relaxed mb-6 max-w-xs mx-auto">
-            When life feels uncertain, clarity begins within. Discover your direction through spiritual guidance.
+            {content['hero-description']}
           </p>
         </motion.div>
       </section>
@@ -282,7 +377,7 @@ const Landing = () => {
                     <h3 className="text-white font-bold text-base leading-tight">Tarot Reading</h3>
                   </div>
                 </div>
-                <div className="text-[#18c2a4] font-bold text-lg leading-none">₹1,100</div>
+                <PriceDisplay serviceId="tarot" pricing={pricing} />
               </div>
               
               {!expandedCards.tarot ? (
@@ -381,7 +476,7 @@ const Landing = () => {
                     <h3 className="text-white font-bold text-base leading-tight">Reiki Healing</h3>
                   </div>
                 </div>
-                <div className="text-[#18c2a4] font-bold text-lg leading-none">₹1,551</div>
+                <PriceDisplay serviceId="reiki" pricing={pricing} />
               </div>
               
               {!expandedCards.reiki ? (
@@ -480,7 +575,7 @@ const Landing = () => {
                     <h3 className="text-white font-bold text-base leading-tight">Jal Jyotish</h3>
                   </div>
                 </div>
-                <div className="text-[#18c2a4] font-bold text-lg leading-none">₹21,000</div>
+                <PriceDisplay serviceId="water-divination" pricing={pricing} />
               </div>
               
               {!expandedCards.jal ? (
@@ -587,10 +682,7 @@ const Landing = () => {
             className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-5 shadow-lg shadow-gold/10"
           >
             <p className="text-gray-300 text-sm leading-relaxed text-center">
-              The seeds were always within me. Through years of study in tarot, energy healing, and ancient wisdom traditions, I discovered that true knowledge comes from quiet moments of connection.
-            </p>
-            <p className="text-gray-300 text-sm leading-relaxed text-center mt-3">
-              When this journey led me to understand myself, I felt called to help others discover their inner clarity.
+              {content['about-journey']}
             </p>
           </motion.div>
 
@@ -675,8 +767,12 @@ const Landing = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-5 shadow-lg shadow-gold/10"
+            onFocus={handleBookingStart}
           >
-            <BookingForm onSuccess={(data) => console.log('Booking success:', data)} />
+            <BookingForm 
+              onSuccess={handleBookingComplete}
+              pricing={lockedPricing || pricing}
+            />
           </motion.div>
         </div>
       </section>
