@@ -30,7 +30,12 @@ export const bookingSchema = Joi.object({
     .required(),
   
   date: Joi.date()
-    .required(),
+    .iso()
+    .required()
+    .messages({
+      'date.base': 'Invalid date format',
+      'date.format': 'Date must be in ISO format'
+    }),
   
   time: Joi.string()
     .valid('9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM', '6:00 PM')

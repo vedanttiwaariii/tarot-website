@@ -5,6 +5,7 @@ import AccessCode from '../models/AccessCode.js'
 import Pricing from '../models/Pricing.js'
 import { validate, bookingSchema } from '../middleware/validation.js'
 import { authenticateAdmin } from '../middleware/auth.js'
+import { sendStatusUpdate } from '../utils/whatsappService.js'
 
 const router = express.Router()
 
@@ -465,6 +466,14 @@ router.put('/:id', async (req, res, next) => {
           success: false,
           message: 'Booking not found'
         })
+      }
+      
+      // Send WhatsApp notification for status change
+      try {
+        await sendStatusUpdate(booking, status)
+      } catch (whatsappError) {
+        console.error('⚠️ WhatsApp notification failed:', whatsappError.message)
+        // Don't fail the update if WhatsApp fails
       }
 
       return res.status(200).json({

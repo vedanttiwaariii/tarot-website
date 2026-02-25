@@ -255,35 +255,44 @@ const AdminDashboard = () => {
         <div className="flex overflow-x-auto">
           <button
             onClick={() => setActiveTab('bookings')}
-            className={`flex-1 min-w-[100px] px-4 py-3 text-sm font-semibold transition-colors ${
+            className={`relative flex-1 min-w-[100px] px-4 py-3 text-sm font-semibold transition-colors ${
               activeTab === 'bookings'
-                ? 'bg-gold/20 text-gold border-b-2 border-gold'
+                ? 'text-gold'
                 : 'text-gray-400'
             }`}
           >
-            Bookings
-            <span className="ml-1 text-xs">({bookings.filter(b => b.status !== 'cancelled').length})</span>
+            {activeTab === 'bookings' && (
+              <div className="absolute inset-0 bg-gold/20 border-b-2 border-gold"></div>
+            )}
+            <span className="relative">Bookings</span>
+            <span className="relative ml-1 text-xs">({bookings.filter(b => b.status !== 'cancelled').length})</span>
           </button>
           <button
             onClick={() => setActiveTab('messages')}
-            className={`flex-1 min-w-[100px] px-4 py-3 text-sm font-semibold transition-colors ${
+            className={`relative flex-1 min-w-[100px] px-4 py-3 text-sm font-semibold transition-colors ${
               activeTab === 'messages'
-                ? 'bg-gold/20 text-gold border-b-2 border-gold'
+                ? 'text-gold'
                 : 'text-gray-400'
             }`}
           >
-            Messages
-            <span className="ml-1 text-xs">({messages.length})</span>
+            {activeTab === 'messages' && (
+              <div className="absolute inset-0 bg-gold/20 border-b-2 border-gold"></div>
+            )}
+            <span className="relative">Messages</span>
+            <span className="relative ml-1 text-xs">({messages.length})</span>
           </button>
           <button
             onClick={() => setActiveTab('content')}
-            className={`flex-1 min-w-[100px] px-4 py-3 text-sm font-semibold transition-colors ${
+            className={`relative flex-1 min-w-[100px] px-4 py-3 text-sm font-semibold transition-colors ${
               activeTab === 'content'
-                ? 'bg-gold/20 text-gold border-b-2 border-gold'
+                ? 'text-gold'
                 : 'text-gray-400'
             }`}
           >
-            Content
+            {activeTab === 'content' && (
+              <div className="absolute inset-0 bg-gold/20 border-b-2 border-gold"></div>
+            )}
+            <span className="relative">Content</span>
           </button>
         </div>
       </div>

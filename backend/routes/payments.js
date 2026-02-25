@@ -5,6 +5,7 @@ import { body, validationResult } from 'express-validator'
 import rateLimit from 'express-rate-limit'
 import Booking from '../models/Booking.js'
 import Pricing from '../models/Pricing.js'
+import { sendBookingConfirmation, sendPaymentFailure } from '../utils/whatsappService.js'
 
 const router = express.Router()
 
@@ -285,6 +286,14 @@ router.post('/verify', paymentLimiter, validateVerifyPayment, async (req, res, n
       updatedBooking = await booking.save()
 
       console.log('✅ Booking updated with payment details:', bookingId)
+      
+      // Send WhatsApp confirmation
+      try {
+        await sendBookingConfirmation(booking)
+      } catch (whatsappError) {
+        console.error('⚠️ WhatsApp notification failed:', whatsappError.message)
+        // Don't fail the payment if WhatsApp fails
+      }
     }
 
     res.status(200).json({
@@ -326,11 +335,20 @@ router.post('/failure', async (req, res, next) => {
 
     // Update booking status to failed
     if (bookingId) {
-      await Booking.findByIdAndUpdate(bookingId, {
+      const booking = await Booking.findByIdAndUpdate(bookingId, {
         paymentStatus: 'failed',
         orderId: orderId || null,
         failureReason: error?.description || 'Payment failed'
-      })
+      }, { new: true })
+      
+      // Send WhatsApp notification
+      if (booking) {
+        try {
+          await sendPaymentFailure(booking)
+        } catch (whatsappError) {
+          console.error('⚠️ WhatsApp notification failed:', whatsappError.message)
+        }
+      }
     }
 
     res.status(200).json({
