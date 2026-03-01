@@ -63,19 +63,21 @@ const Landing = () => {
         ])
         
         // Check if pricing changed
-        const newPricing = {}
-        pricingRes.data.data.forEach(item => {
-          newPricing[item.serviceId] = item.price
-        })
-        
-        const currentPricing = {
-          tarot: pricing.tarot?.price,
-          reiki: pricing.reiki?.price,
-          'water-divination': pricing['water-divination']?.price
-        }
-        
-        if (JSON.stringify(newPricing) !== JSON.stringify(currentPricing)) {
-          setUpdateAvailable(true)
+        if (pricingRes.data?.data && Array.isArray(pricingRes.data.data)) {
+          const newPricing = {}
+          pricingRes.data.data.forEach(item => {
+            newPricing[item.serviceId] = item.price
+          })
+          
+          const currentPricing = {
+            tarot: pricing.tarot?.price,
+            reiki: pricing.reiki?.price,
+            'water-divination': pricing['water-divination']?.price
+          }
+          
+          if (JSON.stringify(newPricing) !== JSON.stringify(currentPricing)) {
+            setUpdateAvailable(true)
+          }
         }
       } catch (error) {
         console.error('Error checking updates:', error)

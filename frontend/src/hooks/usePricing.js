@@ -12,17 +12,20 @@ export const usePricing = () => {
     const fetchPricing = async () => {
       try {
         const response = await axios.get('/api/pricing');
-        const pricingData = {};
-        response.data.data.forEach(item => {
-          pricingData[item.serviceId] = {
-            price: item.price,
-            originalPrice: item.originalPrice,
-            specialEvent: item.specialEvent
-          };
-        });
-        setPricing(prev => ({ ...prev, ...pricingData }));
+        if (response.data?.data && Array.isArray(response.data.data)) {
+          const pricingData = {};
+          response.data.data.forEach(item => {
+            pricingData[item.serviceId] = {
+              price: item.price,
+              originalPrice: item.originalPrice,
+              specialEvent: item.specialEvent
+            };
+          });
+          setPricing(prev => ({ ...prev, ...pricingData }));
+        }
       } catch (error) {
         console.error('Error fetching pricing:', error);
+        // Keep default pricing on error
       }
     };
 
