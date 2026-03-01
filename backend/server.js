@@ -17,6 +17,7 @@ import authRoutes from "./routes/auth.js";
 import paymentRoutes from "./routes/payments.js";
 import pricingRoutes from "./routes/pricing.js";
 import contentRoutes from "./routes/content.js";
+import servicesRoutes from "./routes/services.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 
 // Connect to MongoDB
@@ -134,6 +135,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/pricing", pricingRoutes);
 app.use("/api/content", contentRoutes);
+app.use("/api/services", servicesRoutes);
 
 // Health check
 app.get("/api/health", (req, res) => {

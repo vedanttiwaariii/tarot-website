@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import axios from 'axios'
 import AdminLogin from '../components/AdminLogin'
 import ContentManager from '../components/ContentManager'
+import ServiceManager from '../components/ServiceManager'
 
 const AdminDashboard = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -252,47 +253,48 @@ const AdminDashboard = () => {
 
       {/* Tab Navigation */}
       <div className="bg-deep-purple/20 border-b border-gold/10 sticky top-[57px] z-30">
-        <div className="flex overflow-x-auto">
+        <div className="flex overflow-x-auto scrollbar-hide">
           <button
             onClick={() => setActiveTab('bookings')}
-            className={`relative flex-1 min-w-[100px] px-4 py-3 text-sm font-semibold transition-colors ${
+            className={`flex-shrink-0 px-4 py-3 text-sm font-semibold transition-colors whitespace-nowrap ${
               activeTab === 'bookings'
-                ? 'text-gold'
+                ? 'bg-gold/20 text-gold border-b-2 border-gold'
                 : 'text-gray-400'
             }`}
           >
-            {activeTab === 'bookings' && (
-              <div className="absolute inset-0 bg-gold/20 border-b-2 border-gold"></div>
-            )}
-            <span className="relative">Bookings</span>
-            <span className="relative ml-1 text-xs">({bookings.filter(b => b.status !== 'cancelled').length})</span>
+            Bookings
+            <span className="ml-1 text-xs">({bookings.filter(b => b.status !== 'cancelled').length})</span>
           </button>
           <button
             onClick={() => setActiveTab('messages')}
-            className={`relative flex-1 min-w-[100px] px-4 py-3 text-sm font-semibold transition-colors ${
+            className={`flex-shrink-0 px-4 py-3 text-sm font-semibold transition-colors whitespace-nowrap ${
               activeTab === 'messages'
-                ? 'text-gold'
+                ? 'bg-gold/20 text-gold border-b-2 border-gold'
                 : 'text-gray-400'
             }`}
           >
-            {activeTab === 'messages' && (
-              <div className="absolute inset-0 bg-gold/20 border-b-2 border-gold"></div>
-            )}
-            <span className="relative">Messages</span>
-            <span className="relative ml-1 text-xs">({messages.length})</span>
+            Messages
+            <span className="ml-1 text-xs">({messages.length})</span>
           </button>
           <button
             onClick={() => setActiveTab('content')}
-            className={`relative flex-1 min-w-[100px] px-4 py-3 text-sm font-semibold transition-colors ${
+            className={`flex-shrink-0 px-4 py-3 text-sm font-semibold transition-colors whitespace-nowrap ${
               activeTab === 'content'
-                ? 'text-gold'
+                ? 'bg-gold/20 text-gold border-b-2 border-gold'
                 : 'text-gray-400'
             }`}
           >
-            {activeTab === 'content' && (
-              <div className="absolute inset-0 bg-gold/20 border-b-2 border-gold"></div>
-            )}
-            <span className="relative">Content</span>
+            Content
+          </button>
+          <button
+            onClick={() => setActiveTab('services')}
+            className={`flex-shrink-0 px-4 py-3 text-sm font-semibold transition-colors whitespace-nowrap ${
+              activeTab === 'services'
+                ? 'bg-gold/20 text-gold border-b-2 border-gold'
+                : 'text-gray-400'
+            }`}
+          >
+            Services
           </button>
         </div>
       </div>
@@ -467,6 +469,9 @@ const AdminDashboard = () => {
 
       {/* Content Tab */}
       {activeTab === 'content' && <ContentManager />}
+
+      {/* Services Tab */}
+      {activeTab === 'services' && <ServiceManager />}
 
       {/* Bulk Action Bar */}
       {selectionMode && (

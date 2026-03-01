@@ -20,6 +20,8 @@ const Landing = () => {
     'hero-description': 'When life feels uncertain, clarity begins within. Discover your direction through spiritual guidance.',
     'about-journey': 'The seeds were always within me. Through years of study in tarot, energy healing, and ancient wisdom traditions, I discovered that true knowledge comes from quiet moments of connection. When this journey led me to understand myself, I felt called to help others discover their inner clarity.'
   })
+  const [services, setServices] = useState([])
+  const [servicesLoading, setServicesLoading] = useState(true)
   const [allCardsExpanded, setAllCardsExpanded] = useState(false)
   const [expandedCards, setExpandedCards] = useState({ tarot: false, reiki: false, jal: false })
   const [isBooking, setIsBooking] = useState(false)
@@ -35,7 +37,18 @@ const Landing = () => {
         console.error('Error fetching content:', error)
       }
     }
+    const fetchServices = async () => {
+      try {
+        const response = await axios.get('/api/services')
+        setServices(response.data.data)
+      } catch (error) {
+        console.error('Error fetching services:', error)
+      } finally {
+        setServicesLoading(false)
+      }
+    }
     fetchContent()
+    fetchServices()
   }, [])
 
   // Smart polling - only when NOT booking
@@ -113,49 +126,23 @@ const Landing = () => {
     mode: 'onSubmit'
   })
 
-  const services = [
-    {
-      title: "Tarot Reading",
-      description: "Unlock the mysteries of your future with ancient tarot wisdom. Our comprehensive tarot readings provide deep insights into your life's journey, relationships, career, and spiritual path.",
-      icon: "🔮",
-      price: "₹1,100",
-      features: [
-        "30-minute detailed session",
-        "Professional card interpretation",
-        "Follow-up guidance included",
-        "Past, present, future insights",
-        "Relationship & career guidance"
-      ]
-    },
-    {
-      title: "Reiki Healing",
-      description: "Restore balance and harmony through universal life energy. Experience deep relaxation and healing as we work to align your chakras and clear energy blockages.",
-      icon: "🙏",
-      price: "₹1,551",
-      features: [
-        "60-minute healing session",
-        "Full body energy cleansing",
-        "Chakra balancing & alignment",
-        "Stress relief techniques",
-        "Emotional healing support",
-        "Personalized aftercare advice"
-      ]
-    },
-    {
-      title: "Water Divination (Jal Jyotishi)",
-      description: "Locate underground water sources for wells and borewells using traditional coconut-based detection methods. Our experienced practitioner walks your land to identify optimal drilling locations, helping reduce costs and failure risks before excavation begins.",
-      icon: "💧",
-      price: "₹21,000",
-      features: [
-        "Traditional coconut detection method",
-        "On-site land assessment",
-        "Optimal drilling location marking",
-        "Cost-effective pre-drilling guidance",
-        "Suitable for homes, farms & businesses",
-        "Risk reduction consultation"
-      ]
+  const getServiceIcon = (serviceType) => {
+    const icons = {
+      'tarot': '🔮',
+      'reiki': '🙏',
+      'water-divination': '💧'
     }
-  ]
+    return icons[serviceType] || '✨'
+  }
+
+  const getServiceImage = (serviceType) => {
+    const images = {
+      'tarot': { bg: '/images/tarot.png', icon: '/images/tarot sti.png' },
+      'reiki': { bg: '/images/reikei.png', icon: '/images/reiki sti.png' },
+      'water-divination': { bg: '/images/water.png', icon: '/images/jal sti.png' }
+    }
+    return images[serviceType] || { bg: '', icon: '' }
+  }
 
   const bookingServices = [
     { value: 'tarot', label: 'Tarot Reading - ₹1,100', duration: '30 min' },
@@ -358,304 +345,98 @@ const Landing = () => {
           </motion.div>
 
           {/* Service Cards - Full Width Stacked */}
-          <div className="space-y-4">
-            {/* Tarot Reading */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className={`backdrop-blur-xl bg-gradient-to-br from-deep-purple/40 to-midnight-blue/30 border border-gold/30 p-4 shadow-lg shadow-gold/10 overflow-hidden relative ${
-                expandedCards.tarot ? 'rounded-3xl shadow-xl shadow-gold/20 bg-deep-purple/50' : 'rounded-2xl'
-              }`}
-            >
-              <div className="absolute inset-0 opacity-25 bg-center bg-cover" style={{ backgroundImage: 'url(/images/tarot.png)' }}></div>
-              <div className="relative z-10">
-              <div className="flex items-start justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <img src="/images/tarot sti.png" alt="Tarot" className="w-8 h-8 object-contain" />
-                  <div>
-                    <h3 className="text-white font-bold text-base leading-tight">Tarot Reading</h3>
-                  </div>
-                </div>
-                <PriceDisplay serviceId="tarot" pricing={pricing} />
-              </div>
-              
-              {!expandedCards.tarot ? (
-                <div>
-                  <p className="text-gray-300 text-xs mb-2 leading-relaxed">Personalized guidance for clarity</p>
-                  <div className="space-y-1 mb-3">
-                    <div className="flex items-start gap-1.5 text-xs">
-                      <span className="text-gold mt-0.5">✓</span>
-                      <span className="text-gray-300">30-minute session</span>
-                    </div>
-                    <div className="flex items-start gap-1.5 text-xs">
-                      <span className="text-gold mt-0.5">✓</span>
-                      <span className="text-gray-300">Custom card spread</span>
-                    </div>
-                    <div className="flex items-start gap-1.5 text-xs">
-                      <span className="text-gold mt-0.5">✓</span>
-                      <span className="text-gray-300">Love & career insights</span>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => setExpandedCards(prev => ({ ...prev, tarot: true }))}
-                    className="w-full text-gold text-xs flex items-center justify-center gap-1 hover:text-white transition-colors"
-                  >
-                    <span>View Details</span>
-                    <span>▼</span>
-                  </button>
-                </div>
-              ) : (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  transition={{ duration: 0.4, ease: 'easeOut' }}
-                >
-                  <p className="text-gray-300 text-xs mb-3 leading-relaxed">
-                    Personalized guidance for clarity, direction, and confident decisions.
-                  </p>
-                  <div className="space-y-1.5 mb-4">
-                    <div className="flex items-start gap-1.5 text-xs">
-                      <span className="text-gold mt-0.5">✓</span>
-                      <span className="text-gray-300">Custom card spread based on concern</span>
-                    </div>
-                    <div className="flex items-start gap-1.5 text-xs">
-                      <span className="text-gold mt-0.5">✓</span>
-                      <span className="text-gray-300">Deep intuitive interpretation</span>
-                    </div>
-                    <div className="flex items-start gap-1.5 text-xs">
-                      <span className="text-gold mt-0.5">✓</span>
-                      <span className="text-gray-300">Love, career & life insights</span>
-                    </div>
-                    <div className="flex items-start gap-1.5 text-xs">
-                      <span className="text-gold mt-0.5">✓</span>
-                      <span className="text-gray-300">Follow-up clarification support</span>
-                    </div>
-                    <div className="flex items-start gap-1.5 text-xs">
-                      <span className="text-gold mt-0.5">✓</span>
-                      <span className="text-gray-300">Past, present, future guidance</span>
-                    </div>
-                    <div className="flex items-start gap-1.5 text-xs">
-                      <span className="text-gold mt-0.5">✓</span>
-                      <span className="text-gray-300">Recorded session notes</span>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => handleServiceSelect('tarot')}
-                    className="w-full py-2 border border-gold/40 text-gold font-medium rounded-full hover:bg-gold/10 transition-all duration-300 text-xs mb-2"
-                  >
-                    Book Now
-                  </button>
-                  <button
-                    onClick={() => setExpandedCards(prev => ({ ...prev, tarot: false }))}
-                    className="w-full text-gold text-xs flex items-center justify-center gap-1 hover:text-white transition-colors"
-                  >
-                    <span>Show Less</span>
-                    <span className="rotate-180">▼</span>
-                  </button>
-                </motion.div>
-              )}
-              </div>
-            </motion.div>
+          {servicesLoading ? (
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gold mx-auto"></div>
+            </div>
+          ) : services.length === 0 ? (
+            <div className="text-center py-12 text-gray-400">No services available</div>
+          ) : (
+            <div className="space-y-4">
+              {services.map((service) => {
+                const images = getServiceImage(service.serviceType)
+                const expandKey = service.serviceType === 'water-divination' ? 'jal' : service.serviceType
+                const isExpanded = expandedCards[expandKey]
 
-            {/* Reiki Healing */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className={`backdrop-blur-xl bg-gradient-to-br from-deep-purple/40 to-midnight-blue/30 border border-gold/30 p-4 shadow-lg shadow-gold/10 overflow-hidden relative ${
-                expandedCards.reiki ? 'rounded-3xl shadow-xl shadow-gold/20 bg-deep-purple/50' : 'rounded-2xl'
-              }`}
-            >
-              <div className="absolute inset-0 opacity-25 bg-center bg-cover" style={{ backgroundImage: 'url(/images/reikei.png)' }}></div>
-              <div className="relative z-10">
-              <div className="flex items-start justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <img src="/images/reiki sti.png" alt="Reiki" className="w-8 h-8 object-contain" />
-                  <div>
-                    <h3 className="text-white font-bold text-base leading-tight">Reiki Healing</h3>
-                  </div>
-                </div>
-                <PriceDisplay serviceId="reiki" pricing={pricing} />
-              </div>
-              
-              {!expandedCards.reiki ? (
-                <div>
-                  <p className="text-gray-300 text-xs mb-2 leading-relaxed">Structured 21-day healing journey</p>
-                  <div className="space-y-1 mb-3">
-                    <div className="flex items-start gap-1.5 text-xs">
-                      <span className="text-gold mt-0.5">✓</span>
-                      <span className="text-gray-300">21-day healing journey</span>
-                    </div>
-                    <div className="flex items-start gap-1.5 text-xs">
-                      <span className="text-gold mt-0.5">✓</span>
-                      <span className="text-gray-300">Daily energy sessions</span>
-                    </div>
-                    <div className="flex items-start gap-1.5 text-xs">
-                      <span className="text-gold mt-0.5">✓</span>
-                      <span className="text-gray-300">Complete package ₹2100</span>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => setExpandedCards(prev => ({ ...prev, reiki: true }))}
-                    className="w-full text-gold text-xs flex items-center justify-center gap-1 hover:text-white transition-colors"
+                return (
+                  <motion.div
+                    key={service._id}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    className={`backdrop-blur-xl bg-gradient-to-br from-deep-purple/40 to-midnight-blue/30 border border-gold/30 p-4 shadow-lg shadow-gold/10 overflow-hidden relative ${
+                      isExpanded ? 'rounded-3xl shadow-xl shadow-gold/20 bg-deep-purple/50' : 'rounded-2xl'
+                    }`}
                   >
-                    <span>View Details</span>
-                    <span>▼</span>
-                  </button>
-                </div>
-              ) : (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  transition={{ duration: 0.4, ease: 'easeOut' }}
-                >
-                  <p className="text-gray-300 text-xs mb-3 leading-relaxed">
-                    A structured 21-day healing journey for deep energetic reset.
-                  </p>
-                  <div className="space-y-1.5 mb-4">
-                    <div className="flex items-start gap-1.5 text-xs">
-                      <span className="text-gold mt-0.5">✓</span>
-                      <span className="text-gray-300">Daily energy healing sessions</span>
+                    <div className="absolute inset-0 opacity-25 bg-center bg-cover" style={{ backgroundImage: `url(${images.bg})` }}></div>
+                    <div className="relative z-10">
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <img src={images.icon} alt={service.title} className="w-8 h-8 object-contain" />
+                          <div>
+                            <h3 className="text-white font-bold text-base leading-tight">{service.title}</h3>
+                          </div>
+                        </div>
+                        <PriceDisplay serviceId={service.serviceType} pricing={pricing} />
+                      </div>
+                      
+                      {!isExpanded ? (
+                        <div>
+                          <p className="text-gray-300 text-xs mb-2 leading-relaxed">{service.shortDescription}</p>
+                          <div className="space-y-1 mb-3">
+                            {service.features.slice(0, 3).map((feature, idx) => (
+                              <div key={idx} className="flex items-start gap-1.5 text-xs">
+                                <span className="text-gold mt-0.5">✓</span>
+                                <span className="text-gray-300">{feature}</span>
+                              </div>
+                            ))}
+                          </div>
+                          <button
+                            onClick={() => setExpandedCards(prev => ({ ...prev, [expandKey]: true }))}
+                            className="w-full text-gold text-xs flex items-center justify-center gap-1 hover:text-white transition-colors"
+                          >
+                            <span>View Details</span>
+                            <span>▼</span>
+                          </button>
+                        </div>
+                      ) : (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          transition={{ duration: 0.4, ease: 'easeOut' }}
+                        >
+                          <p className="text-gray-300 text-xs mb-3 leading-relaxed">
+                            {service.fullDescription}
+                          </p>
+                          <div className="space-y-1.5 mb-4">
+                            {service.features.map((feature, idx) => (
+                              <div key={idx} className="flex items-start gap-1.5 text-xs">
+                                <span className="text-gold mt-0.5">✓</span>
+                                <span className="text-gray-300">{feature}</span>
+                              </div>
+                            ))}
+                          </div>
+                          <button
+                            onClick={() => handleServiceSelect(service.serviceType)}
+                            className="w-full py-2 border border-gold/40 text-gold font-medium rounded-full hover:bg-gold/10 transition-all duration-300 text-xs mb-2"
+                          >
+                            Book Now
+                          </button>
+                          <button
+                            onClick={() => setExpandedCards(prev => ({ ...prev, [expandKey]: false }))}
+                            className="w-full text-gold text-xs flex items-center justify-center gap-1 hover:text-white transition-colors"
+                          >
+                            <span>Show Less</span>
+                            <span className="rotate-180">▼</span>
+                          </button>
+                        </motion.div>
+                      )}
                     </div>
-                    <div className="flex items-start gap-1.5 text-xs">
-                      <span className="text-gold mt-0.5">✓</span>
-                      <span className="text-gray-300">Chakra balancing & emotional release</span>
-                    </div>
-                    <div className="flex items-start gap-1.5 text-xs">
-                      <span className="text-gold mt-0.5">✓</span>
-                      <span className="text-gray-300">21-session set (most recommended)</span>
-                    </div>
-                    <div className="flex items-start gap-1.5 text-xs">
-                      <span className="text-gold mt-0.5">✓</span>
-                      <span className="text-gray-300">Complete package ₹2100</span>
-                    </div>
-                    <div className="flex items-start gap-1.5 text-xs">
-                      <span className="text-gold mt-0.5">✓</span>
-                      <span className="text-gray-300">Stress & anxiety relief</span>
-                    </div>
-                    <div className="flex items-start gap-1.5 text-xs">
-                      <span className="text-gold mt-0.5">✓</span>
-                      <span className="text-gray-300">Physical & emotional healing</span>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => handleServiceSelect('reiki')}
-                    className="w-full py-2 border border-gold/40 text-gold font-medium rounded-full hover:bg-gold/10 transition-all duration-300 text-xs mb-2"
-                  >
-                    Book Now
-                  </button>
-                  <button
-                    onClick={() => setExpandedCards(prev => ({ ...prev, reiki: false }))}
-                    className="w-full text-gold text-xs flex items-center justify-center gap-1 hover:text-white transition-colors"
-                  >
-                    <span>Show Less</span>
-                    <span className="rotate-180">▼</span>
-                  </button>
-                </motion.div>
-              )}
-              </div>
-            </motion.div>
-
-            {/* Jal Jyotish */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className={`backdrop-blur-xl bg-gradient-to-br from-deep-purple/40 to-midnight-blue/30 border border-gold/30 p-4 shadow-lg shadow-gold/10 overflow-hidden relative ${
-                expandedCards.jal ? 'rounded-3xl shadow-xl shadow-gold/20 bg-deep-purple/50' : 'rounded-2xl'
-              }`}
-            >
-              <div className="absolute inset-0 opacity-25 bg-center bg-cover" style={{ backgroundImage: 'url(/images/water.png)' }}></div>
-              <div className="relative z-10">
-              <div className="flex items-start justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <img src="/images/jal sti.png" alt="Jal Jyotish" className="w-8 h-8 object-contain" />
-                  <div>
-                    <h3 className="text-white font-bold text-base leading-tight">Jal Jyotish</h3>
-                  </div>
-                </div>
-                <PriceDisplay serviceId="water-divination" pricing={pricing} />
-              </div>
-              
-              {!expandedCards.jal ? (
-                <div>
-                  <p className="text-gray-300 text-xs mb-2 leading-relaxed">Strategic water source assessment</p>
-                  <div className="space-y-1 mb-3">
-                    <div className="flex items-start gap-1.5 text-xs">
-                      <span className="text-gold mt-0.5">✓</span>
-                      <span className="text-gray-300">Traditional water detection</span>
-                    </div>
-                    <div className="flex items-start gap-1.5 text-xs">
-                      <span className="text-gold mt-0.5">✓</span>
-                      <span className="text-gray-300">Land assessment</span>
-                    </div>
-                    <div className="flex items-start gap-1.5 text-xs">
-                      <span className="text-gold mt-0.5">✓</span>
-                      <span className="text-gray-300">Drilling location guidance</span>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => setExpandedCards(prev => ({ ...prev, jal: true }))}
-                    className="w-full text-gold text-xs flex items-center justify-center gap-1 hover:text-white transition-colors"
-                  >
-                    <span>View Details</span>
-                    <span>▼</span>
-                  </button>
-                </div>
-              ) : (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  transition={{ duration: 0.4, ease: 'easeOut' }}
-                >
-                  <p className="text-gray-300 text-xs mb-3 leading-relaxed">
-                    Strategic water source assessment using traditional methods.
-                  </p>
-                  <div className="space-y-1.5 mb-4">
-                    <div className="flex items-start gap-1.5 text-xs">
-                      <span className="text-gold mt-0.5">✓</span>
-                      <span className="text-gray-300">Land & directional evaluation</span>
-                    </div>
-                    <div className="flex items-start gap-1.5 text-xs">
-                      <span className="text-gold mt-0.5">✓</span>
-                      <span className="text-gray-300">Energetic field analysis</span>
-                    </div>
-                    <div className="flex items-start gap-1.5 text-xs">
-                      <span className="text-gold mt-0.5">✓</span>
-                      <span className="text-gray-300">Recommended drilling location</span>
-                    </div>
-                    <div className="flex items-start gap-1.5 text-xs">
-                      <span className="text-gold mt-0.5">✓</span>
-                      <span className="text-gray-300">Cost-risk optimization insight</span>
-                    </div>
-                    <div className="flex items-start gap-1.5 text-xs">
-                      <span className="text-gold mt-0.5">✓</span>
-                      <span className="text-gray-300">Depth estimation guidance</span>
-                    </div>
-                    <div className="flex items-start gap-1.5 text-xs">
-                      <span className="text-gold mt-0.5">✓</span>
-                      <span className="text-gray-300">Post-drilling consultation</span>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => handleServiceSelect('water-divination')}
-                    className="w-full py-2 border border-gold/40 text-gold font-medium rounded-full hover:bg-gold/10 transition-all duration-300 text-xs mb-2"
-                  >
-                    Book Now
-                  </button>
-                  <button
-                    onClick={() => setExpandedCards(prev => ({ ...prev, jal: false }))}
-                    className="w-full text-gold text-xs flex items-center justify-center gap-1 hover:text-white transition-colors"
-                  >
-                    <span>Show Less</span>
-                    <span className="rotate-180">▼</span>
-                  </button>
-                </motion.div>
-              )}
-              </div>
-            </motion.div>
-          </div>
+                  </motion.div>
+                )
+              })}
+            </div>
+          )}
         </div>
       </section>
 
