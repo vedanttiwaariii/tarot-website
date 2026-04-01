@@ -133,7 +133,7 @@ const ManageBooking = () => {
   }
 
   return (
-    <div className="min-h-screen bg-cosmic-blue py-6 md:py-8 lg:pt-24 px-3 md:px-4 pb-24 md:pb-8">
+    <div className="min-h-screen bg-cosmic-blue py-6 px-3 pb-24 lg:pt-24 lg:py-8 lg:px-4 lg:pb-8">
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

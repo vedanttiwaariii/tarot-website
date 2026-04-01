@@ -20,6 +20,19 @@
   * {
     box-sizing: border-box;
   }
+
+  /* Desktop optimizations */
+  @media (min-width: 1024px) {
+    html {
+      font-size: 16px;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    html {
+      font-size: 18px;
+    }
+  }
 }
 
 @layer utilities {
@@ -36,16 +49,54 @@
   .btn-primary {
     @apply bg-gradient-to-r from-gold to-yellow-400 text-deep-purple font-semibold py-3 px-8 rounded-full hover:shadow-lg hover:shadow-gold/50 transition-all duration-300 transform hover:scale-105;
   }
+
+  /* Desktop button optimization */
+  @media (min-width: 1024px) {
+    .btn-primary {
+      @apply py-4 px-12 text-lg;
+    }
+  }
   
   .btn-secondary {
     @apply border-2 border-gold text-gold font-semibold py-3 px-8 rounded-full hover:bg-gold hover:text-deep-purple transition-all duration-300;
+  }
+
+  /* Desktop button optimization */
+  @media (min-width: 1024px) {
+    .btn-secondary {
+      @apply py-4 px-12 text-lg;
+    }
   }
   
   .card-mystical {
     @apply bg-gradient-to-br from-deep-purple/80 to-midnight-blue/80 backdrop-blur-sm border border-gold/20 rounded-xl p-6 hover:border-gold/40 transition-all duration-300 hover:shadow-xl hover:shadow-gold/20;
   }
+
+  /* Desktop card optimization */
+  @media (min-width: 1024px) {
+    .card-mystical {
+      @apply p-8 rounded-2xl;
+    }
+  }
   
   .text-gradient {
     @apply bg-gradient-to-r from-gold to-aqua bg-clip-text text-transparent;
+  }
+
+  /* Desktop container utilities */
+  .container-desktop {
+    @apply mx-auto px-4;
+  }
+
+  @media (min-width: 1024px) {
+    .container-desktop {
+      @apply max-w-7xl px-8;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .container-desktop {
+      @apply max-w-[1400px] px-12;
+    }
   }
 }

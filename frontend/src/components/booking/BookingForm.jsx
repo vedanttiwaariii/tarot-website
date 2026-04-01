@@ -299,155 +299,171 @@ Session Type: ${bookingDetails.sessionType}${bookingDetails.paymentId ? `\nPayme
             setStep(1)
             setMessage('')
           }}
-          className="text-gray-400 hover:text-gold text-xs transition-colors"
+          className="text-gray-400 hover:text-gold text-xs transition-colors lg:text-sm"
         >
           Reset Form
         </button>
       </div>
 
       {step === 1 && (
-        <>
-          <input
-            type="text"
-            {...register('name', { required: 'Name required' })}
-            placeholder="Name *"
-            className="w-full px-3 py-2.5 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white text-sm"
-          />
-          {errors.name && <p className="text-red-400 text-xs">{errors.name.message}</p>}
-
-          <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">+91</span>
+        <div className="lg:grid lg:grid-cols-2 lg:gap-4 space-y-4 lg:space-y-0">
+          <div className="lg:col-span-2">
             <input
-              type="tel"
-              {...register('phone', { 
-                required: 'Phone required',
-                pattern: { value: /^[0-9]{10}$/, message: '10 digits required' }
-              })}
-              placeholder="Phone *"
-              maxLength="10"
-              className="w-full pl-12 pr-3 py-2.5 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white text-sm"
+              type="text"
+              {...register('name', { required: 'Name required' })}
+              placeholder="Name *"
+              className="w-full px-3 py-2.5 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white text-sm lg:px-4 lg:py-3 lg:text-base"
             />
+            {errors.name && <p className="text-red-400 text-xs lg:text-sm mt-1">{errors.name.message}</p>}
           </div>
-          {errors.phone && <p className="text-red-400 text-xs">{errors.phone.message}</p>}
 
-          <input
-            type="email"
-            {...register('email', { 
-              required: 'Email required',
-              pattern: { value: /^\S+@\S+$/i, message: 'Invalid email' }
-            })}
-            placeholder="Email *"
-            className="w-full px-3 py-2.5 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white text-sm"
-          />
-          {errors.email && <p className="text-red-400 text-xs">{errors.email.message}</p>}
+          <div>
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm lg:text-base">+91</span>
+              <input
+                type="tel"
+                {...register('phone', { 
+                  required: 'Phone required',
+                  pattern: { value: /^[0-9]{10}$/, message: '10 digits required' }
+                })}
+                placeholder="Phone *"
+                maxLength="10"
+                className="w-full pl-12 pr-3 py-2.5 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white text-sm lg:px-4 lg:py-3 lg:text-base lg:pl-14"
+              />
+            </div>
+            {errors.phone && <p className="text-red-400 text-xs lg:text-sm mt-1">{errors.phone.message}</p>}
+          </div>
 
-          <button
-            type="button"
-            onClick={() => setStep(2)}
-            className="w-full py-3 bg-gradient-to-r from-gold to-aqua text-deep-purple font-bold rounded-xl"
-          >
-            Next
-          </button>
-        </>
+          <div>
+            <input
+              type="email"
+              {...register('email', { 
+                required: 'Email required',
+                pattern: { value: /^\S+@\S+$/i, message: 'Invalid email' }
+              })}
+              placeholder="Email *"
+              className="w-full px-3 py-2.5 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white text-sm lg:px-4 lg:py-3 lg:text-base"
+            />
+            {errors.email && <p className="text-red-400 text-xs lg:text-sm mt-1">{errors.email.message}</p>}
+          </div>
+
+          <div className="lg:col-span-2">
+            <button
+              type="button"
+              onClick={() => setStep(2)}
+              className="w-full py-3 bg-gradient-to-r from-gold to-aqua text-deep-purple font-bold rounded-xl lg:py-4 lg:text-lg"
+            >
+              Next
+            </button>
+          </div>
+        </div>
       )}
 
       {step === 2 && (
-        <>
-          <select
-            {...register('service', { required: 'Service required' })}
-            className="w-full px-3 py-2.5 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white text-sm"
-          >
-            <option value="">Select Service *</option>
-            <option value="tarot">Tarot Reading - ₹{dynamicPricing.tarot?.price || 1100}</option>
-            <option value="reiki">Reiki Healing - ₹{dynamicPricing.reiki?.price || 1551}</option>
-            <option value="water-divination">Water Divination - ₹{dynamicPricing['water-divination']?.price || 21000}</option>
-          </select>
-          {errors.service && <p className="text-red-400 text-xs">{errors.service.message}</p>}
+        <div className="lg:grid lg:grid-cols-2 lg:gap-4 space-y-4 lg:space-y-0">
+          <div className="lg:col-span-2">
+            <select
+              {...register('service', { required: 'Service required' })}
+              className="w-full px-3 py-2.5 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white text-sm lg:px-4 lg:py-3 lg:text-base"
+            >
+              <option value="">Select Service *</option>
+              <option value="tarot">Tarot Reading - ₹{dynamicPricing.tarot?.price || 1100}</option>
+              <option value="reiki">Reiki Healing - ₹{dynamicPricing.reiki?.price || 1551}</option>
+              <option value="water-divination">Water Divination - ₹{dynamicPricing['water-divination']?.price || 21000}</option>
+            </select>
+            {errors.service && <p className="text-red-400 text-xs lg:text-sm mt-1">{errors.service.message}</p>}
+          </div>
 
-          <input
-            type="date"
-            {...register('date', { required: 'Date required' })}
-            min={new Date().toISOString().split('T')[0]}
-            className="w-full px-3 py-2.5 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white text-sm"
-          />
-          {errors.date && <p className="text-red-400 text-xs">{errors.date.message}</p>}
+          <div>
+            <input
+              type="date"
+              {...register('date', { required: 'Date required' })}
+              min={new Date().toISOString().split('T')[0]}
+              className="w-full px-3 py-2.5 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white text-sm lg:px-4 lg:py-3 lg:text-base"
+            />
+            {errors.date && <p className="text-red-400 text-xs lg:text-sm mt-1">{errors.date.message}</p>}
+          </div>
 
-          <select
-            {...register('time', { required: 'Time required' })}
-            disabled={!selectedDate || loadingSlots}
-            className="w-full px-3 py-2.5 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white text-sm disabled:opacity-50"
-          >
-            <option value="">
-              {!selectedDate ? 'Select date first' : loadingSlots ? 'Loading...' : 'Select Time *'}
-            </option>
-            {slots.map(time => (
-              <option key={time} value={time}>{time}</option>
-            ))}
-          </select>
-          {errors.time && <p className="text-red-400 text-xs">{errors.time.message}</p>}
+          <div>
+            <select
+              {...register('time', { required: 'Time required' })}
+              disabled={!selectedDate || loadingSlots}
+              className="w-full px-3 py-2.5 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white text-sm disabled:opacity-50 lg:px-4 lg:py-3 lg:text-base"
+            >
+              <option value="">
+                {!selectedDate ? 'Select date first' : loadingSlots ? 'Loading...' : 'Select Time *'}
+              </option>
+              {slots.map(time => (
+                <option key={time} value={time}>{time}</option>
+              ))}
+            </select>
+            {errors.time && <p className="text-red-400 text-xs lg:text-sm mt-1">{errors.time.message}</p>}
+          </div>
 
-          <div className="flex gap-2">
+          <div className="flex gap-2 lg:col-span-2">
             <button
               type="button"
               onClick={() => setStep(1)}
-              className="flex-1 py-2.5 border border-gold/30 text-white rounded-xl"
+              className="flex-1 py-2.5 border border-gold/30 text-white rounded-xl lg:py-3 lg:text-base"
             >
               Back
             </button>
             <button
               type="button"
               onClick={() => setStep(3)}
-              className="flex-1 py-3 bg-gradient-to-r from-gold to-aqua text-deep-purple font-bold rounded-xl"
+              className="flex-1 py-3 bg-gradient-to-r from-gold to-aqua text-deep-purple font-bold rounded-xl lg:py-4 lg:text-lg"
             >
               Next
             </button>
           </div>
-        </>
+        </div>
       )}
 
       {step === 3 && (
         <>
-          <label className="flex items-center p-2.5 bg-cosmic-blue/50 border border-gold/30 rounded-xl">
-            <input
-              type="radio"
-              value="in-person"
-              {...register('sessionType', { required: 'Session type required' })}
-              className="mr-2"
-            />
-            <span className="text-white text-sm">In-Person</span>
-          </label>
-          {selectedService !== 'water-divination' && (
-            <label className="flex items-center p-2.5 bg-cosmic-blue/50 border border-gold/30 rounded-xl">
+          <div className="space-y-3 lg:space-y-4">
+            <label className="flex items-center p-2.5 bg-cosmic-blue/50 border border-gold/30 rounded-xl lg:p-4">
               <input
                 type="radio"
-                value="online"
+                value="in-person"
                 {...register('sessionType', { required: 'Session type required' })}
-                className="mr-2"
+                className="mr-2 lg:mr-3"
               />
-              <span className="text-white text-sm">Online</span>
+              <span className="text-white text-sm lg:text-base">In-Person</span>
             </label>
-          )}
-          {errors.sessionType && <p className="text-red-400 text-xs">{errors.sessionType.message}</p>}
+            {selectedService !== 'water-divination' && (
+              <label className="flex items-center p-2.5 bg-cosmic-blue/50 border border-gold/30 rounded-xl lg:p-4">
+                <input
+                  type="radio"
+                  value="online"
+                  {...register('sessionType', { required: 'Session type required' })}
+                  className="mr-2 lg:mr-3"
+                />
+                <span className="text-white text-sm lg:text-base">Online</span>
+              </label>
+            )}
+            {errors.sessionType && <p className="text-red-400 text-xs lg:text-sm">{errors.sessionType.message}</p>}
+          </div>
 
           <textarea
             {...register('message')}
             rows="3"
             placeholder="Message (Optional)"
-            className="w-full px-3 py-2.5 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white text-sm resize-none"
+            className="w-full px-3 py-2.5 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white text-sm resize-none lg:px-4 lg:py-3 lg:text-base lg:rows-4"
           />
 
           <div className="flex gap-2">
             <button
               type="button"
               onClick={() => setStep(2)}
-              className="flex-1 py-2.5 border border-gold/30 text-white rounded-xl"
+              className="flex-1 py-2.5 border border-gold/30 text-white rounded-xl lg:py-3 lg:text-base"
             >
               Back
             </button>
             <button
               type="submit"
               disabled={submitting}
-              className="flex-1 py-3 bg-gradient-to-r from-gold to-aqua text-deep-purple font-bold rounded-xl disabled:opacity-50"
+              className="flex-1 py-3 bg-gradient-to-r from-gold to-aqua text-deep-purple font-bold rounded-xl disabled:opacity-50 lg:py-4 lg:text-lg"
             >
               {submitting ? 'Booking...' : 'Book Now'}
             </button>
@@ -456,7 +472,7 @@ Session Type: ${bookingDetails.sessionType}${bookingDetails.paymentId ? `\nPayme
       )}
 
       {message && (
-        <div className={`p-3 rounded-xl text-xs text-center ${
+        <div className={`p-3 rounded-xl text-xs text-center lg:text-sm lg:p-4 ${
           message.includes('confirmed') ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
         }`}>
           {message}

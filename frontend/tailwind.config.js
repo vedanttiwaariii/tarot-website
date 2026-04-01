@@ -36,6 +36,21 @@ export default {
           '0%': { opacity: '0', transform: 'translateY(20px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' }
         }
+      },
+      spacing: {
+        '18': '4.5rem',
+        '22': '5.5rem',
+        '26': '6.5rem',
+        '30': '7.5rem'
+      },
+      maxWidth: {
+        '8xl': '88rem',
+        '9xl': '96rem'
+      },
+      fontSize: {
+        'xxs': '0.625rem',
+        '2.5xl': '1.75rem',
+        '3.5xl': '2rem'
       }
     },
   },

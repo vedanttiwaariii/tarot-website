@@ -255,14 +255,14 @@ const Landing = () => {
   }
 
   return (
-    <div className="min-h-screen relative pb-20" style={{ overscrollBehavior: 'none' }}>
+    <div className="min-h-screen relative pb-20 lg:pb-0" style={{ overscrollBehavior: 'none' }}>
       {/* Update Notification */}
       {updateAvailable && !isBooking && (
-        <div className="fixed top-4 right-4 bg-gold text-cosmic-blue px-4 py-2 rounded-lg shadow-lg z-50 flex items-center gap-3 animate-pulse">
-          <span className="text-sm font-semibold">New updates available!</span>
+        <div className="fixed top-4 right-4 bg-gold text-cosmic-blue px-4 py-2 rounded-lg shadow-lg z-50 flex items-center gap-3 animate-pulse lg:top-6 lg:right-6 lg:px-6 lg:py-3">
+          <span className="text-sm font-semibold lg:text-base">New updates available!</span>
           <button
             onClick={handleRefresh}
-            className="bg-cosmic-blue text-gold px-3 py-1 rounded text-xs font-bold hover:bg-deep-purple transition-colors"
+            className="bg-cosmic-blue text-gold px-3 py-1 rounded text-xs font-bold hover:bg-deep-purple transition-colors lg:px-4 lg:py-2 lg:text-sm"
           >
             Refresh
           </button>
@@ -283,42 +283,42 @@ const Landing = () => {
       </div>
       
       {/* HOME SECTION */}
-      <section id="home" className="relative py-4 px-4">
+      <section id="home" className="relative py-4 px-4 lg:py-16">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
-          className="text-center py-8 px-4"
+          className="text-center py-8 px-4 lg:max-w-5xl lg:mx-auto"
         >
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-gold/20 to-aqua/20 border-2 border-gold/40 flex items-center justify-center shadow-lg shadow-gold/30 overflow-hidden">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-gold/20 to-aqua/20 border-2 border-gold/40 flex items-center justify-center shadow-lg shadow-gold/30 overflow-hidden lg:w-24 lg:h-24 lg:mb-6">
             <img src="/images/logo.png" alt="Krushnalaya" className="w-full h-full object-cover" />
           </div>
           
-          <h1 className="font-mystical text-[2rem] font-bold text-gold mb-1">
+          <h1 className="font-mystical text-[2rem] font-bold text-gold mb-1 lg:text-6xl lg:mb-4">
             {content['hero-title']}
           </h1>
           
-          <p className="text-aqua text-xs font-semibold tracking-[0.3em] mb-3">
+          <p className="text-aqua text-xs font-semibold tracking-[0.3em] mb-3 lg:text-lg lg:mb-6">
             {content['hero-tagline']}
           </p>
           
-          <p className="text-gray-300 text-sm leading-relaxed mb-6 max-w-xs mx-auto">
+          <p className="text-gray-300 text-sm leading-relaxed mb-6 max-w-xs mx-auto lg:text-xl lg:max-w-3xl lg:mb-8">
             {content['hero-description']}
           </p>
         </motion.div>
       </section>
 
       {/* SERVICES SECTION */}
-      <section id="services" className="py-4 px-4">
-        <div className="px-4 py-6">
+      <section id="services" className="py-4 px-4 lg:py-12">
+        <div className="px-4 py-6 lg:max-w-7xl lg:mx-auto">
           {/* Title */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-6"
+            className="text-center mb-6 lg:mb-10"
           >
-            <h2 className="font-mystical text-[1.8rem] font-bold text-gold mb-2">
+            <h2 className="font-mystical text-[1.8rem] font-bold text-gold mb-2 lg:text-5xl lg:mb-4">
               Services
             </h2>
           </motion.div>
@@ -328,19 +328,19 @@ const Landing = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-3 shadow-lg shadow-gold/10 mb-6"
+            className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-3 shadow-lg shadow-gold/10 mb-6 lg:max-w-4xl lg:mx-auto lg:p-6"
           >
-            <div className="flex items-center justify-around text-xs">
-              <div className="flex items-center gap-1">
-                <span className="text-gold">✓</span>
+            <div className="flex items-center justify-around text-xs lg:text-base lg:gap-12">
+              <div className="flex items-center gap-1 lg:gap-2">
+                <span className="text-gold lg:text-xl">✓</span>
                 <span className="text-gray-300">Guidance</span>
               </div>
-              <div className="flex items-center gap-1">
-                <span className="text-gold">✓</span>
+              <div className="flex items-center gap-1 lg:gap-2">
+                <span className="text-gold lg:text-xl">✓</span>
                 <span className="text-gray-300">Follow-up</span>
               </div>
-              <div className="flex items-center gap-1">
-                <span className="text-gold">✓</span>
+              <div className="flex items-center gap-1 lg:gap-2">
+                <span className="text-gold lg:text-xl">✓</span>
                 <span className="text-gray-300">Support</span>
               </div>
             </div>
@@ -349,16 +349,16 @@ const Landing = () => {
           {/* Service Cards - Full Width Stacked */}
           {servicesLoading ? (
             <div className="text-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gold mx-auto"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gold mx-auto lg:h-12 lg:w-12"></div>
             </div>
           ) : services.length === 0 ? (
-            <div className="text-center py-12 text-gray-400">No services available</div>
+            <div className="text-center py-12 text-gray-400 lg:text-lg">No services available</div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-4 lg:grid lg:grid-cols-3 lg:gap-6 lg:space-y-0">
               {services.map((service) => {
                 const images = getServiceImage(service.serviceType)
                 const expandKey = service.serviceType === 'water-divination' ? 'jal' : service.serviceType
-                const isExpanded = expandedCards[expandKey]
+                const isExpanded = allCardsExpanded
 
                 return (
                   <motion.div
@@ -366,73 +366,98 @@ const Landing = () => {
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
-                    className={`backdrop-blur-xl bg-gradient-to-br from-deep-purple/40 to-midnight-blue/30 border border-gold/30 p-4 shadow-lg shadow-gold/10 overflow-hidden relative ${
+                    className={`backdrop-blur-xl bg-gradient-to-br from-deep-purple/40 to-midnight-blue/30 border border-gold/30 p-4 shadow-lg shadow-gold/10 overflow-hidden relative lg:p-6 lg:flex lg:flex-col ${
                       isExpanded ? 'rounded-3xl shadow-xl shadow-gold/20 bg-deep-purple/50' : 'rounded-2xl'
                     }`}
                   >
                     <div className="absolute inset-0 opacity-25 bg-center bg-cover" style={{ backgroundImage: `url(${images.bg})` }}></div>
-                    <div className="relative z-10">
-                      <div className="flex items-start justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                          <img src={images.icon} alt={service.title} className="w-8 h-8 object-contain" />
-                          <div>
-                            <h3 className="text-white font-bold text-base leading-tight">{service.title}</h3>
-                          </div>
-                        </div>
+                    <div className="relative z-10 lg:flex lg:flex-col lg:h-full">
+                      {/* Title */}
+                      <div className="flex items-center gap-2 mb-2 lg:gap-3 lg:mb-3">
+                        <img src={images.icon} alt={service.title} className="w-8 h-8 object-contain lg:w-12 lg:h-12 flex-shrink-0" />
+                        <h3 className="text-white font-bold text-base leading-tight lg:text-2xl">{service.title}</h3>
+                      </div>
+                      
+                      {/* Price - Full Width Below Title */}
+                      <div className="mb-3 lg:mb-4">
                         <PriceDisplay serviceId={service.serviceType} pricing={pricing} />
                       </div>
                       
-                      {!isExpanded ? (
-                        <div>
-                          <p className="text-gray-300 text-xs mb-2 leading-relaxed">{service.shortDescription}</p>
-                          <div className="space-y-1 mb-3">
-                            {service.features.slice(0, 3).map((feature, idx) => (
-                              <div key={idx} className="flex items-start gap-1.5 text-xs">
-                                <span className="text-gold mt-0.5">✓</span>
-                                <span className="text-gray-300">{feature}</span>
-                              </div>
-                            ))}
+                      {/* Mobile: Collapsible */}
+                      <div className="lg:hidden">
+                        {!isExpanded ? (
+                          <div>
+                            <p className="text-gray-300 text-xs mb-2 leading-relaxed">{service.shortDescription}</p>
+                            <div className="space-y-1 mb-3">
+                              {service.features.slice(0, 3).map((feature, idx) => (
+                                <div key={idx} className="flex items-start gap-1.5 text-xs">
+                                  <span className="text-gold mt-0.5">✓</span>
+                                  <span className="text-gray-300">{feature}</span>
+                                </div>
+                              ))}
+                            </div>
+                            <button
+                              onClick={() => setAllCardsExpanded(true)}
+                              className="w-full text-gold text-xs flex items-center justify-center gap-1 hover:text-white transition-colors"
+                            >
+                              <span>View Details</span>
+                              <span>▼</span>
+                            </button>
                           </div>
-                          <button
-                            onClick={() => setExpandedCards(prev => ({ ...prev, [expandKey]: true }))}
-                            className="w-full text-gold text-xs flex items-center justify-center gap-1 hover:text-white transition-colors"
+                        ) : (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            transition={{ duration: 0.4, ease: 'easeOut' }}
                           >
-                            <span>View Details</span>
-                            <span>▼</span>
-                          </button>
+                            <p className="text-gray-300 text-xs mb-3 leading-relaxed">
+                              {service.fullDescription}
+                            </p>
+                            <div className="space-y-1.5 mb-4">
+                              {service.features.map((feature, idx) => (
+                                <div key={idx} className="flex items-start gap-1.5 text-xs">
+                                  <span className="text-gold mt-0.5">✓</span>
+                                  <span className="text-gray-300">{feature}</span>
+                                </div>
+                              ))}
+                            </div>
+                            <button
+                              onClick={() => handleServiceSelect(service.serviceType)}
+                              className="w-full py-2 border border-gold/40 text-gold font-medium rounded-full hover:bg-gold/10 transition-all duration-300 text-xs mb-2"
+                            >
+                              Book Now
+                            </button>
+                            <button
+                              onClick={() => setAllCardsExpanded(false)}
+                              className="w-full text-gold text-xs flex items-center justify-center gap-1 hover:text-white transition-colors"
+                            >
+                              <span>Show Less</span>
+                              <span className="rotate-180">▼</span>
+                            </button>
+                          </motion.div>
+                        )}
+                      </div>
+
+                      {/* Desktop: Always Expanded */}
+                      <div className="hidden lg:flex lg:flex-col lg:flex-grow">
+                        <p className="text-gray-300 text-sm mb-4 leading-relaxed">
+                          {service.fullDescription}
+                        </p>
+                        <div className="space-y-2 mb-6 flex-grow">
+                          {service.features.map((feature, idx) => (
+                            <div key={idx} className="flex items-start gap-1.5 text-sm">
+                              <span className="text-gold mt-0.5">✓</span>
+                              <span className="text-gray-300">{feature}</span>
+                            </div>
+                          ))}
                         </div>
-                      ) : (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          transition={{ duration: 0.4, ease: 'easeOut' }}
+                        <button
+                          onClick={() => handleServiceSelect(service.serviceType)}
+                          className="w-full py-3 border border-gold/40 text-gold font-medium rounded-full hover:bg-gold/10 transition-all duration-300 text-sm mt-auto"
                         >
-                          <p className="text-gray-300 text-xs mb-3 leading-relaxed">
-                            {service.fullDescription}
-                          </p>
-                          <div className="space-y-1.5 mb-4">
-                            {service.features.map((feature, idx) => (
-                              <div key={idx} className="flex items-start gap-1.5 text-xs">
-                                <span className="text-gold mt-0.5">✓</span>
-                                <span className="text-gray-300">{feature}</span>
-                              </div>
-                            ))}
-                          </div>
-                          <button
-                            onClick={() => handleServiceSelect(service.serviceType)}
-                            className="w-full py-2 border border-gold/40 text-gold font-medium rounded-full hover:bg-gold/10 transition-all duration-300 text-xs mb-2"
-                          >
-                            Book Now
-                          </button>
-                          <button
-                            onClick={() => setExpandedCards(prev => ({ ...prev, [expandKey]: false }))}
-                            className="w-full text-gold text-xs flex items-center justify-center gap-1 hover:text-white transition-colors"
-                          >
-                            <span>Show Less</span>
-                            <span className="rotate-180">▼</span>
-                          </button>
-                        </motion.div>
-                      )}
+                          Book Now
+                        </button>
+                      </div>
                     </div>
                   </motion.div>
                 )
@@ -443,88 +468,90 @@ const Landing = () => {
       </section>
 
       {/* ABOUT MY JOURNEY SECTION */}
-      <section className="px-4 py-8">
-        {/* Title */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-6"
-        >
-          <h2 className="font-mystical text-[1.8rem] font-bold text-gold mb-2">
-            About My Journey
-          </h2>
-        </motion.div>
-
-        <div className="space-y-4">
-          {/* Journey Card */}
+      <section className="px-4 py-8 lg:py-16">
+        <div className="lg:max-w-7xl lg:mx-auto">
+          {/* Title */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-5 shadow-lg shadow-gold/10"
+            className="text-center mb-6 lg:mb-10"
           >
-            <p className="text-gray-300 text-sm leading-relaxed text-center">
-              {content['about-journey']}
-            </p>
+            <h2 className="font-mystical text-[1.8rem] font-bold text-gold mb-2 lg:text-5xl lg:mb-4">
+              About My Journey
+            </h2>
           </motion.div>
 
-          {/* Qualifications Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-5 shadow-lg shadow-gold/10"
-          >
-            <h3 className="text-gold font-semibold text-sm mb-3 text-center">Qualifications</h3>
-            <div className="space-y-2">
-              <div className="flex items-start gap-2 text-xs">
-                <span className="text-gold mt-0.5">✓</span>
-                <span className="text-gray-300">Certified Tarot Reader (10+ years)</span>
+          <div className="space-y-4 lg:space-y-0 lg:grid lg:grid-cols-2 lg:gap-6">
+            {/* Journey Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-5 shadow-lg shadow-gold/10 lg:p-8 lg:flex lg:flex-col lg:justify-center"
+            >
+              <p className="text-gray-300 text-sm leading-relaxed text-center lg:text-base lg:leading-relaxed">
+                {content['about-journey']}
+              </p>
+            </motion.div>
+
+            {/* Qualifications Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-5 shadow-lg shadow-gold/10 lg:p-8"
+            >
+              <h3 className="text-gold font-semibold text-sm mb-3 text-center lg:text-xl lg:mb-5">Qualifications</h3>
+              <div className="space-y-2 lg:space-y-3">
+                <div className="flex items-start gap-2 text-xs lg:text-sm">
+                  <span className="text-gold mt-0.5 lg:text-base">✓</span>
+                  <span className="text-gray-300">Certified Tarot Reader (10+ years)</span>
+                </div>
+                <div className="flex items-start gap-2 text-xs lg:text-sm">
+                  <span className="text-gold mt-0.5 lg:text-base">✓</span>
+                  <span className="text-gray-300">Reiki Master Teacher</span>
+                </div>
+                <div className="flex items-start gap-2 text-xs lg:text-sm">
+                  <span className="text-gold mt-0.5 lg:text-base">✓</span>
+                  <span className="text-gray-300">Traditional Jal Jyotishi Specialist</span>
+                </div>
+                <div className="flex items-start gap-2 text-xs lg:text-sm">
+                  <span className="text-gold mt-0.5 lg:text-base">✓</span>
+                  <span className="text-gray-300">Crystal Healing Therapist</span>
+                </div>
               </div>
-              <div className="flex items-start gap-2 text-xs">
-                <span className="text-gold mt-0.5">✓</span>
-                <span className="text-gray-300">Reiki Master Teacher</span>
-              </div>
-              <div className="flex items-start gap-2 text-xs">
-                <span className="text-gold mt-0.5">✓</span>
-                <span className="text-gray-300">Traditional Jal Jyotishi Specialist</span>
-              </div>
-              <div className="flex items-start gap-2 text-xs">
-                <span className="text-gold mt-0.5">✓</span>
-                <span className="text-gray-300">Crystal Healing Therapist</span>
-              </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
 
           {/* Core Values Card */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-5 shadow-lg shadow-gold/10"
+            className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-5 shadow-lg shadow-gold/10 mt-4 lg:mt-6 lg:p-8"
           >
-            <h3 className="text-gold font-semibold text-sm mb-4 text-center">Core Values</h3>
-            <div className="grid grid-cols-2 gap-3">
+            <h3 className="text-gold font-semibold text-sm mb-4 text-center lg:text-2xl lg:mb-8">Core Values</h3>
+            <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-8">
               <div className="text-center">
-                <div className="text-xl mb-1">✨</div>
-                <div className="text-white font-semibold text-xs mb-0.5">Authenticity</div>
-                <div className="text-gray-400 text-[10px]">Genuine guidance</div>
+                <div className="text-xl mb-1 lg:text-4xl lg:mb-3">✨</div>
+                <div className="text-white font-semibold text-xs mb-0.5 lg:text-base lg:mb-2">Authenticity</div>
+                <div className="text-gray-400 text-[10px] lg:text-sm">Genuine guidance</div>
               </div>
               <div className="text-center">
-                <div className="text-xl mb-1">💖</div>
-                <div className="text-white font-semibold text-xs mb-0.5">Compassion</div>
-                <div className="text-gray-400 text-[10px]">Caring support</div>
+                <div className="text-xl mb-1 lg:text-4xl lg:mb-3">💖</div>
+                <div className="text-white font-semibold text-xs mb-0.5 lg:text-base lg:mb-2">Compassion</div>
+                <div className="text-gray-400 text-[10px] lg:text-sm">Caring support</div>
               </div>
               <div className="text-center">
-                <div className="text-xl mb-1">⚖️</div>
-                <div className="text-white font-semibold text-xs mb-0.5">Integrity</div>
-                <div className="text-gray-400 text-[10px]">Honest practices</div>
+                <div className="text-xl mb-1 lg:text-4xl lg:mb-3">⚖️</div>
+                <div className="text-white font-semibold text-xs mb-0.5 lg:text-base lg:mb-2">Integrity</div>
+                <div className="text-gray-400 text-[10px] lg:text-sm">Honest practices</div>
               </div>
               <div className="text-center">
-                <div className="text-xl mb-1">💪</div>
-                <div className="text-white font-semibold text-xs mb-0.5">Empowerment</div>
-                <div className="text-gray-400 text-[10px]">Inner strength</div>
+                <div className="text-xl mb-1 lg:text-4xl lg:mb-3">💪</div>
+                <div className="text-white font-semibold text-xs mb-0.5 lg:text-base lg:mb-2">Empowerment</div>
+                <div className="text-gray-400 text-[10px] lg:text-sm">Inner strength</div>
               </div>
             </div>
           </motion.div>
@@ -532,15 +559,15 @@ const Landing = () => {
       </section>
 
       {/* BOOK APPOINTMENT SECTION */}
-      <section id="book" className="py-4 px-4">
-        <div className="px-4 py-6">
+      <section id="book" className="py-4 px-4 lg:py-16">
+        <div className="px-4 py-6 lg:max-w-5xl lg:mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-6"
+            className="text-center mb-6 lg:mb-10"
           >
-            <h2 className="font-mystical text-[1.8rem] font-bold text-gold mb-2">
+            <h2 className="font-mystical text-[1.8rem] font-bold text-gold mb-2 lg:text-5xl lg:mb-4">
               Book Session
             </h2>
           </motion.div>
@@ -549,7 +576,7 @@ const Landing = () => {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-5 shadow-lg shadow-gold/10"
+            className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-5 shadow-lg shadow-gold/10 lg:p-8"
             onFocus={handleBookingStart}
           >
             <BookingForm 
@@ -560,160 +587,162 @@ const Landing = () => {
         </div>
       </section>
 
-      <section id="contact" className="py-4 px-4">
-        <div className="px-4 py-6">
+      <section id="contact" className="py-4 px-4 lg:py-16">
+        <div className="px-4 py-6 lg:max-w-7xl lg:mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-6"
+            className="text-center mb-6 lg:mb-10"
           >
-            <h2 className="font-mystical text-[1.8rem] font-bold text-gold mb-2">
+            <h2 className="font-mystical text-[1.8rem] font-bold text-gold mb-2 lg:text-5xl lg:mb-4">
               Contact
             </h2>
           </motion.div>
 
-          {/* Contact Cards */}
-          <div className="space-y-3 mb-6">
-            {/* WhatsApp */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-4 shadow-lg shadow-gold/10"
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">💬</span>
-                  <div>
-                    <h3 className="text-white font-semibold text-sm">WhatsApp</h3>
-                    <p className="text-gray-400 text-xs">Instant messaging</p>
+          <div className="lg:grid lg:grid-cols-2 lg:gap-8">
+            {/* Left Column: Contact Cards */}
+            <div className="space-y-3 mb-6 lg:mb-0">
+              {/* WhatsApp */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-4 shadow-lg shadow-gold/10 lg:p-6"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3 lg:gap-4">
+                    <span className="text-2xl lg:text-4xl">💬</span>
+                    <div>
+                      <h3 className="text-white font-semibold text-sm lg:text-lg">WhatsApp</h3>
+                      <p className="text-gray-400 text-xs lg:text-sm">Instant messaging</p>
+                    </div>
                   </div>
+                  <a
+                    href="https://wa.me/919893578135"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-4 py-2 bg-gradient-to-r from-[#f5d000] to-[#18c2a4] text-deep-purple font-semibold rounded-full text-xs shadow-md lg:px-6 lg:py-3 lg:text-sm"
+                  >
+                    Chat
+                  </a>
                 </div>
-                <a
-                  href="https://wa.me/919893578135"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-4 py-2 bg-gradient-to-r from-[#f5d000] to-[#18c2a4] text-deep-purple font-semibold rounded-full text-xs shadow-md"
-                >
-                  Chat
-                </a>
-              </div>
-            </motion.div>
+              </motion.div>
 
-            {/* Email */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-4 shadow-lg shadow-gold/10"
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">📧</span>
-                  <div>
-                    <h3 className="text-white font-semibold text-sm">Email</h3>
-                    <p className="text-gray-400 text-xs">24-hour response</p>
+              {/* Email */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-4 shadow-lg shadow-gold/10 lg:p-6"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3 lg:gap-4">
+                    <span className="text-2xl lg:text-4xl">📧</span>
+                    <div>
+                      <h3 className="text-white font-semibold text-sm lg:text-lg">Email</h3>
+                      <p className="text-gray-400 text-xs lg:text-sm">24-hour response</p>
+                    </div>
                   </div>
+                  <a
+                    href="mailto:rajshreepandetiwari@gmail.com"
+                    className="px-4 py-2 bg-gradient-to-r from-[#f5d000] to-[#18c2a4] text-deep-purple font-semibold rounded-full text-xs shadow-md lg:px-6 lg:py-3 lg:text-sm"
+                  >
+                    Email
+                  </a>
                 </div>
-                <a
-                  href="mailto:rajshreepandetiwari@gmail.com"
-                  className="px-4 py-2 bg-gradient-to-r from-[#f5d000] to-[#18c2a4] text-deep-purple font-semibold rounded-full text-xs shadow-md"
+              </motion.div>
+            </div>
+
+            {/* Right Column: Contact Form */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-5 shadow-lg shadow-gold/10 lg:p-8"
+            >
+              <h3 className="font-mystical text-base text-gold mb-4 text-center lg:text-2xl lg:mb-6">Send Message</h3>
+              <form onSubmit={handleMobileContactSubmit(onMobileContactSubmit)} className="space-y-3 lg:space-y-4">
+                <div>
+                  <input
+                    type="text"
+                    autoComplete="name"
+                    {...registerMobileContact('name', { required: 'Name is required' })}
+                    className="w-full px-3 py-2 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white placeholder-gray-400 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all text-xs lg:text-sm lg:px-4 lg:py-3"
+                    placeholder="Name"
+                  />
+                  {mobileContactErrors.name && <p className="text-red-400 text-xs mt-1 lg:text-sm">{mobileContactErrors.name.message}</p>}
+                </div>
+
+                <div>
+                  <input
+                    type="email"
+                    autoComplete="email"
+                    {...registerMobileContact('email', { 
+                      required: 'Email is required',
+                      pattern: {
+                        value: /^\S+@\S+$/i,
+                        message: 'Invalid email'
+                      }
+                    })}
+                    className="w-full px-3 py-2 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white placeholder-gray-400 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all text-xs lg:text-sm lg:px-4 lg:py-3"
+                    placeholder="Email"
+                  />
+                  {mobileContactErrors.email && <p className="text-red-400 text-xs mt-1 lg:text-sm">{mobileContactErrors.email.message}</p>}
+                </div>
+
+                <div>
+                  <select
+                    autoComplete="off"
+                    {...registerMobileContact('subject', { required: 'Please select a subject' })}
+                    className="w-full px-3 py-2 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all appearance-none text-xs lg:text-sm lg:px-4 lg:py-3"
+                  >
+                    <option value="" className="bg-cosmic-blue text-gray-400">Subject...</option>
+                    <option value="general-inquiry" className="bg-cosmic-blue text-white">General Inquiry</option>
+                    <option value="booking-question" className="bg-cosmic-blue text-white">Booking Question</option>
+                    <option value="service-information" className="bg-cosmic-blue text-white">Service Info</option>
+                    <option value="other" className="bg-cosmic-blue text-white">Other</option>
+                  </select>
+                  {mobileContactErrors.subject && <p className="text-red-400 text-xs mt-1 lg:text-sm">{mobileContactErrors.subject.message}</p>}
+                </div>
+
+                <div>
+                  <textarea
+                    autoComplete="off"
+                    {...registerMobileContact('message', { 
+                      required: 'Message is required',
+                      minLength: {
+                        value: 25,
+                        message: 'Message must be at least 25 characters'
+                      }
+                    })}
+                    rows="4"
+                    className="w-full px-3 py-2 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white placeholder-gray-400 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all resize-none text-xs lg:text-sm lg:px-4 lg:py-3 lg:rows-5"
+                    placeholder="Your message (minimum 25 characters)..."
+                  ></textarea>
+                  {mobileContactErrors.message && <p className="text-red-400 text-xs mt-1 lg:text-sm">{mobileContactErrors.message.message}</p>}
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isMobileContactSubmitting}
+                  className="w-full py-2.5 bg-gradient-to-r from-[#f5d000] to-[#18c2a4] text-deep-purple font-bold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 text-xs lg:text-sm lg:py-3"
                 >
-                  Email
-                </a>
-              </div>
+                  {isMobileContactSubmitting ? 'Sending...' : 'Send Message'}
+                </button>
+
+                {mobileContactSubmitMessage && (
+                  <div className={`text-center p-3 rounded-xl text-xs lg:text-sm ${
+                    mobileContactSubmitMessage.includes('successfully') 
+                      ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
+                      : 'bg-red-500/20 text-red-400 border border-red-500/30'
+                  }`}>
+                    {mobileContactSubmitMessage}
+                  </div>
+                )}
+              </form>
             </motion.div>
           </div>
-
-          {/* Contact Form */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-5 shadow-lg shadow-gold/10"
-          >
-            <h3 className="font-mystical text-base text-gold mb-4 text-center">Send Message</h3>
-            <form onSubmit={handleMobileContactSubmit(onMobileContactSubmit)} className="space-y-3">
-              <div>
-                <input
-                  type="text"
-                  autoComplete="name"
-                  {...registerMobileContact('name', { required: 'Name is required' })}
-                  className="w-full px-3 py-2 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white placeholder-gray-400 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all text-xs"
-                  placeholder="Name"
-                />
-                {mobileContactErrors.name && <p className="text-red-400 text-xs mt-1">{mobileContactErrors.name.message}</p>}
-              </div>
-
-              <div>
-                <input
-                  type="email"
-                  autoComplete="email"
-                  {...registerMobileContact('email', { 
-                    required: 'Email is required',
-                    pattern: {
-                      value: /^\S+@\S+$/i,
-                      message: 'Invalid email'
-                    }
-                  })}
-                  className="w-full px-3 py-2 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white placeholder-gray-400 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all text-xs"
-                  placeholder="Email"
-                />
-                {mobileContactErrors.email && <p className="text-red-400 text-xs mt-1">{mobileContactErrors.email.message}</p>}
-              </div>
-
-              <div>
-                <select
-                  autoComplete="off"
-                  {...registerMobileContact('subject', { required: 'Please select a subject' })}
-                  className="w-full px-3 py-2 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all appearance-none text-xs"
-                >
-                  <option value="" className="bg-cosmic-blue text-gray-400">Subject...</option>
-                  <option value="general-inquiry" className="bg-cosmic-blue text-white">General Inquiry</option>
-                  <option value="booking-question" className="bg-cosmic-blue text-white">Booking Question</option>
-                  <option value="service-information" className="bg-cosmic-blue text-white">Service Info</option>
-                  <option value="other" className="bg-cosmic-blue text-white">Other</option>
-                </select>
-                {mobileContactErrors.subject && <p className="text-red-400 text-xs mt-1">{mobileContactErrors.subject.message}</p>}
-              </div>
-
-              <div>
-                <textarea
-                  autoComplete="off"
-                  {...registerMobileContact('message', { 
-                    required: 'Message is required',
-                    minLength: {
-                      value: 25,
-                      message: 'Message must be at least 25 characters'
-                    }
-                  })}
-                  rows="4"
-                  className="w-full px-3 py-2 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white placeholder-gray-400 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all resize-none text-xs"
-                  placeholder="Your message (minimum 25 characters)..."
-                ></textarea>
-                {mobileContactErrors.message && <p className="text-red-400 text-xs mt-1">{mobileContactErrors.message.message}</p>}
-              </div>
-
-              <button
-                type="submit"
-                disabled={isMobileContactSubmitting}
-                className="w-full py-2.5 bg-gradient-to-r from-[#f5d000] to-[#18c2a4] text-deep-purple font-bold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 text-xs"
-              >
-                {isMobileContactSubmitting ? 'Sending...' : 'Send Message'}
-              </button>
-
-              {mobileContactSubmitMessage && (
-                <div className={`text-center p-3 rounded-xl text-xs ${
-                  mobileContactSubmitMessage.includes('successfully') 
-                    ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
-                    : 'bg-red-500/20 text-red-400 border border-red-500/30'
-                }`}>
-                  {mobileContactSubmitMessage}
-                </div>
-              )}
-            </form>
-          </motion.div>
         </div>
       </section>
     </div>
