@@ -6,6 +6,7 @@ A modern, full-stack website for spiritual services including Tarot Reading, Rei
 
 ### 🎨 Frontend Features
 - **Modern UI/UX**: Mystical design with deep purple, midnight blue, gold accents
+- **Bilingual Support**: Auto-translation from English to Hindi with preserved fonts
 - **Responsive Design**: Mobile-first approach, fully responsive
 - **Smooth Animations**: Framer Motion animations and transitions
 - **Interactive Components**: Service cards, booking forms, contact forms
@@ -14,6 +15,7 @@ A modern, full-stack website for spiritual services including Tarot Reading, Rei
 
 ### 🚀 Backend Features
 - **RESTful API**: Clean API endpoints for bookings, contact, and payments
+- **Auto-Translation**: Automatic English to Hindi translation for content
 - **Payment Processing**: Complete Razorpay integration with webhooks
 - **Data Validation**: Comprehensive input validation and sanitization
 - **Rate Limiting**: Protection against spam and abuse

@@ -1,0 +1,243 @@
+export const translations = {
+  en: {
+    // Brand
+    brandTitle: 'Krushnalaya',
+    tagline: 'KNOW · HEAL · GROW',
+    
+    // Hero
+    heroDescription: 'When life feels uncertain, clarity begins within. Discover your direction through spiritual guidance.',
+    
+    // Navigation
+    navHome: 'Home',
+    navServices: 'Services',
+    navBook: 'Book',
+    navContact: 'Contact',
+    navManageBooking: 'Manage Booking',
+    
+    // Services Section
+    servicesTitle: 'Services',
+    allSessionsInclude: 'All Sessions Include',
+    guidanceLabel: 'Guidance',
+    followUpLabel: 'Follow-up',
+    supportLabel: 'Support',
+    bookNowBtn: 'Book Now',
+    viewDetails: 'View Details',
+    showLess: 'Show Less',
+    
+    // Service Cards
+    tarotTitle: 'Tarot Reading',
+    tarotShort: 'Gain clarity on life decisions through ancient card wisdom',
+    tarotFull: 'Discover insights into your past, present, and future through the ancient art of tarot. Each reading is personalized to address your specific questions and concerns, providing clarity and guidance for your life journey.',
+    tarotFeature1: 'Personalized card reading',
+    tarotFeature2: 'Life path guidance',
+    tarotFeature3: 'Relationship insights',
+    tarotFeature4: 'Career direction',
+    tarotFeature5: 'Spiritual growth advice',
+    
+    reikiTitle: 'Reiki Healing',
+    reikiShort: 'Experience deep healing through universal life energy',
+    reikiFull: 'Experience the transformative power of Reiki energy healing. This gentle yet powerful technique promotes physical, emotional, and spiritual well-being by channeling universal life force energy to restore balance and harmony.',
+    reikiFeature1: 'Energy balancing',
+    reikiFeature2: 'Stress relief',
+    reikiFeature3: 'Emotional healing',
+    reikiFeature4: 'Chakra alignment',
+    reikiFeature5: 'Distance healing available',
+    
+    jalTitle: 'Water Divination',
+    jalShort: 'Ancient water detection for land and property',
+    jalFull: 'Traditional Jal Jyotishi (water divination) service for detecting underground water sources. Using ancient techniques passed down through generations, we help identify optimal locations for wells and water resources on your property.',
+    jalFeature1: 'Underground water detection',
+    jalFeature2: 'Well location guidance',
+    jalFeature3: 'Property assessment',
+    jalFeature4: 'Traditional methods',
+    jalFeature5: 'Site visit included',
+    
+    // About Section
+    aboutTitle: 'About My Journey',
+    aboutJourney: 'The seeds were always within me. Through years of study in tarot, energy healing, and ancient wisdom traditions, I discovered that true knowledge comes from quiet moments of connection. When this journey led me to understand myself, I felt called to help others discover their inner clarity.',
+    qualificationsTitle: 'Qualifications',
+    qual1: 'Certified Tarot Reader (10+ years)',
+    qual2: 'Reiki Master Teacher',
+    qual3: 'Traditional Jal Jyotishi Specialist',
+    qual4: 'Crystal Healing Therapist',
+    
+    // Core Values
+    valuesTitle: 'Core Values',
+    authenticityTitle: 'Authenticity',
+    authenticityDesc: 'Genuine guidance',
+    compassionTitle: 'Compassion',
+    compassionDesc: 'Caring support',
+    integrityTitle: 'Integrity',
+    integrityDesc: 'Honest practices',
+    empowermentTitle: 'Empowerment',
+    empowermentDesc: 'Inner strength',
+    
+    // Booking Section
+    bookTitle: 'Book Session',
+    bookingFormService: 'Select Service',
+    bookingFormName: 'Name',
+    bookingFormEmail: 'Email',
+    bookingFormPhone: 'Phone',
+    bookingFormDate: 'Date',
+    bookingFormTime: 'Time',
+    bookingFormMessage: 'Message (Optional)',
+    bookingFormAccessCode: 'Access Code (Optional)',
+    bookingSubmitBtn: 'Book & Pay',
+    bookingSubmitting: 'Processing...',
+    
+    // Contact Section
+    contactTitle: 'Contact',
+    whatsappTitle: 'WhatsApp',
+    whatsappDesc: 'Instant messaging',
+    whatsappBtn: 'Chat',
+    emailTitle: 'Email',
+    emailDesc: '24-hour response',
+    emailBtn: 'Email',
+    sendMessageTitle: 'Send Message',
+    contactName: 'Name',
+    contactEmail: 'Email',
+    contactSubject: 'Subject...',
+    contactSubjectGeneral: 'General Inquiry',
+    contactSubjectBooking: 'Booking Question',
+    contactSubjectService: 'Service Info',
+    contactSubjectOther: 'Other',
+    contactMessage: 'Your message (minimum 25 characters)...',
+    contactSendBtn: 'Send Message',
+    contactSending: 'Sending...',
+    
+    // Footer
+    footerTagline: 'Spiritual guidance for modern seekers',
+    footerQuickLinks: 'Quick Links',
+    footerServices: 'Services',
+    footerLegal: 'Legal',
+    footerDisclaimer: 'Disclaimer',
+    footerCopyright: '© 2024 Krushnalaya. All rights reserved.',
+    
+    // Language Modal
+    langModalTitle: 'Choose Your Language',
+    langModalSubtitle: 'अपनी भाषा चुनें',
+    langEnglish: 'English',
+    langHindi: 'हिन्दी',
+  },
+  
+  hi: {
+    // Brand
+    brandTitle: 'कृष्णालय',
+    tagline: 'जानो · जागो · उभरो',
+    
+    // Hero
+    heroDescription: 'जब जीवन अनिश्चित लगे, तो स्पष्टता भीतर से शुरू होती है। आध्यात्मिक मार्गदर्शन के माध्यम से अपनी दिशा खोजें।',
+    
+    // Navigation
+    navHome: 'होम',
+    navServices: 'सेवाएं',
+    navBook: 'बुक करें',
+    navContact: 'संपर्क',
+    navManageBooking: 'बुकिंग प्रबंधित करें',
+    
+    // Services Section
+    servicesTitle: 'सेवाएं',
+    allSessionsInclude: 'सभी सत्रों में शामिल',
+    guidanceLabel: 'मार्गदर्शन',
+    followUpLabel: 'फॉलो-अप',
+    supportLabel: 'सहायता',
+    bookNowBtn: 'अभी बुक करें',
+    viewDetails: 'विवरण देखें',
+    showLess: 'कम दिखाएं',
+    
+    // Service Cards
+    tarotTitle: 'टैरो रीडिंग',
+    tarotShort: 'प्राचीन कार्ड ज्ञान के माध्यम से जीवन के निर्णयों पर स्पष्टता प्राप्त करें',
+    tarotFull: 'टैरो की प्राचीन कला के माध्यम से अपने अतीत, वर्तमान और भविष्य की अंतर्दृष्टि खोजें। प्रत्येक रीडिंग आपके विशिष्ट प्रश्नों और चिंताओं को संबोधित करने के लिए व्यक्तिगत है।',
+    tarotFeature1: 'व्यक्तिगत कार्ड रीडिंग',
+    tarotFeature2: 'जीवन पथ मार्गदर्शन',
+    tarotFeature3: 'संबंध अंतर्दृष्टि',
+    tarotFeature4: 'करियर दिशा',
+    tarotFeature5: 'आध्यात्मिक विकास सलाह',
+    
+    reikiTitle: 'रेकी हीलिंग',
+    reikiShort: 'सार्वभौमिक जीवन ऊर्जा के माध्यम से गहरी उपचार का अनुभव करें',
+    reikiFull: 'रेकी ऊर्जा उपचार की परिवर्तनकारी शक्ति का अनुभव करें। यह कोमल लेकिन शक्तिशाली तकनीक संतुलन और सामंजस्य बहाल करने के लिए सार्वभौमिक जीवन शक्ति ऊर्जा को चैनल करके शारीरिक, भावनात्मक और आध्यात्मिक कल्याण को बढ़ावा देती है।',
+    reikiFeature1: 'ऊर्जा संतुलन',
+    reikiFeature2: 'तनाव से राहत',
+    reikiFeature3: 'भावनात्मक उपचार',
+    reikiFeature4: 'चक्र संरेखण',
+    reikiFeature5: 'दूरस्थ उपचार उपलब्ध',
+    
+    jalTitle: 'जल ज्योतिष',
+    jalShort: 'भूमि और संपत्ति के लिए प्राचीन जल पता लगाना',
+    jalFull: 'भूमिगत जल स्रोतों का पता लगाने के लिए पारंपरिक जल ज्योतिष सेवा। पीढ़ियों से चली आ रही प्राचीन तकनीकों का उपयोग करते हुए, हम आपकी संपत्ति पर कुओं और जल संसाधनों के लिए इष्टतम स्थानों की पहचान करने में मदद करते हैं।',
+    jalFeature1: 'भूमिगत जल का पता लगाना',
+    jalFeature2: 'कुआं स्थान मार्गदर्शन',
+    jalFeature3: 'संपत्ति मूल्यांकन',
+    jalFeature4: 'पारंपरिक तरीके',
+    jalFeature5: 'साइट विजिट शामिल',
+    
+    // About Section
+    aboutTitle: 'मेरी यात्रा के बारे में',
+    aboutJourney: 'बीज हमेशा मेरे भीतर थे। टैरो, ऊर्जा उपचार और प्राचीन ज्ञान परंपराओं में वर्षों के अध्ययन के माध्यम से, मैंने पाया कि सच्चा ज्ञान शांत क्षणों के संबंध से आता है। जब इस यात्रा ने मुझे खुद को समझने के लिए प्रेरित किया, तो मैंने दूसरों को उनकी आंतरिक स्पष्टता खोजने में मदद करने के लिए बुलाया महसूस किया।',
+    qualificationsTitle: 'योग्यताएं',
+    qual1: 'प्रमाणित टैरो रीडर (10+ वर्ष)',
+    qual2: 'रेकी मास्टर टीचर',
+    qual3: 'पारंपरिक जल ज्योतिषी विशेषज्ञ',
+    qual4: 'क्रिस्टल हीलिंग थेरेपिस्ट',
+    
+    // Core Values
+    valuesTitle: 'मूल मूल्य',
+    authenticityTitle: 'प्रामाणिकता',
+    authenticityDesc: 'वास्तविक मार्गदर्शन',
+    compassionTitle: 'करुणा',
+    compassionDesc: 'देखभाल समर्थन',
+    integrityTitle: 'ईमानदारी',
+    integrityDesc: 'ईमानदार प्रथाएं',
+    empowermentTitle: 'सशक्तिकरण',
+    empowermentDesc: 'आंतरिक शक्ति',
+    
+    // Booking Section
+    bookTitle: 'सत्र बुक करें',
+    bookingFormService: 'सेवा चुनें',
+    bookingFormName: 'नाम',
+    bookingFormEmail: 'ईमेल',
+    bookingFormPhone: 'फोन',
+    bookingFormDate: 'तारीख',
+    bookingFormTime: 'समय',
+    bookingFormMessage: 'संदेश (वैकल्पिक)',
+    bookingFormAccessCode: 'एक्सेस कोड (वैकल्पिक)',
+    bookingSubmitBtn: 'बुक करें और भुगतान करें',
+    bookingSubmitting: 'प्रोसेसिंग...',
+    
+    // Contact Section
+    contactTitle: 'संपर्क',
+    whatsappTitle: 'व्हाट्सएप',
+    whatsappDesc: 'तत्काल संदेश',
+    whatsappBtn: 'चैट करें',
+    emailTitle: 'ईमेल',
+    emailDesc: '24 घंटे प्रतिक्रिया',
+    emailBtn: 'ईमेल करें',
+    sendMessageTitle: 'संदेश भेजें',
+    contactName: 'नाम',
+    contactEmail: 'ईमेल',
+    contactSubject: 'विषय...',
+    contactSubjectGeneral: 'सामान्य पूछताछ',
+    contactSubjectBooking: 'बुकिंग प्रश्न',
+    contactSubjectService: 'सेवा जानकारी',
+    contactSubjectOther: 'अन्य',
+    contactMessage: 'आपका संदेश (न्यूनतम 25 वर्ण)...',
+    contactSendBtn: 'संदेश भेजें',
+    contactSending: 'भेजा जा रहा है...',
+    
+    // Footer
+    footerTagline: 'आधुनिक साधकों के लिए आध्यात्मिक मार्गदर्शन',
+    footerQuickLinks: 'त्वरित लिंक',
+    footerServices: 'सेवाएं',
+    footerLegal: 'कानूनी',
+    footerDisclaimer: 'अस्वीकरण',
+    footerCopyright: '© 2024 कृष्णालय। सर्वाधिकार सुरक्षित।',
+    
+    // Language Modal
+    langModalTitle: 'Choose Your Language',
+    langModalSubtitle: 'अपनी भाषा चुनें',
+    langEnglish: 'English',
+    langHindi: 'हिन्दी',
+  }
+}

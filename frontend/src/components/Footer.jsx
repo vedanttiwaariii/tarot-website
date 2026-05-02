@@ -1,7 +1,9 @@
 import { useLocation } from 'react-router-dom'
+import { useLanguage } from '../context/LanguageContext'
 
 const Footer = () => {
   const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || "+919893578135"
+  const { t, language } = useLanguage()
 
   return (
     <footer className="bg-cosmic-blue border-t border-gold/20">
@@ -10,8 +12,8 @@ const Footer = () => {
           <div className="text-center">
             <div className="flex items-center justify-center space-x-2 mb-3 lg:space-x-3 lg:mb-4">
               <img src="/images/logo.png" alt="Krushnalaya" className="w-7 h-7 rounded-full shadow-[0_0_15px_rgba(255,215,0,0.5)] lg:w-10 lg:h-10" />
-              <span className="font-mystical text-lg font-semibold text-gradient lg:text-2xl">
-                Krushnalaya
+              <span className={language === 'hi' ? 'brand-title-hindi text-lg lg:text-2xl' : 'font-mystical text-lg font-semibold text-gradient lg:text-2xl'}>
+                {t('brandTitle')}
               </span>
             </div>
             <p className="text-gray-300 text-sm mb-3 lg:text-base lg:mb-5">

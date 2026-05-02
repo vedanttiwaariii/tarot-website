@@ -15,13 +15,16 @@ export default {
         'cosmic-blue': '#0F0F23'
       },
       fontFamily: {
+        'brand': ['Great Vibes', 'cursive'],
         'mystical': ['Cinzel', 'serif'],
-        'body': ['Inter', 'sans-serif']
+        'mystical-hindi': ['Noto Serif Devanagari', 'serif'],
+        'body': ['Poppins', 'sans-serif']
       },
       animation: {
         'float': 'float 6s ease-in-out infinite',
         'glow': 'glow 2s ease-in-out infinite alternate',
-        'fadeIn': 'fadeIn 0.5s ease-in-out'
+        'fadeIn': 'fadeIn 0.5s ease-in-out',
+        'fadeInScale': 'fadeInScale 1s ease-out'
       },
       keyframes: {
         float: {
@@ -35,6 +38,10 @@ export default {
         fadeIn: {
           '0%': { opacity: '0', transform: 'translateY(20px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' }
+        },
+        fadeInScale: {
+          '0%': { opacity: '0', transform: 'scale(0.95) translateY(10px)' },
+          '100%': { opacity: '1', transform: 'scale(1) translateY(0)' }
         }
       },
       spacing: {

@@ -16,6 +16,9 @@ const contentSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.Mixed,
     required: true
   },
+  contentHindi: {
+    type: mongoose.Schema.Types.Mixed
+  },
   updatedBy: {
     type: String,
     default: 'admin'

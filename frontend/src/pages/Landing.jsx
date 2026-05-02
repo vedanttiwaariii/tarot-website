@@ -8,18 +8,15 @@ import api from '../api/axios'
 import axios from 'axios'
 import BookingForm from '../components/booking/BookingForm'
 import { usePricing } from '../hooks/usePricing'
+import { useLanguage } from '../context/LanguageContext'
 
 const Threads = lazy(() => import('../components/Threads'))
 
 
 const Landing = () => {
+  const { t, language } = useLanguage()
   const pricing = usePricing()
-  const [content, setContent] = useState({
-    'hero-title': 'Krushnalaya',
-    'hero-tagline': 'KNOW · HEAL · GROW',
-    'hero-description': 'When life feels uncertain, clarity begins within. Discover your direction through spiritual guidance.',
-    'about-journey': 'The seeds were always within me. Through years of study in tarot, energy healing, and ancient wisdom traditions, I discovered that true knowledge comes from quiet moments of connection. When this journey led me to understand myself, I felt called to help others discover their inner clarity.'
-  })
+  const [content, setContent] = useState({})
   const [services, setServices] = useState([])
   const [servicesLoading, setServicesLoading] = useState(true)
   const [allCardsExpanded, setAllCardsExpanded] = useState(false)
@@ -31,8 +28,14 @@ const Landing = () => {
   useEffect(() => {
     const fetchContent = async () => {
       try {
-        const response = await axios.get('/api/content')
-        setContent(prev => ({ ...prev, ...response.data.data }))
+        const response = await axios.get('/api/content', {
+          params: { lang: language }
+        })
+        // Only update if we got actual content from database
+        const dbContent = response.data.data
+        if (dbContent && Object.keys(dbContent).length > 0) {
+          setContent(prev => ({ ...prev, ...dbContent }))
+        }
       } catch (error) {
         console.error('Error fetching content:', error)
       }
@@ -49,7 +52,7 @@ const Landing = () => {
     }
     fetchContent()
     fetchServices()
-  }, [])
+  }, [language])
 
   // Smart polling - only when NOT booking
   useEffect(() => {
@@ -283,27 +286,27 @@ const Landing = () => {
       </div>
       
       {/* HOME SECTION */}
-      <section id="home" className="relative py-4 px-4 lg:py-16">
+      <section id="home" className="relative px-4 pt-4 pb-2 lg:pt-24 lg:pb-16">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
-          className="text-center py-8 px-4 lg:max-w-5xl lg:mx-auto"
+          className="text-center py-4 px-4 lg:py-8 lg:max-w-5xl lg:mx-auto"
         >
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-gold/20 to-aqua/20 border-2 border-gold/40 flex items-center justify-center shadow-lg shadow-gold/30 overflow-hidden lg:w-24 lg:h-24 lg:mb-6">
+          <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-gold/20 to-aqua/20 border-2 border-gold/40 flex items-center justify-center shadow-lg shadow-gold/30 overflow-hidden lg:w-48 lg:h-48 lg:mb-8">
             <img src="/images/logo.png" alt="Krushnalaya" className="w-full h-full object-cover" />
           </div>
           
-          <h1 className="font-mystical text-[2rem] font-bold text-gold mb-1 lg:text-6xl lg:mb-4">
-            {content['hero-title']}
+          <h1 className={language === 'hi' ? 'brand-title-hindi mb-1 lg:mb-4' : 'brand-title mb-1 lg:mb-4'}>
+            {content['hero-title'] || t('brandTitle')}
           </h1>
           
           <p className="text-aqua text-xs font-semibold tracking-[0.3em] mb-3 lg:text-lg lg:mb-6">
-            {content['hero-tagline']}
+            {content['hero-tagline'] || t('tagline')}
           </p>
           
           <p className="text-gray-300 text-sm leading-relaxed mb-6 max-w-xs mx-auto lg:text-xl lg:max-w-3xl lg:mb-8">
-            {content['hero-description']}
+            {content['hero-description'] || t('heroDescription')}
           </p>
         </motion.div>
       </section>
@@ -318,8 +321,8 @@ const Landing = () => {
             transition={{ duration: 0.6 }}
             className="text-center mb-6 lg:mb-10"
           >
-            <h2 className="font-mystical text-[1.8rem] font-bold text-gold mb-2 lg:text-5xl lg:mb-4">
-              Services
+            <h2 className={language === 'hi' ? 'font-mystical-hindi text-[1.8rem] font-bold text-gold mb-2 lg:text-5xl lg:mb-4' : 'font-mystical text-[1.8rem] font-bold text-gold mb-2 lg:text-5xl lg:mb-4'}>
+              {t('servicesTitle')}
             </h2>
           </motion.div>
 
@@ -333,15 +336,15 @@ const Landing = () => {
             <div className="flex items-center justify-around text-xs lg:text-base lg:gap-12">
               <div className="flex items-center gap-1 lg:gap-2">
                 <span className="text-gold lg:text-xl">✓</span>
-                <span className="text-gray-300">Guidance</span>
+                <span className="text-gray-300">{t('guidanceLabel')}</span>
               </div>
               <div className="flex items-center gap-1 lg:gap-2">
                 <span className="text-gold lg:text-xl">✓</span>
-                <span className="text-gray-300">Follow-up</span>
+                <span className="text-gray-300">{t('followUpLabel')}</span>
               </div>
               <div className="flex items-center gap-1 lg:gap-2">
                 <span className="text-gold lg:text-xl">✓</span>
-                <span className="text-gray-300">Support</span>
+                <span className="text-gray-300">{t('supportLabel')}</span>
               </div>
             </div>
           </motion.div>
@@ -359,6 +362,14 @@ const Landing = () => {
                 const images = getServiceImage(service.serviceType)
                 const expandKey = service.serviceType === 'water-divination' ? 'jal' : service.serviceType
                 const isExpanded = allCardsExpanded
+                
+                // Get translation keys based on service type
+                const titleKey = service.serviceType === 'water-divination' ? 'jalTitle' : `${service.serviceType}Title`
+                const shortKey = service.serviceType === 'water-divination' ? 'jalShort' : `${service.serviceType}Short`
+                const fullKey = service.serviceType === 'water-divination' ? 'jalFull' : `${service.serviceType}Full`
+                const featureKeys = service.serviceType === 'water-divination' 
+                  ? ['jalFeature1', 'jalFeature2', 'jalFeature3', 'jalFeature4', 'jalFeature5']
+                  : [`${service.serviceType}Feature1`, `${service.serviceType}Feature2`, `${service.serviceType}Feature3`, `${service.serviceType}Feature4`, `${service.serviceType}Feature5`]
 
                 return (
                   <motion.div
@@ -374,8 +385,8 @@ const Landing = () => {
                     <div className="relative z-10 lg:flex lg:flex-col lg:h-full">
                       {/* Title */}
                       <div className="flex items-center gap-2 mb-2 lg:gap-3 lg:mb-3">
-                        <img src={images.icon} alt={service.title} className="w-8 h-8 object-contain lg:w-12 lg:h-12 flex-shrink-0" />
-                        <h3 className="text-white font-bold text-base leading-tight lg:text-2xl">{service.title}</h3>
+                        <img src={images.icon} alt={t(titleKey)} className="w-8 h-8 object-contain lg:w-12 lg:h-12 flex-shrink-0" />
+                        <h3 className="text-white font-bold text-base leading-tight lg:text-2xl">{t(titleKey)}</h3>
                       </div>
                       
                       {/* Price - Full Width Below Title */}
@@ -387,12 +398,12 @@ const Landing = () => {
                       <div className="lg:hidden">
                         {!isExpanded ? (
                           <div>
-                            <p className="text-gray-300 text-xs mb-2 leading-relaxed">{service.shortDescription}</p>
+                            <p className="text-gray-300 text-xs mb-2 leading-relaxed">{t(shortKey)}</p>
                             <div className="space-y-1 mb-3">
-                              {service.features.slice(0, 3).map((feature, idx) => (
+                              {featureKeys.slice(0, 3).map((featureKey, idx) => (
                                 <div key={idx} className="flex items-start gap-1.5 text-xs">
                                   <span className="text-gold mt-0.5">✓</span>
-                                  <span className="text-gray-300">{feature}</span>
+                                  <span className="text-gray-300">{t(featureKey)}</span>
                                 </div>
                               ))}
                             </div>
@@ -400,7 +411,7 @@ const Landing = () => {
                               onClick={() => setAllCardsExpanded(true)}
                               className="w-full text-gold text-xs flex items-center justify-center gap-1 hover:text-white transition-colors"
                             >
-                              <span>View Details</span>
+                              <span>{t('viewDetails')}</span>
                               <span>▼</span>
                             </button>
                           </div>
@@ -411,13 +422,13 @@ const Landing = () => {
                             transition={{ duration: 0.4, ease: 'easeOut' }}
                           >
                             <p className="text-gray-300 text-xs mb-3 leading-relaxed">
-                              {service.fullDescription}
+                              {t(fullKey)}
                             </p>
                             <div className="space-y-1.5 mb-4">
-                              {service.features.map((feature, idx) => (
+                              {featureKeys.map((featureKey, idx) => (
                                 <div key={idx} className="flex items-start gap-1.5 text-xs">
                                   <span className="text-gold mt-0.5">✓</span>
-                                  <span className="text-gray-300">{feature}</span>
+                                  <span className="text-gray-300">{t(featureKey)}</span>
                                 </div>
                               ))}
                             </div>
@@ -425,13 +436,13 @@ const Landing = () => {
                               onClick={() => handleServiceSelect(service.serviceType)}
                               className="w-full py-2 border border-gold/40 text-gold font-medium rounded-full hover:bg-gold/10 transition-all duration-300 text-xs mb-2"
                             >
-                              Book Now
+                              {t('bookNowBtn')}
                             </button>
                             <button
                               onClick={() => setAllCardsExpanded(false)}
                               className="w-full text-gold text-xs flex items-center justify-center gap-1 hover:text-white transition-colors"
                             >
-                              <span>Show Less</span>
+                              <span>{t('showLess')}</span>
                               <span className="rotate-180">▼</span>
                             </button>
                           </motion.div>
@@ -441,13 +452,13 @@ const Landing = () => {
                       {/* Desktop: Always Expanded */}
                       <div className="hidden lg:flex lg:flex-col lg:flex-grow">
                         <p className="text-gray-300 text-sm mb-4 leading-relaxed">
-                          {service.fullDescription}
+                          {t(fullKey)}
                         </p>
                         <div className="space-y-2 mb-6 flex-grow">
-                          {service.features.map((feature, idx) => (
+                          {featureKeys.map((featureKey, idx) => (
                             <div key={idx} className="flex items-start gap-1.5 text-sm">
                               <span className="text-gold mt-0.5">✓</span>
-                              <span className="text-gray-300">{feature}</span>
+                              <span className="text-gray-300">{t(featureKey)}</span>
                             </div>
                           ))}
                         </div>
@@ -455,7 +466,7 @@ const Landing = () => {
                           onClick={() => handleServiceSelect(service.serviceType)}
                           className="w-full py-3 border border-gold/40 text-gold font-medium rounded-full hover:bg-gold/10 transition-all duration-300 text-sm mt-auto"
                         >
-                          Book Now
+                          {t('bookNowBtn')}
                         </button>
                       </div>
                     </div>
@@ -477,8 +488,8 @@ const Landing = () => {
             transition={{ duration: 0.6 }}
             className="text-center mb-6 lg:mb-10"
           >
-            <h2 className="font-mystical text-[1.8rem] font-bold text-gold mb-2 lg:text-5xl lg:mb-4">
-              About My Journey
+            <h2 className={language === 'hi' ? 'font-mystical-hindi text-[1.8rem] font-bold text-gold mb-2 lg:text-5xl lg:mb-4' : 'font-mystical text-[1.8rem] font-bold text-gold mb-2 lg:text-5xl lg:mb-4'}>
+              {t('aboutTitle')}
             </h2>
           </motion.div>
 
@@ -491,7 +502,7 @@ const Landing = () => {
               className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-5 shadow-lg shadow-gold/10 lg:p-8 lg:flex lg:flex-col lg:justify-center"
             >
               <p className="text-gray-300 text-sm leading-relaxed text-center lg:text-base lg:leading-relaxed">
-                {content['about-journey']}
+                {content['about-journey'] || t('aboutJourney')}
               </p>
             </motion.div>
 
@@ -502,23 +513,23 @@ const Landing = () => {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-5 shadow-lg shadow-gold/10 lg:p-8"
             >
-              <h3 className="text-gold font-semibold text-sm mb-3 text-center lg:text-xl lg:mb-5">Qualifications</h3>
+              <h3 className="text-gold font-semibold text-sm mb-3 text-center lg:text-xl lg:mb-5">{t('qualificationsTitle')}</h3>
               <div className="space-y-2 lg:space-y-3">
                 <div className="flex items-start gap-2 text-xs lg:text-sm">
                   <span className="text-gold mt-0.5 lg:text-base">✓</span>
-                  <span className="text-gray-300">Certified Tarot Reader (10+ years)</span>
+                  <span className="text-gray-300">{t('qual1')}</span>
                 </div>
                 <div className="flex items-start gap-2 text-xs lg:text-sm">
                   <span className="text-gold mt-0.5 lg:text-base">✓</span>
-                  <span className="text-gray-300">Reiki Master Teacher</span>
+                  <span className="text-gray-300">{t('qual2')}</span>
                 </div>
                 <div className="flex items-start gap-2 text-xs lg:text-sm">
                   <span className="text-gold mt-0.5 lg:text-base">✓</span>
-                  <span className="text-gray-300">Traditional Jal Jyotishi Specialist</span>
+                  <span className="text-gray-300">{t('qual3')}</span>
                 </div>
                 <div className="flex items-start gap-2 text-xs lg:text-sm">
                   <span className="text-gold mt-0.5 lg:text-base">✓</span>
-                  <span className="text-gray-300">Crystal Healing Therapist</span>
+                  <span className="text-gray-300">{t('qual4')}</span>
                 </div>
               </div>
             </motion.div>
@@ -531,27 +542,27 @@ const Landing = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-5 shadow-lg shadow-gold/10 mt-4 lg:mt-6 lg:p-8"
           >
-            <h3 className="text-gold font-semibold text-sm mb-4 text-center lg:text-2xl lg:mb-8">Core Values</h3>
+            <h3 className="text-gold font-semibold text-sm mb-4 text-center lg:text-2xl lg:mb-8">{t('valuesTitle')}</h3>
             <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-8">
               <div className="text-center">
                 <div className="text-xl mb-1 lg:text-4xl lg:mb-3">✨</div>
-                <div className="text-white font-semibold text-xs mb-0.5 lg:text-base lg:mb-2">Authenticity</div>
-                <div className="text-gray-400 text-[10px] lg:text-sm">Genuine guidance</div>
+                <div className="text-white font-semibold text-xs mb-0.5 lg:text-base lg:mb-2">{t('authenticityTitle')}</div>
+                <div className="text-gray-400 text-[10px] lg:text-sm">{t('authenticityDesc')}</div>
               </div>
               <div className="text-center">
                 <div className="text-xl mb-1 lg:text-4xl lg:mb-3">💖</div>
-                <div className="text-white font-semibold text-xs mb-0.5 lg:text-base lg:mb-2">Compassion</div>
-                <div className="text-gray-400 text-[10px] lg:text-sm">Caring support</div>
+                <div className="text-white font-semibold text-xs mb-0.5 lg:text-base lg:mb-2">{t('compassionTitle')}</div>
+                <div className="text-gray-400 text-[10px] lg:text-sm">{t('compassionDesc')}</div>
               </div>
               <div className="text-center">
                 <div className="text-xl mb-1 lg:text-4xl lg:mb-3">⚖️</div>
-                <div className="text-white font-semibold text-xs mb-0.5 lg:text-base lg:mb-2">Integrity</div>
-                <div className="text-gray-400 text-[10px] lg:text-sm">Honest practices</div>
+                <div className="text-white font-semibold text-xs mb-0.5 lg:text-base lg:mb-2">{t('integrityTitle')}</div>
+                <div className="text-gray-400 text-[10px] lg:text-sm">{t('integrityDesc')}</div>
               </div>
               <div className="text-center">
                 <div className="text-xl mb-1 lg:text-4xl lg:mb-3">💪</div>
-                <div className="text-white font-semibold text-xs mb-0.5 lg:text-base lg:mb-2">Empowerment</div>
-                <div className="text-gray-400 text-[10px] lg:text-sm">Inner strength</div>
+                <div className="text-white font-semibold text-xs mb-0.5 lg:text-base lg:mb-2">{t('empowermentTitle')}</div>
+                <div className="text-gray-400 text-[10px] lg:text-sm">{t('empowermentDesc')}</div>
               </div>
             </div>
           </motion.div>
@@ -567,8 +578,8 @@ const Landing = () => {
             transition={{ duration: 0.6 }}
             className="text-center mb-6 lg:mb-10"
           >
-            <h2 className="font-mystical text-[1.8rem] font-bold text-gold mb-2 lg:text-5xl lg:mb-4">
-              Book Session
+            <h2 className={language === 'hi' ? 'font-mystical-hindi text-[1.8rem] font-bold text-gold mb-2 lg:text-5xl lg:mb-4' : 'font-mystical text-[1.8rem] font-bold text-gold mb-2 lg:text-5xl lg:mb-4'}>
+              {t('bookTitle')}
             </h2>
           </motion.div>
 
@@ -595,8 +606,8 @@ const Landing = () => {
             transition={{ duration: 0.6 }}
             className="text-center mb-6 lg:mb-10"
           >
-            <h2 className="font-mystical text-[1.8rem] font-bold text-gold mb-2 lg:text-5xl lg:mb-4">
-              Contact
+            <h2 className={language === 'hi' ? 'font-mystical-hindi text-[1.8rem] font-bold text-gold mb-2 lg:text-5xl lg:mb-4' : 'font-mystical text-[1.8rem] font-bold text-gold mb-2 lg:text-5xl lg:mb-4'}>
+              {t('contactTitle')}
             </h2>
           </motion.div>
 
@@ -614,8 +625,8 @@ const Landing = () => {
                   <div className="flex items-center gap-3 lg:gap-4">
                     <span className="text-2xl lg:text-4xl">💬</span>
                     <div>
-                      <h3 className="text-white font-semibold text-sm lg:text-lg">WhatsApp</h3>
-                      <p className="text-gray-400 text-xs lg:text-sm">Instant messaging</p>
+                      <h3 className="text-white font-semibold text-sm lg:text-lg">{t('whatsappTitle')}</h3>
+                      <p className="text-gray-400 text-xs lg:text-sm">{t('whatsappDesc')}</p>
                     </div>
                   </div>
                   <a
@@ -624,7 +635,7 @@ const Landing = () => {
                     rel="noopener noreferrer"
                     className="px-4 py-2 bg-gradient-to-r from-[#f5d000] to-[#18c2a4] text-deep-purple font-semibold rounded-full text-xs shadow-md lg:px-6 lg:py-3 lg:text-sm"
                   >
-                    Chat
+                    {t('whatsappBtn')}
                   </a>
                 </div>
               </motion.div>
@@ -640,15 +651,15 @@ const Landing = () => {
                   <div className="flex items-center gap-3 lg:gap-4">
                     <span className="text-2xl lg:text-4xl">📧</span>
                     <div>
-                      <h3 className="text-white font-semibold text-sm lg:text-lg">Email</h3>
-                      <p className="text-gray-400 text-xs lg:text-sm">24-hour response</p>
+                      <h3 className="text-white font-semibold text-sm lg:text-lg">{t('emailTitle')}</h3>
+                      <p className="text-gray-400 text-xs lg:text-sm">{t('emailDesc')}</p>
                     </div>
                   </div>
                   <a
                     href="mailto:rajshreepandetiwari@gmail.com"
                     className="px-4 py-2 bg-gradient-to-r from-[#f5d000] to-[#18c2a4] text-deep-purple font-semibold rounded-full text-xs shadow-md lg:px-6 lg:py-3 lg:text-sm"
                   >
-                    Email
+                    {t('emailBtn')}
                   </a>
                 </div>
               </motion.div>
@@ -661,7 +672,7 @@ const Landing = () => {
               transition={{ duration: 0.6 }}
               className="backdrop-blur-xl bg-gradient-to-br from-deep-purple/30 to-midnight-blue/20 border border-gold/30 rounded-2xl p-5 shadow-lg shadow-gold/10 lg:p-8"
             >
-              <h3 className="font-mystical text-base text-gold mb-4 text-center lg:text-2xl lg:mb-6">Send Message</h3>
+              <h3 className="font-mystical text-base text-gold mb-4 text-center lg:text-2xl lg:mb-6">{t('sendMessageTitle')}</h3>
               <form onSubmit={handleMobileContactSubmit(onMobileContactSubmit)} className="space-y-3 lg:space-y-4">
                 <div>
                   <input
@@ -669,7 +680,7 @@ const Landing = () => {
                     autoComplete="name"
                     {...registerMobileContact('name', { required: 'Name is required' })}
                     className="w-full px-3 py-2 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white placeholder-gray-400 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all text-xs lg:text-sm lg:px-4 lg:py-3"
-                    placeholder="Name"
+                    placeholder={t('contactName')}
                   />
                   {mobileContactErrors.name && <p className="text-red-400 text-xs mt-1 lg:text-sm">{mobileContactErrors.name.message}</p>}
                 </div>
@@ -686,7 +697,7 @@ const Landing = () => {
                       }
                     })}
                     className="w-full px-3 py-2 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white placeholder-gray-400 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all text-xs lg:text-sm lg:px-4 lg:py-3"
-                    placeholder="Email"
+                    placeholder={t('contactEmail')}
                   />
                   {mobileContactErrors.email && <p className="text-red-400 text-xs mt-1 lg:text-sm">{mobileContactErrors.email.message}</p>}
                 </div>
@@ -697,11 +708,11 @@ const Landing = () => {
                     {...registerMobileContact('subject', { required: 'Please select a subject' })}
                     className="w-full px-3 py-2 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all appearance-none text-xs lg:text-sm lg:px-4 lg:py-3"
                   >
-                    <option value="" className="bg-cosmic-blue text-gray-400">Subject...</option>
-                    <option value="general-inquiry" className="bg-cosmic-blue text-white">General Inquiry</option>
-                    <option value="booking-question" className="bg-cosmic-blue text-white">Booking Question</option>
-                    <option value="service-information" className="bg-cosmic-blue text-white">Service Info</option>
-                    <option value="other" className="bg-cosmic-blue text-white">Other</option>
+                    <option value="" className="bg-cosmic-blue text-gray-400">{t('contactSubject')}</option>
+                    <option value="general-inquiry" className="bg-cosmic-blue text-white">{t('contactSubjectGeneral')}</option>
+                    <option value="booking-question" className="bg-cosmic-blue text-white">{t('contactSubjectBooking')}</option>
+                    <option value="service-information" className="bg-cosmic-blue text-white">{t('contactSubjectService')}</option>
+                    <option value="other" className="bg-cosmic-blue text-white">{t('contactSubjectOther')}</option>
                   </select>
                   {mobileContactErrors.subject && <p className="text-red-400 text-xs mt-1 lg:text-sm">{mobileContactErrors.subject.message}</p>}
                 </div>
@@ -718,7 +729,7 @@ const Landing = () => {
                     })}
                     rows="4"
                     className="w-full px-3 py-2 bg-cosmic-blue/50 border border-gold/30 rounded-xl text-white placeholder-gray-400 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all resize-none text-xs lg:text-sm lg:px-4 lg:py-3 lg:rows-5"
-                    placeholder="Your message (minimum 25 characters)..."
+                    placeholder={t('contactMessage')}
                   ></textarea>
                   {mobileContactErrors.message && <p className="text-red-400 text-xs mt-1 lg:text-sm">{mobileContactErrors.message.message}</p>}
                 </div>
@@ -728,7 +739,7 @@ const Landing = () => {
                   disabled={isMobileContactSubmitting}
                   className="w-full py-2.5 bg-gradient-to-r from-[#f5d000] to-[#18c2a4] text-deep-purple font-bold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 text-xs lg:text-sm lg:py-3"
                 >
-                  {isMobileContactSubmitting ? 'Sending...' : 'Send Message'}
+                  {isMobileContactSubmitting ? t('contactSending') : t('contactSendBtn')}
                 </button>
 
                 {mobileContactSubmitMessage && (

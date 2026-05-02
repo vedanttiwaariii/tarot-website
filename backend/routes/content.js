@@ -2,6 +2,7 @@ import express from 'express';
 import { body, validationResult } from 'express-validator';
 import Content from '../models/Content.js';
 import { authenticateAdmin } from '../middleware/auth.js';
+import { translateToHindi } from '../utils/translator.js';
 
 const router = express.Router();
 
@@ -10,10 +11,19 @@ const router = express.Router();
 // @access  Public
 router.get('/', async (req, res, next) => {
   try {
+    const { lang } = req.query;
     const content = await Content.find();
     const contentMap = {};
     content.forEach(item => {
-      contentMap[item.sectionId] = item.content;
+      if (lang === 'hi') {
+        // Only return content if Hindi translation exists
+        if (item.contentHindi) {
+          contentMap[item.sectionId] = item.contentHindi;
+        }
+        // If no Hindi translation, don't include it (frontend will use fallback)
+      } else {
+        contentMap[item.sectionId] = item.content;
+      }
     });
     res.json({ success: true, data: contentMap });
   } catch (error) {
@@ -50,10 +60,17 @@ router.put('/:sectionId', authenticateAdmin, [
   try {
     const { content, type } = req.body;
     
+    // Auto-translate to Hindi
+    let contentHindi = null;
+    if (typeof content === 'string') {
+      contentHindi = await translateToHindi(content);
+    }
+    
     let contentDoc = await Content.findOne({ sectionId: req.params.sectionId });
     
     if (contentDoc) {
       contentDoc.content = content;
+      contentDoc.contentHindi = contentHindi;
       if (type) contentDoc.type = type;
       contentDoc.updatedBy = req.user?.email || 'admin';
       await contentDoc.save();
@@ -62,6 +79,7 @@ router.put('/:sectionId', authenticateAdmin, [
         sectionId: req.params.sectionId,
         type: type || 'text',
         content,
+        contentHindi,
         updatedBy: req.user?.email || 'admin'
       });
     }

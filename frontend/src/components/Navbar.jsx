@@ -1,9 +1,12 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
+import { useLanguage } from '../context/LanguageContext'
+import LanguageSwitcher from './LanguageSwitcher'
 
 const Navbar = () => {
   const location = useLocation()
   const navigate = useNavigate()
+  const { t, language } = useLanguage()
   const [showNavbar, setShowNavbar] = useState(true)
   const [scrolled, setScrolled] = useState(false)
   const lastScrollYRef = useRef(0)
@@ -72,8 +75,8 @@ const Navbar = () => {
                 className="w-12 h-12 rounded-full transition-all duration-300 group-hover:scale-110 relative z-10 shadow-[0_0_15px_rgba(255,215,0,0.3)]"
               />
             </div>
-            <span className="font-mystical text-2xl text-gold group-hover:text-aqua transition-colors duration-300">
-              Krushnalaya
+            <span className={language === 'hi' ? 'brand-title-hindi text-2xl' : 'font-mystical text-2xl text-gold group-hover:text-aqua transition-colors duration-300'}>
+              {t('brandTitle')}
             </span>
           </Link>
           
@@ -82,35 +85,40 @@ const Navbar = () => {
             <NavLink 
               onClick={() => isLandingPage ? scrollToSection('home') : null}
               to={isLandingPage ? '#home' : '/#home'}
-              label="Home"
+              label={t('navHome')}
               icon="🏠"
             />
             <NavLink 
               onClick={() => isLandingPage ? scrollToSection('services') : null}
               to={isLandingPage ? '#services' : '/#services'}
-              label="Services"
+              label={t('navServices')}
               icon="✨"
             />
             <NavLink 
               onClick={() => isLandingPage ? scrollToSection('book') : null}
               to={isLandingPage ? '#book' : '/#book'}
-              label="Book"
+              label={t('navBook')}
               icon="📅"
             />
             <NavLink 
               onClick={() => isLandingPage ? scrollToSection('contact') : null}
               to={isLandingPage ? '#contact' : '/#contact'}
-              label="Contact"
+              label={t('navContact')}
               icon="💬"
             />
+            
+            {/* Language Switcher */}
+            <div className="ml-2">
+              <LanguageSwitcher />
+            </div>
             
             {/* Manage Booking Button */}
             <button
               onClick={() => navigate('/manage-booking')}
-              className="ml-4 px-5 py-2.5 bg-gradient-to-r from-gold/20 to-aqua/20 border border-gold/40 text-gold font-semibold rounded-full hover:from-gold/30 hover:to-aqua/30 hover:border-gold/60 hover:shadow-lg hover:shadow-gold/20 transition-all duration-300 text-sm flex items-center gap-2 group"
+              className="ml-2 px-5 py-2.5 bg-gradient-to-r from-gold/20 to-aqua/20 border border-gold/40 text-gold font-semibold rounded-full hover:from-gold/30 hover:to-aqua/30 hover:border-gold/60 hover:shadow-lg hover:shadow-gold/20 transition-all duration-300 text-sm flex items-center gap-2 group"
             >
               <span className="group-hover:scale-110 transition-transform duration-300">🔍</span>
-              <span>Manage Booking</span>
+              <span>{t('navManageBooking')}</span>
             </button>
           </div>
         </div>

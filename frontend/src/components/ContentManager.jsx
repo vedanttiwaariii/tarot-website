@@ -23,7 +23,26 @@ const ContentManager = () => {
         axios.get('/api/content')
       ])
       setPricing(pricingRes.data.data)
-      setContent(contentRes.data.data)
+      // Store full content objects, not just strings
+      const contentData = {}
+      const rawContent = contentRes.data.data
+      
+      // Fetch full content objects for each section
+      const sections = ['hero-title', 'hero-tagline', 'hero-description', 'about-journey']
+      const fullContentPromises = sections.map(sectionId => 
+        axios.get(`/api/content/${sectionId}`).catch(() => null)
+      )
+      const fullContentResults = await Promise.all(fullContentPromises)
+      
+      fullContentResults.forEach((result, index) => {
+        if (result?.data?.data) {
+          contentData[sections[index]] = result.data.data
+        } else {
+          contentData[sections[index]] = { content: rawContent[sections[index]] || '' }
+        }
+      })
+      
+      setContent(contentData)
     } catch (error) {
       console.error('Error fetching data:', error)
       setMessage('Error loading data')
@@ -317,14 +336,29 @@ const ContentManager = () => {
 }
 
 const ContentEditCard = ({ title, sectionId, content, editMode, setEditMode, updateContent, saving, multiline }) => {
+  const [showTranslation, setShowTranslation] = useState(false)
+  const contentData = content || {}
+  const englishContent = typeof contentData === 'string' ? contentData : contentData.content || ''
+  const hindiContent = contentData.contentHindi || ''
+
   return (
     <motion.div className="bg-deep-purple/20 border border-gold/20 rounded-lg p-4">
-      <h4 className="text-white font-semibold mb-2">{title}</h4>
+      <div className="flex items-center justify-between mb-2">
+        <h4 className="text-white font-semibold">{title}</h4>
+        {hindiContent && (
+          <button
+            onClick={() => setShowTranslation(!showTranslation)}
+            className="text-xs text-aqua hover:text-gold transition-colors"
+          >
+            {showTranslation ? 'Show English' : 'हिन्दी देखें'}
+          </button>
+        )}
+      </div>
       {editMode[sectionId] ? (
         <div className="space-y-2">
           {multiline ? (
             <textarea
-              defaultValue={content}
+              defaultValue={englishContent}
               className="w-full px-3 py-2 bg-cosmic-blue border border-gold/30 rounded text-white text-sm"
               rows="4"
               id={`content-${sectionId}`}
@@ -332,11 +366,12 @@ const ContentEditCard = ({ title, sectionId, content, editMode, setEditMode, upd
           ) : (
             <input
               type="text"
-              defaultValue={content}
+              defaultValue={englishContent}
               className="w-full px-3 py-2 bg-cosmic-blue border border-gold/30 rounded text-white text-sm"
               id={`content-${sectionId}`}
             />
           )}
+          <p className="text-xs text-gray-400">✨ Hindi translation will be generated automatically</p>
           <div className="flex gap-2">
             <button
               onClick={() => {
@@ -346,7 +381,7 @@ const ContentEditCard = ({ title, sectionId, content, editMode, setEditMode, upd
               disabled={saving}
               className="px-3 py-1 bg-gold text-cosmic-blue rounded text-xs font-semibold"
             >
-              Save
+              {saving ? 'Translating...' : 'Save'}
             </button>
             <button
               onClick={() => setEditMode({ ...editMode, [sectionId]: false })}
@@ -358,7 +393,9 @@ const ContentEditCard = ({ title, sectionId, content, editMode, setEditMode, upd
         </div>
       ) : (
         <div>
-          <p className="text-gray-300 text-sm mb-2">{content}</p>
+          <p className="text-gray-300 text-sm mb-2">
+            {showTranslation && hindiContent ? hindiContent : englishContent}
+          </p>
           <button
             onClick={() => setEditMode({ ...editMode, [sectionId]: true })}
             className="text-gold text-xs hover:underline"
