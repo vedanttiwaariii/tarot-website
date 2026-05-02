@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { useLanguage } from '../context/LanguageContext'
+import LanguageSwitcher from './LanguageSwitcher'
 
 const MobileBottomNav = () => {
+  const { t } = useLanguage()
   const [isVisible, setIsVisible] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
   const location = useLocation()
@@ -36,13 +39,10 @@ const MobileBottomNav = () => {
   }
 
   const navItems = [
-    { name: 'Home', icon: '🏠', action: () => isHomePage ? scrollToSection('#home') : window.location.href = '/', isExternal: false },
-    { name: 'Services', icon: '🔮', action: () => scrollToSection('#services'), isExternal: false },
-    { name: 'Book', icon: '📅', action: () => scrollToSection('#book'), isExternal: false },
-    { name: 'Manage', icon: '📋', action: '/manage-booking', isRoute: true },
-    { name: 'Contact', icon: '📧', action: () => scrollToSection('#contact'), isExternal: false },
-    { name: 'WhatsApp', icon: '💬', action: 'https://wa.me/919893578135', isExternal: true },
-    { name: 'About', icon: '✨', action: () => scrollToSection('#about'), isExternal: false }
+    { name: t('navHome'), icon: '🏠', action: () => isHomePage ? scrollToSection('#home') : window.location.href = '/', isExternal: false },
+    { name: t('navBook'), icon: '📅', action: () => scrollToSection('#book'), isExternal: false },
+    { name: t('navManageBooking'), icon: '📋', action: '/manage-booking', isRoute: true },
+    { name: 'WhatsApp', icon: '💬', action: 'https://wa.me/919893578135', isExternal: true }
   ]
 
   return (
@@ -101,6 +101,11 @@ const MobileBottomNav = () => {
                 </button>
               )
             })}
+            
+            {/* Language Switcher */}
+            <div className="flex items-center justify-center p-1.5 md:p-2 min-w-[60px] md:min-w-[68px] flex-shrink-0" style={{ scrollSnapAlign: 'start' }}>
+              <LanguageSwitcher />
+            </div>
           </div>
         </div>
       </div>

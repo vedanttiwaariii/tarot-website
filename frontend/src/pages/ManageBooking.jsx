@@ -2,8 +2,10 @@ import { useState, useMemo, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
+import { useLanguage } from '../context/LanguageContext'
 
 const ManageBooking = () => {
+  const { t } = useLanguage()
   const [bookings, setBookings] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -141,10 +143,10 @@ const ManageBooking = () => {
           className="text-center mb-6 md:mb-8"
         >
           <h1 className="font-mystical text-2xl md:text-4xl font-bold text-gradient mb-2 md:mb-4">
-            Manage Your Booking
+            {t('manageBookingTitle')}
           </h1>
           <p className="text-gray-300 text-sm md:text-base">
-            Find and reschedule your appointments (at least 12 hours in advance)
+            {t('manageBookingSubtitle')}
           </p>
         </motion.div>
 
@@ -154,33 +156,33 @@ const ManageBooking = () => {
           animate={{ opacity: 1, y: 0 }}
           className="card-mystical mb-6 md:mb-8"
         >
-          <h2 className="text-xl md:text-2xl font-bold text-gold mb-4 md:mb-6">Find Your Booking</h2>
+          <h2 className="text-xl md:text-2xl font-bold text-gold mb-4 md:mb-6">{t('findBookingTitle')}</h2>
           
           <form onSubmit={handleLookupSubmit(onLookupSubmit)} className="space-y-3 md:space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
               <div>
-                <label className="block text-gold font-semibold mb-1.5 md:mb-2 text-sm md:text-base">Booking Number</label>
+                <label className="block text-gold font-semibold mb-1.5 md:mb-2 text-sm md:text-base">{t('bookingNumberLabel')}</label>
                 <input
                   type="text"
                   {...registerLookup('bookingNumber')}
                   className="w-full px-3 md:px-4 py-2.5 md:py-3 bg-cosmic-blue/50 border border-gold/30 rounded-lg text-white text-sm md:text-base placeholder-gray-400 focus:border-gold focus:outline-none transition-colors"
-                  placeholder="Enter booking number"
+                  placeholder={t('bookingNumberPlaceholder')}
                 />
               </div>
               
               <div>
-                <label className="block text-gold font-semibold mb-1.5 md:mb-2 text-sm md:text-base">Email Address</label>
+                <label className="block text-gold font-semibold mb-1.5 md:mb-2 text-sm md:text-base">{t('emailLabel')}</label>
                 <input
                   type="email"
                   {...registerLookup('email')}
                   className="w-full px-3 md:px-4 py-2.5 md:py-3 bg-cosmic-blue/50 border border-gold/30 rounded-lg text-white text-sm md:text-base placeholder-gray-400 focus:border-gold focus:outline-none transition-colors"
-                  placeholder="Enter email"
+                  placeholder={t('emailPlaceholder')}
                 />
               </div>
             </div>
             
             <p className="text-gray-400 text-xs md:text-sm">
-              Provide either your booking number or email address
+              {t('provideEitherText')}
             </p>
             
             <button
@@ -188,7 +190,7 @@ const ManageBooking = () => {
               disabled={loading}
               className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base"
             >
-              {loading ? 'Searching...' : 'Find Bookings'}
+              {loading ? t('searchingText') : t('findBookingsBtn')}
             </button>
           </form>
         </motion.div>
@@ -200,7 +202,7 @@ const ManageBooking = () => {
             animate={{ opacity: 1, y: 0 }}
             className="bg-red-500/20 text-red-400 border border-red-500/30 rounded-lg p-3 md:p-4 mb-6 md:mb-8 text-sm md:text-base"
           >
-            {error}
+            {error.includes('No bookings found') ? t('noBookingsFound') : error}
           </motion.div>
         )}
 
@@ -220,7 +222,7 @@ const ManageBooking = () => {
             animate={{ opacity: 1, y: 0 }}
             className="card-mystical"
           >
-            <h2 className="text-xl md:text-2xl font-bold text-gold mb-4 md:mb-6">Your Bookings</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-gold mb-4 md:mb-6">{t('yourBookingsTitle')}</h2>
             
             <div className="space-y-3 md:space-y-4">
               {bookings.map((booking) => (
@@ -242,29 +244,29 @@ const ManageBooking = () => {
                   
                   <div className="grid grid-cols-1 gap-2.5 md:grid-cols-3 md:gap-4 mb-3 md:mb-4">
                     <div>
-                      <p className="text-gold font-semibold text-xs md:text-sm">Service</p>
+                      <p className="text-gold font-semibold text-xs md:text-sm">{t('serviceLabel')}</p>
                       <p className="text-gray-300 capitalize text-sm md:text-base">{booking.service.replace('-', ' ')}</p>
                     </div>
                     <div>
-                      <p className="text-gold font-semibold text-xs md:text-sm">Date & Time</p>
+                      <p className="text-gold font-semibold text-xs md:text-sm">{t('dateTimeLabel')}</p>
                       <p className="text-gray-300 text-sm md:text-base">{formatDate(booking.date)} at {booking.time}</p>
                     </div>
                     <div>
-                      <p className="text-gold font-semibold text-xs md:text-sm">Session Type</p>
+                      <p className="text-gold font-semibold text-xs md:text-sm">{t('sessionTypeLabel')}</p>
                       <p className="text-gray-300 capitalize text-sm md:text-base">{booking.sessionType.replace('-', ' ')}</p>
                     </div>
                   </div>
                   
                   {booking.message && (
                     <div className="mb-3 md:mb-4">
-                      <p className="text-gold font-semibold text-xs md:text-sm">Message</p>
+                      <p className="text-gold font-semibold text-xs md:text-sm">{t('messageLabel')}</p>
                       <p className="text-gray-300 text-sm md:text-base">{booking.message}</p>
                     </div>
                   )}
                   
                   <div className="mb-3 md:mb-4">
-                    <p className="text-gold font-semibold text-xs md:text-sm">Booking Details</p>
-                    <p className="text-gray-400 text-xs md:text-sm">Booked on: {formatDateTime(booking.createdAt)}</p>
+                    <p className="text-gold font-semibold text-xs md:text-sm">{t('bookingDetailsLabel')}</p>
+                    <p className="text-gray-400 text-xs md:text-sm">{t('bookedOnText')}: {formatDateTime(booking.createdAt)}</p>
                   </div>
                   
                   <div className="flex flex-col sm:flex-row gap-2 md:gap-3">
@@ -273,13 +275,13 @@ const ManageBooking = () => {
                         onClick={() => openRescheduleModal(booking)}
                         className="btn-primary text-xs md:text-sm w-full sm:w-auto"
                       >
-                        Reschedule
+                        {t('rescheduleBtn')}
                       </button>
                     ) : (
                       <span className="text-gray-500 text-xs md:text-sm">
-                        {booking.status === 'cancelled' ? 'Cancelled' :
-                         booking.status === 'completed' ? 'Completed' :
-                         'Cannot reschedule (less than 12 hours)'}
+                        {booking.status === 'cancelled' ? t('cancelledText') :
+                         booking.status === 'completed' ? t('completedText') :
+                         t('cannotRescheduleText')}
                       </span>
                     )}
                     
@@ -289,7 +291,7 @@ const ManageBooking = () => {
                       rel="noopener noreferrer"
                       className="btn-secondary text-xs md:text-sm w-full sm:w-auto text-center"
                     >
-                      Contact Support
+                      {t('contactSupportBtn')}
                     </a>
                   </div>
                 </div>
@@ -307,7 +309,7 @@ const ManageBooking = () => {
               className="bg-cosmic-blue border border-gold/20 rounded-lg p-4 md:p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
             >
               <div className="flex justify-between items-center mb-4 md:mb-6">
-                <h3 className="text-xl md:text-2xl font-bold text-gold">Reschedule Booking</h3>
+                <h3 className="text-xl md:text-2xl font-bold text-gold">{t('rescheduleBookingTitle')}</h3>
                 <button 
                   onClick={() => setShowRescheduleModal(false)}
                   className="text-gray-400 hover:text-white text-2xl leading-none"
@@ -317,15 +319,15 @@ const ManageBooking = () => {
               </div>
               
               <div className="mb-3 md:mb-4 p-2.5 md:p-3 bg-deep-purple/20 rounded-lg">
-                <p className="text-gold font-semibold text-sm md:text-base">Current Booking:</p>
+                <p className="text-gold font-semibold text-sm md:text-base">{t('currentBookingLabel')}:</p>
                 <p className="text-white text-sm md:text-base">#{selectedBooking.bookingNumber}</p>
-                <p className="text-gray-300 text-xs md:text-sm">Appointment: {formatDate(selectedBooking.date)} at {selectedBooking.time}</p>
-                <p className="text-gray-400 text-xs">Booked on: {formatDateTime(selectedBooking.createdAt)}</p>
+                <p className="text-gray-300 text-xs md:text-sm">{t('appointmentText')}: {formatDate(selectedBooking.date)} at {selectedBooking.time}</p>
+                <p className="text-gray-400 text-xs">{t('bookedOnText')}: {formatDateTime(selectedBooking.createdAt)}</p>
               </div>
               
               <form onSubmit={handleRescheduleSubmit(onRescheduleSubmit)} className="space-y-3 md:space-y-4">
                 <div>
-                  <label className="block text-gold font-semibold mb-1.5 md:mb-2 text-sm md:text-base">New Date *</label>
+                  <label className="block text-gold font-semibold mb-1.5 md:mb-2 text-sm md:text-base">{t('newDateLabel')} *</label>
                   <input
                     type="date"
                     {...registerReschedule('date', { required: 'Date is required' })}
@@ -336,14 +338,14 @@ const ManageBooking = () => {
                 </div>
                 
                 <div>
-                  <label className="block text-gold font-semibold mb-1.5 md:mb-2 text-sm md:text-base">New Time *</label>
+                  <label className="block text-gold font-semibold mb-1.5 md:mb-2 text-sm md:text-base">{t('newTimeLabel')} *</label>
                   <select
                     {...registerReschedule('time', { required: 'Time is required' })}
                     disabled={!selectedDate || loadingSlots}
                     className="w-full px-3 py-2 bg-cosmic-blue/50 border border-gold/30 rounded text-white text-sm md:text-base focus:border-gold focus:outline-none disabled:opacity-50"
                   >
                     <option value="">
-                      {!selectedDate ? 'Select date first' : loadingSlots ? 'Loading...' : 'Choose a time...'}
+                      {!selectedDate ? t('selectDateFirst') : loadingSlots ? t('loadingText') : t('chooseTimeText')}
                     </option>
                     {availableSlots.map((time) => (
                       <option key={time} value={time}>
@@ -353,7 +355,7 @@ const ManageBooking = () => {
                   </select>
                   {availableSlots.length === 0 && selectedDate && !loadingSlots && (
                     <p className="text-yellow-400 text-xs md:text-sm mt-1">
-                      No time slots available for this date.
+                      {t('noSlotsAvailable')}
                     </p>
                   )}
                   {rescheduleErrors.time && <p className="text-red-400 text-xs md:text-sm mt-1">{rescheduleErrors.time.message}</p>}
@@ -365,14 +367,14 @@ const ManageBooking = () => {
                     onClick={() => setShowRescheduleModal(false)}
                     className="btn-secondary flex-1 text-sm md:text-base"
                   >
-                    Cancel
+                    {t('cancelBtn')}
                   </button>
                   <button
                     type="submit"
                     disabled={rescheduleSubmitting}
                     className="btn-primary flex-1 text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {rescheduleSubmitting ? 'Rescheduling...' : 'Reschedule'}
+                    {rescheduleSubmitting ? t('reschedulingText') : t('rescheduleBtn')}
                   </button>
                 </div>
                 
@@ -382,7 +384,7 @@ const ManageBooking = () => {
                       ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
                       : 'bg-red-500/20 text-red-400 border border-red-500/30'
                   }`}>
-                    {rescheduleMessage}
+                    {rescheduleMessage.includes('successfully') ? t('bookingRescheduledSuccess') : rescheduleMessage}
                   </div>
                 )}
               </form>
