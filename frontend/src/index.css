@@ -157,4 +157,24 @@
       @apply max-w-[1400px] px-12;
     }
   }
+  
+  /* Mobile-friendly select dropdown */
+  select {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  
+  select option {
+    background-color: #1a1a2e;
+    color: white;
+    padding: 12px;
+  }
+  
+  /* Improve mobile touch targets */
+  @media (max-width: 1023px) {
+    select, input, textarea, button {
+      min-height: 44px;
+      -webkit-tap-highlight-color: transparent;
+    }
+  }
 }
